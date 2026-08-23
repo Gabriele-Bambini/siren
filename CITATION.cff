@@ -1,7 +1,6 @@
 # CFF citation metadata for the SIREN reference-class release.
-# NOTE (TODO before submission): replace the placeholder creator name with the
-# compiled author list (same list as the manuscript byline), and fill in
-# `doi` once the Zenodo deposit is minted from the GitHub tag v1.0.
+# NOTE (TODO before Zenodo deposit): add ORCIDs if desired, and fill in `doi`
+# once the deposit is minted from the GitHub tag v1.0.
 # Validate with `cffconvert --validate` or https://citation-file-format.github.io/
 cff-version: 1.2.0
 message: >-
@@ -12,8 +11,12 @@ title: >-
   (code & results for "How far do simple baselines go in CRISPRi enhancer–gene
   prediction?")
 authors:
-  - name: "SIREN Project Authors"
-    # TODO(preprint-submission): expand to full author list with ORCIDs.
+  - given-name: Gabriele
+    family-names: Bambini
+    affiliation: "Università Commerciale Luigi Bocconi, Milano, Italia"
+  - given-name: Andrea
+    family-names: Tangherloni
+    affiliation: "Università Commerciale Luigi Bocconi, Milano, Italia"
 version: v1.0
 date-released: "2026-08-23"
 license: MIT
