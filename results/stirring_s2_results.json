@@ -1,0 +1,40 @@
+{
+  "ranker_chr19": {
+    "tag": "S2_ranker_chr19",
+    "AUROC": 0.8011,
+    "AP": 0.2141,
+    "prec@2pct": 0.3111
+  },
+  "ranker_k562held": {
+    "tag": "S2_ranker_k562held",
+    "AUROC": 0.7126,
+    "AP": 0.2738,
+    "prec@2pct": 0.5
+  },
+  "backbone_chr19": {
+    "tag": "backbone_chr19",
+    "AUROC": 0.8147,
+    "AP": 0.3682,
+    "prec@2pct": 0.4
+  },
+  "backbone_k562held": {
+    "tag": "backbone_k562held",
+    "AUROC": 0.7136,
+    "AP": 0.3246,
+    "prec@2pct": 0.6053
+  },
+  "delta_AP_ranker_vs_backbone_chr19": {
+    "ci95": [
+      0.0819,
+      0.3
+    ],
+    "p": 0.0
+  },
+  "delta_AP_ranker_vs_backbone_k562held": {
+    "ci95": [
+      0.1209,
+      0.2523
+    ],
+    "p": 0.0
+  }
+}

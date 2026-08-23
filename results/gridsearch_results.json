@@ -1,0 +1,59 @@
+{
+  "cv_default_AP": 0.3563,
+  "cv_best_AP": 0.4155,
+  "best_cfg": {
+    "n_estimators": 150,
+    "learning_rate": 0.03,
+    "num_leaves": 7,
+    "min_child_samples": 80,
+    "colsample_bytree": 1.0
+  },
+  "n_configs": 40,
+  "gain_cv_vs_default": 0.0593,
+  "finalization": {
+    "default": {
+      "chr19": {
+        "AP": 0.3681742022513491,
+        "AP_minusdist": 0.3477,
+        "delta_AP_vs_dist": 0.0205,
+        "ci95_delta": [
+          -0.0432,
+          0.0783
+        ],
+        "p_two_sided_boot": 0.547
+      },
+      "k562held": {
+        "AP": 0.32462377976528123,
+        "AP_minusdist": 0.3295,
+        "delta_AP_vs_dist": -0.0049,
+        "ci95_delta": [
+          -0.0443,
+          0.0312
+        ],
+        "p_two_sided_boot": 0.744
+      }
+    },
+    "best": {
+      "chr19": {
+        "AP": 0.3000478701643915,
+        "AP_minusdist": 0.3477,
+        "delta_AP_vs_dist": -0.0477,
+        "ci95_delta": [
+          -0.1189,
+          0.0308
+        ],
+        "p_two_sided_boot": 0.227
+      },
+      "k562held": {
+        "AP": 0.35911863193587,
+        "AP_minusdist": 0.3295,
+        "delta_AP_vs_dist": 0.0296,
+        "ci95_delta": [
+          -0.0027,
+          0.0559
+        ],
+        "p_two_sided_boot": 0.071
+      }
+    }
+  }
+}

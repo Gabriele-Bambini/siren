@@ -1,0 +1,64 @@
+{
+  "firmato_poi_abs": {
+    "tag": "firmato_poi_abs",
+    "AUROC": 0.7136,
+    "AP": 0.3246,
+    "prec@2pct": 0.6053,
+    "rho_signed_vs_lfc": -0.1564
+  },
+  "abs_diretto": {
+    "tag": "abs_diretto",
+    "AUROC": 0.6919,
+    "AP": 0.3,
+    "prec@2pct": 0.6053,
+    "rho_signed_vs_lfc": -0.162
+  },
+  "bench_chr19": {
+    "n": 2260,
+    "prev": 0.0257,
+    "MODELLO": {
+      "AUROC": 0.815,
+      "AP": 0.368,
+      "prec@2pct": 0.4
+    },
+    "-dist": {
+      "AUROC": 0.823,
+      "AP": 0.348,
+      "prec@2pct": 0.422
+    },
+    "H3K27acRPM": {
+      "AUROC": 0.672,
+      "AP": 0.056,
+      "prec@2pct": 0.089
+    },
+    "DHS_RPM": {
+      "AUROC": 0.655,
+      "AP": 0.048,
+      "prec@2pct": 0.067
+    }
+  },
+  "bench_k562held": {
+    "n": 1918,
+    "prev": 0.0892,
+    "MODELLO": {
+      "AUROC": 0.714,
+      "AP": 0.325,
+      "prec@2pct": 0.605
+    },
+    "-dist": {
+      "AUROC": 0.727,
+      "AP": 0.33,
+      "prec@2pct": 0.605
+    },
+    "H3K27acRPM": {
+      "AUROC": 0.748,
+      "AP": 0.22,
+      "prec@2pct": 0.289
+    },
+    "DHS_RPM": {
+      "AUROC": 0.717,
+      "AP": 0.197,
+      "prec@2pct": 0.237
+    }
+  }
+}

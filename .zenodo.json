@@ -1,0 +1,31 @@
+{
+  "//": "Zenodo deposit metadata for siren-crispr-reference v1.0. TODO before deposit: replace creators with the compiled author list (name + orcid) and add the GitHub repo URL to related_identifiers once pushed.",
+  "title": "SIREN — a calibrated reference class for CRISPRi enhancer→gene prediction (v1.0)",
+  "upload_type": "software",
+  "creators": [
+    {
+      "name": "SIREN Project Authors",
+      "affiliation": "Università Commerciale Luigi Bocconi"
+    }
+  ],
+  "description": "<p>Code, experiment scripts, result artifacts, and transparency materials (append-only project log with pre-registrations, adversarial-program charter, stirring log, trap register) for the study <em>How far do simple baselines go in CRISPRi enhancer–gene prediction? A calibrated reference class, the specificity wall, and the failure of sequence-model counterfactuals.</em> Includes leakage-safe chromosome-holdout splitting with halo deconfliction, the distance+ATAC gradient-boosting backbone with split-conformal intervals, the Enformer ISD powered replication (negative), and the adversarial robustness program.</p>",
+  "access_right": "open",
+  "license": "MIT",
+  "version": "v1.0",
+  "pub_date": "2026-08-23",
+  "keywords": [
+    "CRISPRi",
+    "enhancer-gene prediction",
+    "benchmark",
+    "conformal prediction",
+    "negative results",
+    "functional genomics"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/TODO-ACCOUNT/siren-crispr-reference",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

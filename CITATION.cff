@@ -1,0 +1,36 @@
+# CFF citation metadata for the SIREN reference-class release.
+# NOTE (TODO before submission): replace the placeholder creator name with the
+# compiled author list (same list as the manuscript byline), and fill in
+# repository-code / doi once the GitHub repo is pushed and the Zenodo deposit
+# is minted. Validate with `cffconvert --validate` or https://citation-file-format.github.io/
+cff-version: 1.2.0
+message: >-
+  If you use this software or benchmark protocol, please cite both this
+  software release and the accompanying preprint.
+title: >-
+  SIREN — a calibrated reference class for CRISPRi enhancer→gene prediction
+  (code & results for "How far do simple baselines go in CRISPRi enhancer–gene
+  prediction?")
+authors:
+  - name: "SIREN Project Authors"
+    # TODO(preprint-submission): expand to full author list with ORCIDs.
+version: v1.0
+date-released: "2026-08-23"
+license: MIT
+type: software
+repository-code: "https://github.com/TODO-ACCOUNT/siren-crispr-reference" # TODO: set after push
+abstract: >-
+  Leakage-safe benchmark study of CRISPRi enhancer→gene effect prediction on
+  EPCrisprBenchmark K562 (10,356 valid pairs): a calibrated simple baseline
+  (distance + cell-type-matched ATAC, gradient boosting + split-conformal
+  intervals), the specificity wall for cross-cell-type and cross-screen
+  transfer, a powered pre-registered negative on Enformer in-silico-silencing
+  counterfactual deltas, baseline-adjusted sign-metric reporting, and an
+  adversarial robustness program in which no variant beat the reference class.
+keywords:
+  - CRISPRi
+  - enhancer-gene prediction
+  - benchmark
+  - conformal prediction
+  - negative results
+  - functional genomics

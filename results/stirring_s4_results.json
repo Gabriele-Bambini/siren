@@ -1,0 +1,52 @@
+{
+  "backbone_chr19": {
+    "tag": "backbone_chr19",
+    "AUROC": 0.8147,
+    "AP": 0.3682,
+    "prec@2pct": 0.4
+  },
+  "backbone_k562held": {
+    "tag": "backbone_k562held",
+    "AUROC": 0.7136,
+    "AP": 0.3246,
+    "prec@2pct": 0.6053
+  },
+  "s4_product_chr19": {
+    "tag": "s4_product_chr19",
+    "AUROC": 0.8051,
+    "AP": 0.3717,
+    "prec@2pct": 0.4444
+  },
+  "s4_product_k562held": {
+    "tag": "s4_product_k562held",
+    "AUROC": 0.7309,
+    "AP": 0.3283,
+    "prec@2pct": 0.5
+  },
+  "s4_prob_chr19": {
+    "tag": "s4_prob_chr19",
+    "AUROC": 0.798,
+    "AP": 0.2945,
+    "prec@2pct": 0.4222
+  },
+  "s4_prob_k562held": {
+    "tag": "s4_prob_k562held",
+    "AUROC": 0.7297,
+    "AP": 0.3264,
+    "prec@2pct": 0.5
+  },
+  "delta_AP_s4_vs_backbone_chr19": {
+    "ci95": [
+      -0.0366,
+      0.0481
+    ],
+    "p": 0.84
+  },
+  "delta_AP_s4_vs_backbone_k562held": {
+    "ci95": [
+      -0.0215,
+      0.0264
+    ],
+    "p": 0.777
+  }
+}
