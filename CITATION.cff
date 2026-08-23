@@ -14,11 +14,11 @@ authors:
   - given-name: Gabriele
     family-names: Bambini
     affiliation: "Università Commerciale Luigi Bocconi, Milano, Italia"
-  - given-name: Andrea
-    family-names: Tangherloni
-    affiliation: "Università Commerciale Luigi Bocconi, Milano, Italia"
   - given-name: Lorenzo
     family-names: De Santis
+    affiliation: "Università Commerciale Luigi Bocconi, Milano, Italia"
+  - given-name: Andrea
+    family-names: Tangherloni
     affiliation: "Università Commerciale Luigi Bocconi, Milano, Italia"
 version: v1.0
 date-released: "2026-08-23"
