@@ -17,6 +17,7 @@ A leakage-safe benchmark study of CRISPRi enhancer→gene effect prediction on E
 ```
 scripts/    one script per experiment (hpc_*.py); numbers → JSON/MD artifacts
 src/        shared library incl. split/halo leakage checker (unit-tested)
+tests/      unit-test suite (split integrity, metrics, leakage, schemas)
 results/    all result artifacts + publication figures (PNG/PDF + data JSON)
 supplementary/  project log (pre-registrations + verdicts), adversarial charter,
                 stirring log, experiment dashboard & trap register
@@ -35,7 +36,7 @@ python3 scripts/hpc_backtest_bench.py
 python3 ../stirring scripts (see supplementary/CHARTER.md)
 ```
 
-Unit tests: `pytest src` (38 tests).
+Unit tests: `pytest tests` (38 passed / 1 skipped locally on Python 3.9 and 3.13; CI runs the suite on every push).
 
 ## Citation
 
