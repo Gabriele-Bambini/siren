@@ -1,8 +1,8 @@
 # CFF citation metadata for the SIREN reference-class release.
 # NOTE (TODO before submission): replace the placeholder creator name with the
 # compiled author list (same list as the manuscript byline), and fill in
-# repository-code / doi once the GitHub repo is pushed and the Zenodo deposit
-# is minted. Validate with `cffconvert --validate` or https://citation-file-format.github.io/
+# `doi` once the Zenodo deposit is minted from the GitHub tag v1.0.
+# Validate with `cffconvert --validate` or https://citation-file-format.github.io/
 cff-version: 1.2.0
 message: >-
   If you use this software or benchmark protocol, please cite both this
@@ -18,7 +18,7 @@ version: v1.0
 date-released: "2026-08-23"
 license: MIT
 type: software
-repository-code: "https://github.com/TODO-ACCOUNT/siren-crispr-reference" # TODO: set after push
+repository-code: "https://github.com/Gabriele-Bambini/siren-crispr-reference"
 abstract: >-
   Leakage-safe benchmark study of CRISPRi enhancer→gene effect prediction on
   EPCrisprBenchmark K562 (10,356 valid pairs): a calibrated simple baseline

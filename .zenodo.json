@@ -1,5 +1,5 @@
 {
-  "//": "Zenodo deposit metadata for siren-crispr-reference v1.0. TODO before deposit: replace creators with the compiled author list (name + orcid) and add the GitHub repo URL to related_identifiers once pushed.",
+  "//": "Zenodo deposit metadata for siren-crispr-reference v1.0. TODO before deposit: replace creators with the compiled author list (name + orcid).",
   "title": "SIREN — a calibrated reference class for CRISPRi enhancer→gene prediction (v1.0)",
   "upload_type": "software",
   "creators": [
@@ -23,7 +23,7 @@
   ],
   "related_identifiers": [
     {
-      "identifier": "https://github.com/TODO-ACCOUNT/siren-crispr-reference",
+      "identifier": "https://github.com/Gabriele-Bambini/siren-crispr-reference",
       "relation": "isSupplementTo",
       "scheme": "url"
     }

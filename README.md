@@ -44,7 +44,7 @@ Please cite both the preprint and this software release (Zenodo DOI minted from 
 - **Software:** see [`CITATION.cff`](CITATION.cff) — GitHub renders it as a "Cite this repository" block; the same metadata in `.zenodo.json` drives the archived deposit.
 - **Preprint:** *How far do simple baselines go in CRISPRi enhancer–gene prediction? A calibrated reference class, the specificity wall, and the failure of sequence-model counterfactuals.* DOI link added upon bioRxiv posting.
 
-> TODO before submission: expand the placeholder creator name in `CITATION.cff` / `.zenodo.json` to the full author list, and set the repository URL after the first push.
+> TODO before submission: expand the placeholder creator name in `CITATION.cff` / `.zenodo.json` to the full author list, and add the Zenodo DOI once the deposit is minted from tag `v1.0`.
 
 ## License
 MIT (see LICENSE). Benchmark data redistributed under its original license terms; ENCODE data is public domain.
