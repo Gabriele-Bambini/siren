@@ -64,3 +64,17 @@ split chrom-holdout + halo ±25kb ─┘            │
 - Repo `flagship_project_execution/siren/`; log append-only SOLO Add-Content.
 - Ogni nuovo esperimento: (1) pre-registrare soglie nel log PRIMA di guardare i risultati, (2) score positività 1–100 nel messaggio all'utente, (3) aggiornare questa mappa.
 - Prima di ogni nuovo "grande progetto" (sheaf, grafi complessi, nuovi encoder): rileggere T4 e la lezione W3b — complessità ≠ informazione; il routing verso ciò che funziona ha precedenza.
+
+---
+
+## v3 — Stato pubblicazione (2026-08-23, post-freeze round 2)
+
+- Preprint: paper_v0/MANUSCRIPT.md (autori Bambini, De Santis, Tangherloni; bibliografia DOI-verificata Crossref+PubMed; keywords + accession GEO/ENCODE in Data & code availability; sezioni Author contributions/Acknowledgments come skeleton). Artefatti: MANUSCRIPT.docx, MANUSCRIPT_SUBMISSION.docx (figure incorporate per bioRxiv), references.bib, SUBMISSION_CHECKLIST.md.
+- Tool: github.com/Gabriele-Bambini/siren-crispr-reference (PRIVATO fino a submission) - tests inclusi (38 pass/1 skip), CI verde py3.9+3.13 con demo sintetica end-to-end, tag v1.0 + GitHub Release, CITATION.cff schema-valid (cffconvert), .zenodo.json pronti per mint DOI.
+- Registro TRAP aggiornato:
+
+### T13 - .gitignore non ancorato esclude sottocartelle omonime
+Regola `data/` matchava `src/data/` a qualunque profondita': i file erano nel working tree ma MAI committati (invisibile in locale, fatale nei cloni - CI: ModuleNotFoundError 'src.data'). Fix: ancorare alla root (`/data/`) e verificare con `git check-ignore -v <file>` PRIMA di fidarsi dello status locale. Lezione generale: dopo ogni add massivo, confrontare `git ls-files` col contenuto su disco quando entrano nuove cartelle.
+
+### T14 - URL citati a memoria
+URL bibliografici scritti da memoria sono risultati 404 (NeurIPS LightGBM). Regola: ogni URL in README/manoscritto va verificato con HTTP HEAD prima del freeze; hash lunghi non si indovinano.
