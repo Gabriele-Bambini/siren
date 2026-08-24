@@ -4,7 +4,10 @@ Code, results, and transparency artifacts for:
 
 > **How far do simple baselines go in CRISPRi enhancer–gene prediction? A calibrated reference class, the specificity wall, and the failure of sequence-model counterfactuals.**
 
-[![status: preprint](https://img.shields.io/badge/status-preprint_pending-blue)]()
+[![CI](https://github.com/Gabriele-Bambini/siren-crispr-reference/actions/workflows/ci.yml/badge.svg)](https://github.com/Gabriele-Bambini/siren-crispr-reference/actions/workflows/ci.yml)
+[![release](https://img.shields.io/badge/release-v1.0-blue)](https://github.com/Gabriele-Bambini/siren-crispr-reference/releases/tag/v1.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![status: preprint pending](https://img.shields.io/badge/status-preprint_pending-blue)]()
 
 ## What this is
 A leakage-safe benchmark study of CRISPRi enhancer→gene effect prediction on EPCrisprBenchmark K562 (10,356 valid pairs), showing:
@@ -13,6 +16,9 @@ A leakage-safe benchmark study of CRISPRi enhancer→gene effect prediction on E
 3. A **powered pre-registered negative** on Enformer ISD deltas (Δρ = −0.275, CI excludes benefit), after our own audit exposed a base-rate artifact in the initial probe.
 4. An **adversarial robustness program** (charter-governed): learning-to-rank, two-stage decomposition, uncertainty-penalized re-ranking, hyperparameter search — none beats the reference class.
 
+## At a glance
+
+![The specificity wall: training-source x evaluation-context heatmap of Spearman rho on |CRISPRi effect|; signal lives only on the diagonal (Fig. 1 of the preprint).](results/fig_transfer_matrix.png)
 ## Repository layout
 ```
 scripts/    one script per experiment (hpc_*.py); numbers → JSON/MD artifacts
@@ -32,6 +38,8 @@ python3 -m pip install -r requirements.txt
 python3 scripts/hpc_w2c_full_baseline.py       # requires benchmark tables under data/raw/
 # backtests + benchmark comparison (Table 1 canonical path):
 python3 scripts/hpc_backtest_bench.py
+# no-data smoke demo (~20 s, synthetic): split -> backbone -> conformal
+python3 scripts/demo_synthetic.py
 # adversarial program:
 python3 ../stirring scripts (see supplementary/CHARTER.md)
 ```

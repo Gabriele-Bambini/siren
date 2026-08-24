@@ -24,3 +24,5 @@ jobs:
           pip install -r requirements.txt
       - name: Run unit-test suite
         run: python -m pytest tests -q
+      - name: Run synthetic end-to-end demo
+        run: python scripts/demo_synthetic.py

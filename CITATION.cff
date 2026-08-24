@@ -11,13 +11,13 @@ title: >-
   (code & results for "How far do simple baselines go in CRISPRi enhancer–gene
   prediction?")
 authors:
-  - given-name: Gabriele
+  - given-names: Gabriele
     family-names: Bambini
     affiliation: "Università Commerciale Luigi Bocconi, Milano, Italia"
-  - given-name: Lorenzo
+  - given-names: Lorenzo
     family-names: De Santis
     affiliation: "Università Commerciale Luigi Bocconi, Milano, Italia"
-  - given-name: Andrea
+  - given-names: Andrea
     family-names: Tangherloni
     affiliation: "Università Commerciale Luigi Bocconi, Milano, Italia"
 version: v1.0
