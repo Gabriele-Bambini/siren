@@ -78,3 +78,18 @@ Regola `data/` matchava `src/data/` a qualunque profondita': i file erano nel wo
 
 ### T14 - URL citati a memoria
 URL bibliografici scritti da memoria sono risultati 404 (NeurIPS LightGBM). Regola: ogni URL in README/manoscritto va verificato con HTTP HEAD prima del freeze; hash lunghi non si indovinano.
+
+---
+
+## v4 — Audit critico (2026-10): leggere prima `AUDIT_TREE.md`
+
+Correzioni che invalidano voci di questa mappa: W3b (−0.275) non valido e ritirato fino al re-run; "Path B" va riformulato con −distanza come riferimento a zero parametri; "K562 heldout" = screen nuovi sugli stessi cromosomi, non cromosomi held-out; la copertura conformal è nominale solo in media (0.13–0.57 tra le significative); il "96,7% di repressione tra le significative" vale per i sottoinsiemi W3 (e 95% entro 90 kb), sull'intera tabella EPC è 86,3%.
+
+### T15 — Allineamento per indice di pandas
+`pd.Series(np_array).corr(df_filtrato.col)` allinea sulle etichette d'indice: con un indice bucato correla righe sbagliate senza errori. Regola: metriche solo su array posizionali (`src.evaluation.protocol.spearman`).
+
+### T16 — Crop di Enformer
+L'output (896 bin × 128 bp) copre solo i 114.688 bp centrali dei 196.608 in input: bin = (pos − inizio_finestra − 40.960) // 128 (`src.sequence.enformer_readout`).
+
+### T17 — Codice copiato in linea
+Quindici copie dello stesso split/metrica/conformal sono divergite in bug diversi. Regola: un solo modulo testato (`src/evaluation/protocol.py`); le figure leggono i JSON, mai numeri scritti a mano.
