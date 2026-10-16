@@ -10,14 +10,19 @@ Outputs (data/processed/):
   contacts_gm12878_rao2014.tsv.gz parsed Hi-C loops
   screen_inventory.tsv          per-source pair/element/gene counts + sig rates
   qc_report.md                  human-readable QC decisions
-Run: sbatch --qos=stud --partition=stud (see hpc_preprocess.sbatch)
+Run: SIREN_HOME=<data root> python3 scripts/hpc_preprocess.py (on the cluster it was
+submitted via an sbatch wrapper that is not part of the release).
+
+Correzione 2026-10: la query cCRE restituisce distanza -1 per cromosomi assenti,
+che veniva contata come "nearest <= 250bp"; ora esclusa.
 """
 from __future__ import annotations
 import bisect, gzip, os, sys, time
 import pandas as pd
 
-RAW = os.path.expanduser("~/siren_hpc/data/raw")
-PROC = os.path.expanduser("~/siren_hpc/data/processed")
+_HOME = os.environ.get("SIREN_HOME", os.path.expanduser("~/siren_hpc"))
+RAW = f"{_HOME}/data/raw"
+PROC = f"{_HOME}/data/processed"
 os.makedirs(PROC, exist_ok=True)
 T0 = time.time()
 def say(msg): print(f"[{time.time()-T0:7.1f}s] {msg}", flush=True)
@@ -139,7 +144,7 @@ def map_table(df, tag, pad_bp=0):
     m = pd.DataFrame(res, columns=["ccre_overlap","ccre_nearest","dist_nearest"])
     out = pd.concat([df.reset_index(drop=True), m], axis=1)
     rate = (m["ccre_overlap"] != "").mean()
-    near_rate = (m["dist_nearest"] <= 250).mean()
+    near_rate = ((m["dist_nearest"] >= 0) & (m["dist_nearest"] <= 250)).mean()  # -1 = cromosoma assente
     inv_rows.append((f"ccremap_{tag}", len(out), (m['ccre_overlap'] != '').sum(), "", rate))
     say(f"{tag}: cCRE overlap rate={rate:.3f} | nearest<=250bp: {near_rate:.3f}")
     out.to_csv(f"{PROC}/elements_ccremap_{tag}.tsv.gz", sep="\t", index=False)

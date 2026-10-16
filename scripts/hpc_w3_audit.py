@@ -5,13 +5,15 @@ Verifiche: baserate dei segni, concordanza scomposta per direzione, baseline
 maggioritario, p binomiale esatta, bootstrap CI, sbilanciamenti dist/ATAC tra
 strati, stabilita' jackknife del parziale, duplicati elemento→geni.
 """
-import os, json, math, random
+import os, sys, json, math, random
 import numpy as np
 import pandas as pd
 
-REPO = os.path.expanduser("~/siren_hpc"); RES = f"{REPO}/results"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, ROOT)
+from src.evaluation.protocol import spearman as sp  # posizionale (mai allineamento per indice)
+REPO = os.environ.get("SIREN_HOME", os.path.expanduser("~/siren_hpc")); RES = f"{REPO}/results"
 df = pd.read_csv(f"{RES}/w3_enformer_pairs.tsv.gz", sep="\t")
-def sp(a,b): return float(pd.Series(a).rank().corr(pd.Series(b).rank()))
 
 sig = df[df.significant].copy(); nosig = df[~df.significant].copy()
 out = {"n": int(len(df)), "n_sig": int(len(sig)), "elem_unici": int(df.element.nunique())}

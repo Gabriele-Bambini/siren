@@ -1,13 +1,15 @@
-"""End-to-end smoke demo on synthetic data (~20 s CPU, no downloads).
+"""End-to-end smoke demo on synthetic data (~5 s CPU, no downloads).
 
 Generates a fake EPC-like benchmark (elements + element-gene pairs across
-chromosomes), runs the real release pipeline:
+chromosomes) and runs the same protocol the experiment scripts use
+(``src.evaluation.protocol``):
 
-  1. leakage-safe chromosome-holdout split with halo deconfliction
-     (``src.data.splits.split_s1``, validated against ``src.utils.leakage``);
+  1. greedy whole-chromosome holdout with verified +/-25 kb halo;
   2. gradient-boosting backbone on distance + ATAC features (LightGBM);
-  3. split-conformal intervals (``src.evaluation.conformal.conformal_quantile``);
-  4. evaluation with the shipped metrics (``src.evaluation.metrics``).
+  3. cross-conformal 90% intervals from chromosome-grouped out-of-fold
+     residuals (no training row is scored by a model fitted on it);
+  4. evaluation: |prediction| ranking, tie-aware precision@2%, comparison with
+     the zero-parameter -distance reference.
 
 Exits non-zero if any acceptance check fails. Intended for humans verifying
 their install and for CI.
@@ -23,13 +25,7 @@ import pandas as pd
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 
-from src.data.splits import split_s1                      # noqa: E402
-from src.evaluation.conformal import conformal_quantile   # noqa: E402
-from src.evaluation.metrics import (                       # noqa: E402
-    coverage,
-    precision_at_k,
-    spearman_signed,
-)
+from src.evaluation import protocol as P  # noqa: E402
 
 RNG = np.random.default_rng(0)
 
@@ -67,55 +63,54 @@ def main() -> int:
     pairs, elements = make_synthetic()
     print(f"synthetic data: {len(pairs)} pairs / {len(elements)} elements "
           f"(prevalence {pairs['significant'].mean():.3f})")
+    d = pairs.merge(elements, left_on="enhancer_id", right_on="element_id")
 
-    # 1. leakage-safe split with halo deconfliction (real src code path)
-    pairs, meta = split_s1(pairs, elements, heldout_chroms=["chr6"], seed=0)
-    tr = pairs[pairs["split_s1"] == "train"]
-    te = pairs[pairs["split_s1"] == "test"]
-    print(f"split_s1: heldout={meta['heldout_chroms']} "
-          f"train={len(tr)} test={len(te)} moved_by_halo={meta['n_moved_to_test']}")
+    # 1. whole-chromosome holdout + halo verification (same call as the scripts)
+    held, is_te = P.chrom_holdout_split(d["chrom"], d["start"], d["end"], 0.15, 25_000)
+    tr, te = d[~is_te].reset_index(drop=True), d[is_te].reset_index(drop=True)
+    print(f"split: heldout={held} train={len(tr)} test={len(te)} (halo verified)")
     assert len(tr) > 0 and len(te) > 0
 
     feats = ["log10_distance", "atac_overlap", "log10_peak_dist"]
-    X_tr = tr.merge(elements, left_on="enhancer_id", right_on="element_id")[feats]
-    y_tr = tr["lfc_signed"].to_numpy()
-    X_te = te.merge(elements, left_on="enhancer_id", right_on="element_id")[feats]
-    y_te = te["lfc_signed"].to_numpy()
-    sig_te = te["significant"].to_numpy().astype(bool)
-
     # 2. backbone (same family as the reference class); LightGBM preferred,
     #    scikit-learn histogram GB as dependency-light fallback
     try:
         from lightgbm import LGBMRegressor
-        model = LGBMRegressor(n_estimators=300, learning_rate=0.05, num_leaves=31,
-                              min_child_samples=40, random_state=0, verbose=-1)
+        make = lambda: LGBMRegressor(n_estimators=300, learning_rate=0.05, num_leaves=31,
+                                     min_child_samples=40, random_state=0, verbose=-1)
         backend = "lightgbm"
     except ImportError:
         from sklearn.ensemble import HistGradientBoostingRegressor
-        model = HistGradientBoostingRegressor(max_iter=300, learning_rate=0.05,
-                                              random_state=0)
+        make = lambda: HistGradientBoostingRegressor(max_iter=300, learning_rate=0.05, random_state=0)
         backend = "sklearn-HGB"
     print(f"backbone backend: {backend}")
-    rng = np.random.default_rng(0)
-    calib_mask = rng.random(len(X_tr)) < 0.25
-    model.fit(X_tr[~calib_mask], y_tr[~calib_mask])
-    pred_te = model.predict(X_te)
-    resid_cal = np.abs(y_tr[calib_mask] - model.predict(X_tr[calib_mask]))
+    model = make().fit(tr[feats].to_numpy(), tr["lfc_signed"].to_numpy())
+    pred_te = model.predict(te[feats].to_numpy())
 
-    # 3. split-conformal interval at nominal 90%
-    q90 = conformal_quantile(resid_cal, alpha=0.10)
-    lo, hi = pred_te - q90, pred_te + q90
-    cov = coverage(y_te, lo, hi)
-    rho = spearman_signed(np.abs(pred_te), np.abs(y_te))
-    k = max(int(0.02 * len(te)), 1)
-    p_at_k = precision_at_k(sig_te.astype(float), pred_te, k=k, use_abs=True)
+    # 3. cross-conformal interval at nominal 90%
+    folds = tr["chrom"].map(P.balanced_chrom_folds(tr["chrom"], 5)).to_numpy()
+    oof = P.oof_predictions(make, tr[feats].to_numpy(), tr["lfc_signed"].to_numpy(), folds)
+    q90 = P.conformal_quantile(np.abs(oof - tr["lfc_signed"].to_numpy()), alpha=0.10)
+    sig_te = te["significant"].to_numpy().astype(bool)
+    cov = P.coverage_report(te["lfc_signed"], pred_te, q90, {"significant": sig_te})
+
+    # 4. ranking by |prediction| vs the zero-parameter -distance reference
+    score = P.strength(pred_te)
+    rho = P.spearman(score, te["lfc_signed"].abs())
+    # budget 10%: with ~60 test pairs a 2% budget is K=1 (one coin flip); K is reported
+    frac = 0.10
+    k = P.topk_size(len(te), frac)
+    p_at_k = P.precision_at_frac(sig_te, score, frac)
+    p_dist = P.precision_at_frac(sig_te, -te["log10_distance"].to_numpy(), frac)
     base_rate = float(sig_te.mean())
 
-    print(f"conformal: q90={q90:.4f} coverage={cov:.3f} (nominal 0.90)")
-    print(f"ranking:   spearman(|pred|,|true|)={rho:.3f}  precision@2%={p_at_k:.3f} vs base rate={base_rate:.3f}")
+    print(f"conformal: q90={q90:.4f} coverage={cov['coverage']:.3f} (nominal 0.90); "
+          f"among significant {cov['significant'].get('True', {}).get('coverage')}")
+    print(f"ranking:   spearman(|pred|,|true|)={rho:.3f}  precision@10% (K={k})={p_at_k:.3f} "
+          f"(-distance {p_dist:.3f}) vs base rate={base_rate:.3f}")
 
     checks = {
-        "coverage_close_to_nominal": bool(cov >= 0.80),
+        "coverage_close_to_nominal": bool(cov["coverage"] >= 0.80),
         "ranking_beats_chance": bool(rho > 0.15),
         "topk_enriched": bool(p_at_k > base_rate * 2),
     }

@@ -4,9 +4,11 @@ import os, sys, json
 import numpy as np
 import pandas as pd
 
-REPO = os.path.expanduser("~/siren_hpc"); RES = f"{REPO}/results"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, ROOT)
+from src.evaluation.protocol import spearman as sp  # posizionale (mai allineamento per indice)
+REPO = os.environ.get("SIREN_HOME", os.path.expanduser("~/siren_hpc")); RES = f"{REPO}/results"
 df = pd.read_csv(f"{RES}/w3_enformer_pairs.tsv.gz", sep="\t")
-def sp(a,b): return float(pd.Series(a).rank().corr(pd.Series(b).rank()))
 out = {"n_pairs": int(len(df)), "n_significant": int(df.significant.sum())}
 
 rho_abs = sp(df.log_abs_delta, df.lfc.abs())

@@ -5,20 +5,26 @@ Feature: M1 dist_tss | M2 +ATAC K562 (overlap binario + dist. picco) |
          M3 +powerlaw.Score ABC + classi cCRE (PLS/pELS/dELS/CTCF-only)
 Bias documentato: powerlaw.Score = modello solo-contatto; classi Registry = attivita'
 pan-cancro/non K562-specifica -> blocco attivita' v0, limite inferiore onesto.
+
+Correzioni 2026-10 (supplementary/AUDIT_TREE.md): split condiviso con halo
+verificato (il loop originale andava in TypeError se attivato), overlap ATAC
+esatto, precision@2% senza soglia minima K>=30, Spearman posizionale.
 """
 from __future__ import annotations
 import os, sys, json, time, glob
 import numpy as np
 import pandas as pd
 
-REPO = os.path.expanduser("~/siren_hpc")
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, ROOT)
+from src.data.benchmark import add_peak_features, load_peaks
+from src.evaluation import protocol as P
+REPO = os.environ.get("SIREN_HOME", os.path.expanduser("~/siren_hpc"))
 RAW = f"{REPO}/data/raw"; PROC = f"{REPO}/data/processed"; RES = f"{REPO}/results"
-sys.path.insert(0, REPO)
-from src.utils.leakage import check_halo_overlap
 
 T0 = time.time()
 def say(m): print(f"[{time.time()-T0:6.1f}s] {m}", flush=True)
-def spearman(a,b): return float(pd.Series(a).rank().corr(pd.Series(b).rank()))
+spearman = P.spearman
 def sba(pred,true):
     p,t = np.sign(pred), np.sign(true); m=t!=0; p,t=p[m],t[m]
     vals=[float((p[t==c]==c).mean()) for c in (-1.,1.) if (t==c).any()]
@@ -37,35 +43,10 @@ epc["element_chrom"] = epc["element_chrom"].astype(str)
 
 # ---------- ATAC K562: overlap + distanza picco ----------
 peak_path = sorted(glob.glob(f"{RAW}/REF/ENCODE_ATAC_K562_*peaks.bed.gz"))[0]
-pk = pd.read_csv(peak_path, sep="\t", header=None,
-                 usecols=[0,1,2], names=["chrom","start","end"], low_memory=False)
-pk["chrom"] = pk["chrom"].astype(str)
+pk = load_peaks(peak_path)
 say(f"ATAC peaks={len(pk)} da {os.path.basename(peak_path)}")
-atac_ov = np.zeros(len(epc), dtype=np.int8)
-atac_dist = np.full(len(epc), 5000.0)
-starts_by, ends_by = {}, {}
-for c, sub in pk.groupby("chrom"):
-    ss = sub.sort_values("start")
-    starts_by[c] = ss["start"].to_numpy()
-    ends_by[c] = ss["end"].to_numpy()
-ch = epc["element_chrom"].values
-st = epc["element_start"].astype(np.int64).values - 25
-en = epc["element_end"].astype(np.int64).values + 25
-mid = (st+en)//2
-for i in range(len(epc)):
-    s_arr = starts_by.get(ch[i]); e_arr = ends_by.get(ch[i])
-    if s_arr is None: continue
-    k = np.searchsorted(s_arr, mid[i])
-    ov = False; best = 5000
-    for j in (k-1, k):
-        if 0 <= j < len(s_arr):
-            if e_arr[j] > st[i] and s_arr[j] < en[i]: ov = True
-            d = max(0, max(s_arr[j]-en[i], st[i]-e_arr[j]))
-            best = min(best, d)
-    if ov: atac_ov[i] = 1
-    atac_dist[i] = min(best, 5000)
-epc["atac_ov"] = atac_ov
-epc["atac_dist"] = np.log1p(atac_dist)
+add_peak_features(epc, pk, chrom="element_chrom", start="element_start", end="element_end")
+atac_ov = epc["atac_ov"].to_numpy()
 say(f"ATAC overlap rate (+-25bp): {atac_ov.mean():.3f}")
 
 # ---------- classi cCRE ----------
@@ -98,23 +79,10 @@ m = m[m["adiff"] <= 100].sort_values("adiff").drop_duplicates(
 say(f"coppie con powerlaw: {len(m)} su {len(epc)} ({len(m)/len(epc):.1%})")
 
 # ---------- split S1 (greedy chrom-holdout + halo) ----------
-elem = m.groupby(["element_chrom","element_start","element_end"], as_index=False).size().rename(columns={"size":"n_pairs"})
-cnt = elem.groupby("element_chrom")["n_pairs"].sum().sort_values(ascending=False)
-total = cnt.sum(); test_chroms = []; acc = 0
-for chn, n in cnt.items():
-    if acc/total >= 0.15: break
-    test_chroms.append(chn); acc += n
-tr_e = elem[~elem.element_chrom.isin(test_chroms)]; te_e = elem[elem.element_chrom.isin(test_chroms)]
-for it in range(20):
-    viol = check_halo_overlap(list(zip(tr_e.element_chrom,tr_e.element_start,tr_e.element_end)),
-                              list(zip(te_e.element_chrom,te_e.element_start,te_e.element_end)), halo_bp=25_000)
-    if not viol: break
-    bad = {(v[0],v[1],v[2]) for v in viol}
-    mask = pd.Series(list(zip(tr_e.element_chrom,tr_e.element_start,tr_e.element_end)), index=tr_e.index).isin(bad)
-    te_e = pd.concat([te_e, tr_e[mask]]); tr_e = tr_e[~mask]
-keys = ["element_chrom","element_start","element_end"]
-tr = m.merge(tr_e[keys], on=keys); te = m.merge(te_e[keys], on=keys)
-say(f"S1: train={len(tr)} test={len(te)} chr={test_chroms} halo_iter={it}")
+m = m.reset_index(drop=True)
+test_chroms, is_te = P.chrom_holdout_split(m.element_chrom, m.element_start, m.element_end, 0.15, 25_000)
+tr = m[~is_te].reset_index(drop=True); te = m[is_te].reset_index(drop=True)
+say(f"S1: train={len(tr)} test={len(te)} chr={test_chroms} (halo verificato)")
 
 from lightgbm import LGBMRegressor
 def fit_eval(feats, tag):
@@ -122,8 +90,7 @@ def fit_eval(feats, tag):
                       min_child_samples=40, random_state=0, verbose=-1)
     g.fit(tr[feats].values, tr.lfc_signed.values)
     p = g.predict(te[feats].values)
-    order = np.argsort(-np.abs(p)); k = max(30, int(0.02*len(te)))
-    pak = float(np.mean(te.significant.values.astype(bool)[order[:k]]))
+    pak = P.precision_at_frac(te.significant.values.astype(bool), P.strength(p), 0.02)
     r = dict(model=tag, n_feats=len(feats), spearman=round(spearman(p, te.lfc_signed.values),4),
              sign_bal_acc=round(sba(p, te.lfc_signed.values),4), prec_at_2pct=round(pak,4))
     say(json.dumps(r)); return r
