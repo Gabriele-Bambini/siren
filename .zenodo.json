@@ -6,6 +6,10 @@
     {
       "name": "Bambini, Gabriele",
       "affiliation": "Università Commerciale Luigi Bocconi, Milano, Italia"
+    },
+    {
+      "name": "Tangherloni, Andrea",
+      "affiliation": "Università Commerciale Luigi Bocconi, Milano, Italia"
     }
   ],
   "description": "<p>Code, experiment scripts, result artifacts, and transparency materials (append-only project log with pre-registrations, adversarial-program charter, stirring log, trap register) for the study <em>How far do simple baselines go in CRISPRi enhancer–gene prediction? A calibrated reference class, the specificity wall, and the failure of sequence-model counterfactuals.</em> Includes leakage-safe chromosome-holdout splitting with halo deconfliction, the distance+ATAC gradient-boosting backbone with split-conformal intervals, the Enformer ISD powered replication (negative), and the adversarial robustness program.</p>",
