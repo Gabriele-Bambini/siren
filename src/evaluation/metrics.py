@@ -373,7 +373,8 @@ def paired_bootstrap_loci(
         "b_ci_high": b_ci[1],
         "delta_ci_low": d_ci[0],
         "delta_ci_high": d_ci[1],
-        "p_delta_gt_zero": float(np.nanmean(d_draws > 0.0)) if n_valid else float("nan"),
+        # over valid draws only (NaN > 0 is False and used to bias this towards 0)
+        "p_delta_gt_zero": float(np.mean(d_draws[np.isfinite(d_draws)] > 0.0)) if n_valid else float("nan"),
         "p_value": p_two_sided,
     }
 

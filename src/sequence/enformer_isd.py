@@ -18,7 +18,7 @@ Project-relative usage::
     from src.sequence.enformer_isd import EnformerISDEncoder, DEFAULT_TRACKS
 
     enc = EnformerISDEncoder(weights_dir="checkpoints/enformer",
-                             track_indices={"CAGE": 4675, "ATAC": 8, "H3K27ac": 12},
+                             track_indices={"CAGE": 4828},  # K562 CAGE (CNhs11250)
                              sequence_fn=my_pyfaidx_fetcher)
     deltas = enc.silencing_delta(Region("chr7", 55086700, 55087200),
                                  mask_interval=(55086700, 55087200))
@@ -175,8 +175,10 @@ class EnformerISDEncoder(SequenceEncoder):
                 When None, falls back to ``$SIREN_ENFORMER_WEIGHTS``. Weights
                 are never downloaded (project policy).
             track_indices: Mapping track name -> column index inside the chosen
-                model head, e.g. ``{"CAGE": 4675}``; required before predicting
-                because Enformer's 5313 human columns are cell-type specific.
+                model head, e.g. ``{"CAGE": 4828}`` (K562 CAGE; see
+                ``src.sequence.enformer_readout.K562_CAGE_TRACKS``); required
+                before predicting because Enformer's 5313 human columns are
+                cell-type specific (4675 is merely the first CAGE track).
             sequence_fn: Callable ``(chrom, start, end) -> str`` returning the
                 reference genome slice (e.g. backed by ``pyfaidx``). Required
                 by :meth:`silencing_delta` unless ``_fetch_window`` is
@@ -458,7 +460,10 @@ class EnformerISDEncoder(SequenceEncoder):
 
         Returns:
             Mapping track name -> float32 delta array of shape ``(T,)`` over
-            prediction bins (bin width ≈ window / T).
+            prediction bins. For the official model T=896 bins of 128 bp that
+            cover only the central 114,688 bp of the window (40,960 bp are
+            cropped on each side): map positions with
+            ``src.sequence.enformer_readout.output_bin``, not ``pos // (window/T)``.
 
         Raises:
             RuntimeError: Missing dependency or weights directory.

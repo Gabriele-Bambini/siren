@@ -21,6 +21,7 @@ defines. Coordinates are 0-based half-open throughout.
 from __future__ import annotations
 
 import bisect
+import math
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 
@@ -217,16 +218,23 @@ def kmer_identity_ok(
 ) -> bool:
     """True iff the sequence pair is certified *not* near-identical.
 
-    Conservative approximation, documented as such: sequence identity is
-    estimated from the strand-collapsed k-mer Jaccard ``J`` as
-    ``J ** (1 / k)`` (Mash-style ANI approximation) and compared against
-    ``max_identity``. This is an alignment-free *approximation*, not an
-    alignment; it is conservative in the leakage sense because shared exact
-    k-mers count on both strands and every unassessable input fails closed
-    (returns ``False``, i.e. "cannot certify safety"):
+    Alignment-free approximation, documented as such. From the strand-collapsed
+    k-mer sets ``A``, ``B`` two identity estimates are formed and the larger
+    (more conservative) one is compared against ``max_identity``:
 
-    * either sequence shorter than ``min_len``;
-    * neither sequence yields at least one clean (ACGT-only) k-mer.
+    * Mash: ``1 + ln(2J / (1 + J)) / k`` with ``J`` the Jaccard index
+      (Ondov et al. 2016). The previous ``J ** (1/k)`` under-estimated identity,
+      i.e. erred on the *unsafe* side;
+    * containment: ``(|A & B| / min(|A|, |B|)) ** (1/k)``, so that a short
+      element contained (even exactly) in a long one is not certified as
+      dissimilar just because its k-mers are a small fraction of the union.
+
+    Limits: with ``k=21`` the expected fraction of shared k-mers at identity
+    ``p`` is ~``p**21`` (about 1% at p=0.8), so sequence pairs near or below the
+    0.8 threshold can share no k-mer at all and be certified; this is a screen
+    for near-duplicates, not a homology search. Unassessable inputs fail closed
+    (``False``): either sequence shorter than ``min_len``, or no clean
+    (ACGT-only) k-mer in one of them.
     """
     if not 0.0 <= max_identity <= 1.0:
         raise ValueError(f"max_identity must be in [0, 1], got {max_identity}")
@@ -240,10 +248,13 @@ def kmer_identity_ok(
     kmers_b = _canonical_kmers(seq_b, k)
     if not kmers_a or not kmers_b:
         return False
-    union = len(kmers_a | kmers_b)
-    jaccard = len(kmers_a & kmers_b) / union
-    approx_identity = jaccard ** (1.0 / k)
-    return approx_identity <= max_identity
+    inter = len(kmers_a & kmers_b)
+    if inter == 0:
+        return True
+    jaccard = inter / len(kmers_a | kmers_b)
+    mash_identity = 1.0 + math.log(2.0 * jaccard / (1.0 + jaccard)) / k
+    containment_identity = (inter / min(len(kmers_a), len(kmers_b))) ** (1.0 / k)
+    return max(mash_identity, containment_identity) <= max_identity
 
 
 def _guide_and_element(record: object) -> tuple[str, str]:

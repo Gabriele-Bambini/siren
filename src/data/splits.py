@@ -66,7 +66,7 @@ _COL_START = ("start", "chrom_start", "begin", "pos_start")
 _COL_END = ("end", "chrom_end", "stop", "pos_end")
 _COL_ELEMENT_ID = ("element_id", "id", "peak_id", "name", "accession")
 _COL_ENHANCER = (
-    "enhancer_id", "enhancer", "e_id", "enh_element_id",
+    "element_id", "enhancer_id", "enhancer", "e_id", "enh_element_id",
     "candidate_enhancer_id", "enhancer_peak_id", "peak_id",
 )
 _COL_GENE = (
@@ -89,7 +89,10 @@ _COL_YEAR = ("year", "publication_year", "pub_year", "date_year")
 def _pick_col(df: pd.DataFrame, candidates: Sequence[str], required: bool = True) -> Optional[str]:
     """Ritorna il nome reale della prima colonna che matcha i candidati.
 
-    Match esatto case-insensitive, poi match per suffisso (es. ``screen_context``).
+    Match esatto case-insensitive, poi match per suffisso **su confine "_"**
+    (es. ``screen_context`` per ``context``). Il suffisso libero di prima
+    sceglieva colonne sbagliate senza errori: ``gene_id`` come enhancer (finisce
+    in ``e_id``), ``laboratory``/``assay``/``study`` come label (finiscono in ``y``).
     Solleva :class:`KeyError` con messaggio esplicito se ``required`` e assente.
     """
     lower_map = {str(c).lower().strip(): str(c) for c in df.columns}
@@ -98,7 +101,7 @@ def _pick_col(df: pd.DataFrame, candidates: Sequence[str], required: bool = True
             return lower_map[cand]
     for cand in candidates:
         for low, orig in lower_map.items():
-            if low.endswith(cand) and low != cand:
+            if low.endswith("_" + cand):
                 return orig
     if required:
         raise KeyError(
@@ -108,14 +111,26 @@ def _pick_col(df: pd.DataFrame, candidates: Sequence[str], required: bool = True
     return None
 
 
-def _count_positives(labels: pd.Series) -> int:
-    """Conta i positivi: label numerica == 1, altrimenti truthy booleana."""
+def _count_positives(labels: pd.Series) -> Optional[int]:
+    """Conta i positivi di una label binaria (0/1 o booleana).
+
+    Per label continue (es. LFC firmato) "== 1" non ha significato: ritorna None.
+    """
     if len(labels) == 0:
         return 0
+    if labels.dtype == bool:
+        return int(labels.sum())
     num = pd.to_numeric(labels, errors="coerce")
-    if bool(num.notna().any()):
+    vals = set(num.dropna().unique().tolist())
+    if vals <= {0, 1}:
         return int((num == 1).sum())
-    return int(labels.fillna(False).astype(bool).sum())
+    return None
+
+
+def _norm_chrom(s: pd.Series) -> pd.Series:
+    """'chr19', '19', 19 -> '19'; il sentinel dei mancanti resta tale."""
+    t = s.astype(str)
+    return t.where(~t.str.lower().str.startswith("chr"), t.str[3:])
 
 
 def _as_str_series(s: pd.Series) -> pd.Series:
@@ -158,8 +173,9 @@ def _overlaps(chrom_arr: pd.Series, start_arr: np.ndarray, end_arr: np.ndarray,
               intervals: Dict[str, Tuple[np.ndarray, np.ndarray, np.ndarray]]) -> np.ndarray:
     """Maschera booleana: query interval vs. intervalli espansi per cromosoma.
 
-    Per ogni query conta gli intervalli con ``start < query_end`` (searchsorted)
-    e verifica se il running-max dei loro ``end`` supera ``query_start``.
+    Per ogni query conta gli intervalli con ``start <= query_end`` (searchsorted)
+    e verifica se il running-max dei loro ``end`` raggiunge ``query_start``:
+    confine incluso (gap == halo e' violazione), come il checker canonico.
     """
     n = len(chrom_arr)
     res = np.zeros(n, dtype=bool)
@@ -175,37 +191,30 @@ def _overlaps(chrom_arr: pd.Series, start_arr: np.ndarray, end_arr: np.ndarray,
         iv_starts, _iv_ends, iv_run_max = iv
         sel = ch == ch_val
         q_start, q_end = starts_arr[sel], ends_arr[sel]
-        idx = np.searchsorted(iv_starts, q_end, side="left")
+        idx = np.searchsorted(iv_starts, q_end, side="right")
         hit = np.zeros(int(sel.sum()), dtype=bool)
         pos = idx > 0
-        hit[pos] = iv_run_max[idx[pos] - 1] > q_start[pos]
+        hit[pos] = iv_run_max[idx[pos] - 1] >= q_start[pos]
         res[sel] = hit
     return res
 
 
 def _call_canonical_checker(
-    train_pairs: pd.DataFrame, test_elements: pd.DataFrame, halo_bp: int
+    train_elements: pd.DataFrame, test_elements: pd.DataFrame, halo_bp: int
 ) -> Tuple[Optional[Any], str]:
-    """Invoca il checker canonico ``src.utils.leakage.check_halo_overlap``.
+    """Valida con ``src.utils.leakage.check_halo_overlap`` (elementi, non coppie).
 
-    Tenta firme plausibili; ritorna ``(risultato, stato)`` con stato in
-    {unavailable, ok, signature_mismatch, error:<msg>}.
+    Gli argomenti hanno colonne ``echrom/estart/eend``; il checker riceve tuple
+    ``(chrom, start, end)``. La versione precedente passava DataFrame (iterarli
+    da' i nomi di colonna), finiva sempre in ``signature_mismatch`` e quindi la
+    "validazione finale" non avveniva mai.
     """
     if check_halo_overlap is None:
         return None, "unavailable"
-    attempts: List[Tuple[Tuple[Any, ...], Dict[str, Any]]] = [
-        ((train_pairs, test_elements, halo_bp), {}),
-        ((train_pairs, test_elements), {"halo_bp": halo_bp}),
-        ((train_pairs, test_elements), {}),
-    ]
-    for args, kwargs in attempts:
-        try:
-            return check_halo_overlap(*args, **kwargs), "ok"  # type: ignore[misc]
-        except (TypeError, ValueError):
-            continue
-        except Exception as exc:  # checker presente ma input inattesi
-            return None, f"error:{type(exc).__name__}:{exc}"
-    return None, "signature_mismatch"
+    as_tuples = lambda d: list(zip(d["echrom"].astype(str), d["estart"].astype("int64"),
+                                   d["eend"].astype("int64")))
+    return check_halo_overlap(as_tuples(train_elements), as_tuples(test_elements),
+                              halo_bp=halo_bp), "ok"
 
 
 # --------------------------------------------------------------------------- #
@@ -305,16 +314,22 @@ def split_s1(
 
     enh_col, gene_col, e_coord, g_coord = _pair_element_coords(pairs, elements)
 
-    # Cromosoma della coppia: lato enhancer, fallback lato gene.
-    pair_chrom = e_coord["_chrom"].where(e_coord["_chrom"].notna(), g_coord["_chrom"])
-    all_chroms = pd.concat([pair_chrom, elements[_pick_col(elements, _COL_CHROM, required=True)].astype(str)],
-                           ignore_index=True)
-    heldout = choose_heldout_chromosomes(all_chroms.dropna().tolist(), frac=frac, seed=seed,
-                                         forced=heldout_chroms)
+    # Cromosoma della coppia: lato enhancer, fallback lato gene (nomi normalizzati).
+    e_ch = e_coord["_chrom"]
+    pair_chrom = e_ch.where(~(e_ch.isna() | (e_ch == _MISSING)), g_coord["_chrom"])
+    pair_chrom = _norm_chrom(pair_chrom.fillna(_MISSING).astype(str))
+    unknown = np.asarray(pair_chrom.isin([_MISSING, "nan", "None"]), dtype=bool)
+    if unknown.any():
+        warnings.warn(f"S1: {int(unknown.sum())} coppie senza coordinate risolte -> split 'unknown'",
+                      RuntimeWarning, stacklevel=2)
+    # candidati = cromosomi che portano coppie (non contig senza coppie, non 'nan')
+    forced = None if heldout_chroms is None else [_norm_chrom(pd.Series([str(c)]))[0] for c in heldout_chroms]
+    heldout = choose_heldout_chromosomes(pair_chrom[~unknown].tolist(), frac=frac, seed=seed,
+                                         forced=forced)
     meta["heldout_chroms"] = heldout
     heldout_set = set(heldout)
 
-    is_test = np.asarray(pair_chrom.astype(str).isin(heldout_set), dtype=bool).copy()
+    is_test = np.asarray(pair_chrom.isin(heldout_set), dtype=bool).copy() & ~unknown
     moved = np.zeros(n, dtype=bool)
 
     enh_ids = _as_str_series(pairs[enh_col]) if enh_col is not None else pd.Series([None] * n, dtype="object")
@@ -326,7 +341,7 @@ def split_s1(
     el_end_col = _pick_col(elements, _COL_END, required=True)
     el_coords = pd.DataFrame({
         "eid": _as_str_series(elements[el_id_col]),
-        "echrom": _as_str_series(elements[el_chrom_col]),
+        "echrom": _norm_chrom(_as_str_series(elements[el_chrom_col])),
         "estart": pd.to_numeric(elements[el_start_col], errors="coerce"),
         "eend": pd.to_numeric(elements[el_end_col], errors="coerce"),
     }).dropna(subset=["estart", "eend"]).sort_values("eid", kind="stable").drop_duplicates("eid", keep="first")
@@ -338,7 +353,13 @@ def split_s1(
 
     iterations = 0
     while iterations < _MAX_HALO_ITERATIONS:
-        train_mask = ~is_test
+        # coppie di train che referenziano un elemento gia' di test escono dal train
+        # (prima `cand_ids -= test_elements` le lasciava nel train in silenzio)
+        shared = np.asarray(enh_ids.isin(test_elements) | gene_ids.isin(test_elements), dtype=bool) & ~is_test & ~unknown
+        if shared.any():
+            is_test |= shared
+            moved |= shared
+        train_mask = ~is_test & ~unknown
         if not train_mask.any() or not test_elements:
             break
         el_test = el_coords[el_coords["eid"].isin(test_elements)]
@@ -373,22 +394,23 @@ def split_s1(
     meta["iterations"] = iterations
     meta["n_moved_to_test"] = int(moved.sum())
 
-    # Validazione finale con il checker canonico, se disponibile.
-    train_df = out.loc[~is_test].copy()
-    el_test_df = elements[_as_str_series(elements[el_id_col]).isin(test_elements)].copy()
-    _res, status = _call_canonical_checker(train_df, el_test_df, halo_bp)
+    # Validazione finale con il checker canonico: elementi usati dal train vs test.
+    train_mask = ~is_test & ~unknown
+    train_ids = set(enh_ids[train_mask].dropna()) | set(gene_ids[train_mask].dropna())
+    el_train = el_coords[el_coords["eid"].isin(train_ids - test_elements)]
+    el_test = el_coords[el_coords["eid"].isin(test_elements)]
+    _res, status = _call_canonical_checker(el_train, el_test, halo_bp)
     meta["canonical_validation"] = status
     if status == "ok":
-        try:
-            violated = bool(len(_res)) if hasattr(_res, "__len__") else bool(_res)
-        except Exception:
-            violated = False
-        meta["canonical_violations"] = int(len(_res)) if violated and hasattr(_res, "__len__") else 0
+        meta["canonical_violations"] = len(_res)
+        if _res:
+            raise RuntimeError(f"S1: {len(_res)} violazioni halo residue dopo la deconfliction")
 
-    out["split_s1"] = np.where(is_test, "test", "train")
+    out["split_s1"] = np.where(unknown, "unknown", np.where(is_test, "test", "train"))
     out["s1_moved_by_halo"] = moved
-    meta["n_train"] = int((~is_test).sum())
+    meta["n_train"] = int(train_mask.sum())
     meta["n_test"] = int(is_test.sum())
+    meta["n_unknown"] = int(unknown.sum())
     return out, meta
 
 
@@ -592,7 +614,7 @@ def make_splits(
 
     report: Dict[str, Any] = {
         "n": int(len(pairs)),
-        "positives": int(_count_positives(labels)),
+        "positives": _count_positives(labels),  # None for non-binary labels
         "seed": int(seed),
         "per_split": {},
     }
@@ -601,8 +623,8 @@ def make_splits(
         split_col = {"S1": "split_s1", "S2": "split_s2", "S4": "split_s4"}.get(name)
         entry: Dict[str, Any] = dict(metas.get(name, {}))
         if split_col in df.columns:
-            entry["positives_train"] = int(_count_positives(df.loc[df[split_col] == "train", label_col])) if label_col else 0
-            entry["positives_test"] = int(_count_positives(df.loc[df[split_col] == "test", label_col])) if label_col else 0
+            entry["positives_train"] = _count_positives(df.loc[df[split_col] == "train", label_col]) if label_col else None
+            entry["positives_test"] = _count_positives(df.loc[df[split_col] == "test", label_col]) if label_col else None
         report["per_split"][name] = entry
 
     if write:

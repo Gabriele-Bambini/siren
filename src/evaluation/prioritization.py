@@ -106,6 +106,7 @@ _SCORE_COLUMN_CANDIDATES: Dict[str, Tuple[str, ...]] = {
 }
 
 _FALSEISH_STRINGS = frozenset({"", "false", "f", "no", "n", "none", "nan"})
+_SIGNED_EFFECT_COLUMNS = frozenset({"delta_pred"})
 
 
 # ---------------------------------------------------------------------------
@@ -160,9 +161,12 @@ def _candidate_order(sub: pd.DataFrame, policy: str, rng: np.random.Generator) -
     n = len(sub)
     if policy == POLICY_RANDOM:
         return rng.permutation(n)
-    scores = pd.to_numeric(
-        sub[_resolve_score_column(sub, policy)], errors="coerce"
-    ).to_numpy(dtype=float)
+    col = _resolve_score_column(sub, policy)
+    scores = pd.to_numeric(sub[col], errors="coerce").to_numpy(dtype=float)
+    if col in _SIGNED_EFFECT_COLUMNS:
+        # a signed effect prediction ranks by magnitude: CRISPRi hits are mostly
+        # negative, so "largest first" on the signed value puts them last
+        scores = np.abs(scores)
     if policy == POLICY_DISTANCE:  # nearest-first, missing distance -> +inf
         key = np.where(np.isfinite(scores), scores, np.inf)
         return np.argsort(key, kind="stable")
@@ -290,8 +294,9 @@ def run_budget_replay(
             runnable ones from the available columns.
         alpha: Conformal miscoverage level used to calibrate ``tau`` when it is
             not given explicitly.
-        validation_df: Optional held-out frame with ``radius_col`` used to pick
-            ``tau``; falls back to the replay frame's own radii (in-sample).
+        validation_df: Held-out frame with ``radius_col`` used to pick ``tau``.
+            Required for the abstention policy unless ``tau`` is given: the
+            former fallback calibrated on the replay (test) frame's own radii.
         tau: Explicit abstention threshold overriding calibration.
         recall_target: Target recall for number-needed-to-screen.
         restrict_score_policy: If set, keep only rows whose optional
@@ -347,6 +352,10 @@ def run_budget_replay(
     curves: Dict[str, List[Dict[str, float]]] = {}
     taus: Dict[str, Optional[float]] = {}
     summary_nns: Dict[str, List[float]] = {}
+    # recall / NNS denominators: positives in the full context, *before* any
+    # abstention, so that policies are compared against the same universe
+    n_sig_full = {ctx: int(significant_all[pos].sum())
+                  for ctx, pos in _group_positions(contexts_all).items()}
 
     for policy in pol_list:
         frame, significant, contexts = work, significant_all, contexts_all
@@ -357,7 +366,8 @@ def run_budget_replay(
             elif validation_df is not None:
                 tau_used = calibrate_conformal_tau(validation_df[radius_col], alpha)
             else:
-                tau_used = calibrate_conformal_tau(work[radius_col], alpha)
+                raise ValueError("rank_abstention needs validation_df or an explicit tau; "
+                                 "calibrating on the evaluated frame itself would be in-sample")
             radii = pd.to_numeric(
                 frame[radius_col], errors="coerce"
             ).to_numpy(dtype=float)
@@ -380,7 +390,8 @@ def run_budget_replay(
             sig_sorted = significant[positions[order]]
             cum_hits = np.cumsum(sig_sorted)
             n_cand = int(len(order))
-            n_sig = int(sig_sorted.sum())
+            n_sig_kept = int(sig_sorted.sum())
+            n_sig = n_sig_full[ctx]
 
             for k in ks_list:
                 kk = min(k, n_cand)
@@ -394,6 +405,7 @@ def run_budget_replay(
                         "k": k,
                         "n_candidates": n_cand,
                         "n_significant": n_sig,
+                        "n_significant_retained": n_sig_kept,
                         "n_screened": kk,
                         "hits": hits,
                         "precision_at_k": hits / kk if kk else 0.0,

@@ -182,7 +182,13 @@ def pu_mask(df: "pd.DataFrame", tested_col: str = "tested") -> "pd.Series":
             f"Colonna '{tested_col}' assente: impossibile costruire la PU mask "
             "(serve il flag tested del PairLabel)."
         )
-    return df[tested_col].fillna(False).astype(bool)
+    # astype(bool) on strings made "False"/"0" truthy (non-empty string): parse explicitly
+    col = df[tested_col]
+    if col.dtype == bool:
+        return col.copy()
+    truthy = {"true", "1", "yes", "y", "t", "1.0"}
+    return col.map(lambda v: (bool(v) if isinstance(v, (bool, int, float)) and v == v
+                              else str(v).strip().lower() in truthy)).astype(bool)
 
 
 def sign_convention_doc() -> str:
