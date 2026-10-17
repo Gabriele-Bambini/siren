@@ -81,6 +81,15 @@ Ambiente dell'audit: le tabelle EPCrisprBenchmark (GitHub, EngreitzLab/CRISPR_co
 
 ## Cosa rieseguire sul cluster (in ordine)
 
+Tutto in un solo job: dal checkout del repo sul cluster,
+`export SIREN_HOME=~/siren_hpc && sbatch scripts/hpc_rerun_all.sbatch`. Lo script
+salva prima `results/` in `results_preaudit_<timestamp>/`, esegue i passi qui sotto
+nello stesso ordine (un passo fallito non ferma gli altri; riepilogo degli exit code
+alla fine) e raccoglie in `$SIREN_HOME/rerun_<timestamp>.tar.gz` i file da
+committare in `results/`. Provato end-to-end sul layout di smoke (dati reali del
+benchmark + stand-in sintetici, Enformer con stub): 18/18 passi con exit 0.
+Equivalente manuale:
+
 ```bash
 export SIREN_HOME=~/siren_hpc          # data/raw, data/processed, results
 python3 scripts/hpc_preprocess.py      # se data/processed manca

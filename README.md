@@ -50,7 +50,7 @@ python3 scripts/hpc_reference_eval.py      # corrected Table 1 (add --no-atac wi
 python3 scripts/demo_synthetic.py          # no-data smoke demo (~5 s): split -> backbone -> conformal
 ```
 
-`hpc_reference_eval.py --no-atac` needs only the two EPCrisprBenchmark tables (`EPCrisprBenchmark_combined_data.{training_K562,heldout_5_cell_types}.GRCh38.tsv.gz` from EngreitzLab/CRISPR_comparison) under `$SIREN_HOME/data/raw/D6d_crispr_comparison/resources/crispr_data/`. The full re-run order is at the end of `supplementary/AUDIT_TREE.md`.
+`hpc_reference_eval.py --no-atac` needs only the two EPCrisprBenchmark tables (`EPCrisprBenchmark_combined_data.{training_K562,heldout_5_cell_types}.GRCh38.tsv.gz` from EngreitzLab/CRISPR_comparison) under `$SIREN_HOME/data/raw/D6d_crispr_comparison/resources/crispr_data/`. On the cluster the whole corrected pipeline runs as one job: `sbatch scripts/hpc_rerun_all.sbatch` from the checkout (it backs up `results/` first and bundles the outputs to commit); the step order is at the end of `supplementary/AUDIT_TREE.md`.
 
 Unit tests: `pytest tests` (65 passed locally on Python 3.13; CI runs the suite and the demo on Python 3.9 and 3.13).
 
