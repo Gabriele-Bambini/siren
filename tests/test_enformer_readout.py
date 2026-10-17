@@ -1,7 +1,9 @@
 """Coordinate tests for the Enformer ISD readout (no torch needed)."""
 
+import os
 import subprocess
 import sys
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -42,8 +44,9 @@ def test_cage_readout_uses_k562_tracks_only():
 
 def test_stable_seed_is_process_independent():
     code = "from src.sequence.enformer_readout import stable_seed; print(stable_seed('chr1', 12345, 12900))"
-    outs = {subprocess.run([sys.executable, "-c", code], capture_output=True, text=True,
-                           env={"PYTHONHASHSEED": str(h), "PYTHONPATH": "."}).stdout.strip()
+    root = str(Path(__file__).resolve().parents[1])
+    outs = {subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True,
+                           env={**os.environ, "PYTHONHASHSEED": str(h), "PYTHONPATH": root}).stdout.strip()
             for h in (1, 2, 3)}
     assert len(outs) == 1 and outs.pop() == str(R.stable_seed("chr1", 12345, 12900))
 
