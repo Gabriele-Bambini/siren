@@ -4,25 +4,31 @@
 Domanda falsificabile: quanto segnale c'e' nella sola distanza elemento->TSS?
 (= riferimento minimo che SIREN deve battere con i delta di sequenza.)
 Output: results/w2_gate_report.md + splits parquet-less tsv + metriche stampate.
+
+Correzioni 2026-10 (supplementary/AUDIT_TREE.md): split condiviso (il loop halo
+originale indicizzava HaloViolation come tupla -> TypeError se mai attivato; con
+cromosomi interi held-out l'halo e' una verifica, ora esplicita); baseline a
+decili con bordi stimati sul TRAIN (prima pd.qcut sul test); precision@2% senza
+soglia minima K>=50; Spearman posizionale.
 """
 from __future__ import annotations
 import os, sys, json, time
 import numpy as np
 import pandas as pd
 
-REPO = os.path.expanduser("~/siren_hpc")
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, ROOT)
+from src.evaluation import protocol as P
+REPO = os.environ.get("SIREN_HOME", os.path.expanduser("~/siren_hpc"))
 RAW = f"{REPO}/data/raw"; PROC = f"{REPO}/data/processed"; RES = f"{REPO}/results"
 os.makedirs(RES, exist_ok=True)
-sys.path.insert(0, REPO)
-from src.utils.leakage import check_halo_overlap  # modulo del repo (pure-python)
 
 T0 = time.time()
 def say(m): print(f"[{time.time()-T0:6.1f}s] {m}", flush=True)
 
 HALO_BP = 25_000
 
-def spearman(a, b):
-    return float(pd.Series(a).rank().corr(pd.Series(b).rank()))
+spearman = P.spearman
 
 def sign_balanced_accuracy(pred, true):
     pred = np.sign(pred); true = np.sign(true)
@@ -34,34 +40,15 @@ def sign_balanced_accuracy(pred, true):
         if mm.any(): out.append(float((pred[mm] == cls).mean()))
     return float(np.mean(out)) if out else float("nan")
 
-def precision_at_k(true_sig, score_desc_order, k):
-    top = score_desc_order[:k]
-    return float(np.mean(np.asarray(true_sig)[top]))
 
 def build_s1(elements: pd.DataFrame, target_frac=0.15):
-    """Chrom-holdout greedy fino a >=target_frac delle coppie, poi pulizia halo."""
-    cnt = elements.groupby("element_chrom")["n_pairs"].sum().sort_values(ascending=False)
-    test_chroms, acc = [], 0
-    total = cnt.sum()
-    for chrom, n in cnt.items():
-        if acc / total >= target_frac: break
-        test_chroms.append(chrom); acc += n
-    say(f"S1 test chromosomes: {test_chroms} ({acc}/{total} coppie = {acc/total:.1%})")
-    tr = elements[~elements["element_chrom"].isin(test_chroms)]
-    te = elements[elements["element_chrom"].isin(test_chroms)]
-    # pulizia halo: elementi di train entro HALO da elementi di test -> spostati in test
-    for it in range(20):
-        viol = check_halo_overlap(
-            list(zip(tr["element_chrom"], tr["element_start"], tr["element_end"])),
-            list(zip(te["element_chrom"], te["element_start"], te["element_end"])),
-            halo_bp=HALO_BP)
-        if not viol: break
-        bad = {(v[0], v[1], v[2]) for v in viol}
-        mask = pd.Series(list(zip(tr["element_chrom"], tr["element_start"], tr["element_end"])),
-                         index=tr.index).isin(bad)
-        te = pd.concat([te, tr[mask]]); tr = tr[~mask]
-        say(f"  halo iter {it}: mosse {int(mask.sum())} elementi train->test")
-    return tr, te, test_chroms, it
+    """Chrom-holdout greedy fino a >=target_frac delle coppie + verifica halo."""
+    rows = elements.loc[elements.index.repeat(elements["n_pairs"])]
+    test_chroms, _ = P.chrom_holdout_split(rows["element_chrom"], rows["element_start"],
+                                           rows["element_end"], target_frac, HALO_BP)
+    te_mask = elements["element_chrom"].isin(test_chroms)
+    say(f"S1 test chromosomes: {test_chroms} ({int(elements.n_pairs[te_mask].sum())}/{int(elements.n_pairs.sum())} coppie)")
+    return elements[~te_mask], elements[te_mask], test_chroms, 0
 
 def run_table(df, tag, feat_cols, sig_col="significant", label_col="lfc_signed"):
     """df: righe-coppia con coords elemento + TSS; esegue split+GBM+baseline binned."""
@@ -83,14 +70,13 @@ def run_table(df, tag, feat_cols, sig_col="significant", label_col="lfc_signed")
     p = m.predict(Xte)
     rho = spearman(p, yte)
     sba = sign_balanced_accuracy(p, yte)
-    order = np.argsort(-np.abs(p))
-    k = max(50, int(0.02 * len(yte)))
-    pak = precision_at_k(te[sig_col].values.astype(bool), order, k)
+    pak = P.precision_at_frac(te[sig_col].values.astype(bool), P.strength(p), 0.02)
     base_rate = float(te[sig_col].mean())
     # baseline non-parametrica: media per decile di distanza (calibrata su train)
-    qbin = pd.qcut(tr["dist_tss"], 10, labels=False, duplicates="drop")
+    qbin, edges = pd.qcut(tr["dist_tss"], 10, labels=False, retbins=True, duplicates="drop")
     bins = pd.DataFrame({"b": qbin.values, "y": ytr}).groupby("b")["y"].mean()
-    te_bin = pd.qcut(te["dist_tss"], list(bins.index) + [10] if False else 10, labels=False, duplicates="drop")
+    edges[0], edges[-1] = -np.inf, np.inf  # bordi del TRAIN applicati al test
+    te_bin = pd.cut(te["dist_tss"], edges, labels=False)
     pred_binned = np.array([bins.get(b, ytr.mean()) for b in te_bin])
     rho_b = spearman(pred_binned, yte)
     res = dict(table=tag, train_pairs=len(tr), test_pairs=len(te),

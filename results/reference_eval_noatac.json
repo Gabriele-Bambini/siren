@@ -1,0 +1,1125 @@
+{
+  "has_atac": false,
+  "backbone": "GBM dist",
+  "bootstrap": "pigeonhole element x gene",
+  "B": 2000,
+  "E1_chr19": {
+    "held_out": [
+      "chr19"
+    ],
+    "n_train": 8096,
+    "metrics": {
+      "-distance": {
+        "n": 2260,
+        "prevalence": 0.0257,
+        "k": 45,
+        "AUROC": 0.8229,
+        "AP": 0.3477,
+        "prec@0.02": 0.4222,
+        "enrich@0.02": 16.45
+      },
+      "H3K27ac RPM": {
+        "n": 2260,
+        "prevalence": 0.0257,
+        "k": 45,
+        "AUROC": 0.672,
+        "AP": 0.0562,
+        "prec@0.02": 0.0889,
+        "enrich@0.02": 3.46,
+        "vs_-distance_AP": {
+          "delta": -0.2915,
+          "ci95": [
+            -0.5151,
+            -0.0923
+          ],
+          "p_two_sided": 0.004,
+          "B_used": 2000,
+          "B_skipped": 0,
+          "resampling": "pigeonhole"
+        },
+        "vs_-distance_prec@2%": {
+          "delta": -0.3333,
+          "ci95": [
+            -0.6133,
+            -0.027
+          ],
+          "p_two_sided": 0.031,
+          "B_used": 2000,
+          "B_skipped": 0,
+          "resampling": "pigeonhole"
+        }
+      },
+      "DHS RPM": {
+        "n": 2260,
+        "prevalence": 0.0257,
+        "k": 45,
+        "AUROC": 0.655,
+        "AP": 0.0476,
+        "prec@0.02": 0.0571,
+        "enrich@0.02": 2.23,
+        "vs_-distance_AP": {
+          "delta": -0.3001,
+          "ci95": [
+            -0.5269,
+            -0.1041
+          ],
+          "p_two_sided": 0.003,
+          "B_used": 2000,
+          "B_skipped": 0,
+          "resampling": "pigeonhole"
+        },
+        "vs_-distance_prec@2%": {
+          "delta": -0.3651,
+          "ci95": [
+            -0.6667,
+            -0.0526
+          ],
+          "p_two_sided": 0.021,
+          "B_used": 2000,
+          "B_skipped": 0,
+          "resampling": "pigeonhole"
+        }
+      },
+      "GBM dist": {
+        "n": 2260,
+        "prevalence": 0.0257,
+        "k": 45,
+        "AUROC": 0.8174,
+        "AP": 0.3117,
+        "prec@0.02": 0.3833,
+        "enrich@0.02": 14.94,
+        "vs_-distance_AP": {
+          "delta": -0.036,
+          "ci95": [
+            -0.1148,
+            0.0554
+          ],
+          "p_two_sided": 0.4028,
+          "B_used": 2000,
+          "B_skipped": 0,
+          "resampling": "pigeonhole"
+        },
+        "vs_-distance_prec@2%": {
+          "delta": -0.0389,
+          "ci95": [
+            -0.1878,
+            0.1547
+          ],
+          "p_two_sided": 0.9515,
+          "B_used": 2000,
+          "B_skipped": 0,
+          "resampling": "pigeonhole"
+        }
+      },
+      "GBM dist (monotone, diagnostic)": {
+        "n": 2260,
+        "prevalence": 0.0257,
+        "k": 45,
+        "AUROC": 0.8222,
+        "AP": 0.3024,
+        "prec@0.02": 0.4284,
+        "enrich@0.02": 16.69,
+        "vs_-distance_AP": {
+          "delta": -0.0453,
+          "ci95": [
+            -0.0976,
+            -0.0029
+          ],
+          "p_two_sided": 0.03,
+          "B_used": 2000,
+          "B_skipped": 0,
+          "resampling": "pigeonhole"
+        },
+        "vs_-distance_prec@2%": {
+          "delta": 0.0062,
+          "ci95": [
+            -0.0305,
+            0.09
+          ],
+          "p_two_sided": 0.4968,
+          "B_used": 2000,
+          "B_skipped": 0,
+          "resampling": "pigeonhole"
+        }
+      }
+    }
+  },
+  "E2_LOCO": {
+    "n": 10356,
+    "metrics": {
+      "-distance": {
+        "n": 10356,
+        "prevalence": 0.0527,
+        "k": 207,
+        "AUROC": 0.8534,
+        "AP": 0.4089,
+        "prec@0.02": 0.6135,
+        "enrich@0.02": 11.64
+      },
+      "H3K27ac RPM": {
+        "n": 10356,
+        "prevalence": 0.0527,
+        "k": 207,
+        "AUROC": 0.7232,
+        "AP": 0.1132,
+        "prec@0.02": 0.1304,
+        "enrich@0.02": 2.47,
+        "vs_-distance_AP": {
+          "delta": -0.2957,
+          "ci95": [
+            -0.3776,
+            -0.2124
+          ],
+          "p_two_sided": 0.001,
+          "B_used": 2000,
+          "B_skipped": 0,
+          "resampling": "pigeonhole"
+        },
+        "vs_-distance_prec@2%": {
+          "delta": -0.4831,
+          "ci95": [
+            -0.6156,
+            -0.3111
+          ],
+          "p_two_sided": 0.001,
+          "B_used": 2000,
+          "B_skipped": 0,
+          "resampling": "pigeonhole"
+        }
+      },
+      "DHS RPM": {
+        "n": 10356,
+        "prevalence": 0.0527,
+        "k": 207,
+        "AUROC": 0.7072,
+        "AP": 0.1104,
+        "prec@0.02": 0.1498,
+        "enrich@0.02": 2.84,
+        "vs_-distance_AP": {
+          "delta": -0.2985,
+          "ci95": [
+            -0.3793,
+            -0.2119
+          ],
+          "p_two_sided": 0.001,
+          "B_used": 2000,
+          "B_skipped": 0,
+          "resampling": "pigeonhole"
+        },
+        "vs_-distance_prec@2%": {
+          "delta": -0.4638,
+          "ci95": [
+            -0.5981,
+            -0.2917
+          ],
+          "p_two_sided": 0.001,
+          "B_used": 2000,
+          "B_skipped": 0,
+          "resampling": "pigeonhole"
+        }
+      },
+      "GBM dist": {
+        "n": 10356,
+        "prevalence": 0.0527,
+        "k": 207,
+        "AUROC": 0.8127,
+        "AP": 0.3437,
+        "prec@0.02": 0.5362,
+        "enrich@0.02": 10.17,
+        "vs_-distance_AP": {
+          "delta": -0.0652,
+          "ci95": [
+            -0.0949,
+            -0.0334
+          ],
+          "p_two_sided": 0.001,
+          "B_used": 2000,
+          "B_skipped": 0,
+          "resampling": "pigeonhole"
+        },
+        "vs_-distance_prec@2%": {
+          "delta": -0.0773,
+          "ci95": [
+            -0.161,
+            0.0131
+          ],
+          "p_two_sided": 0.096,
+          "B_used": 2000,
+          "B_skipped": 0,
+          "resampling": "pigeonhole"
+        }
+      },
+      "GBM dist (monotone, diagnostic)": {
+        "n": 10356,
+        "prevalence": 0.0527,
+        "k": 207,
+        "AUROC": 0.8399,
+        "AP": 0.3707,
+        "prec@0.02": 0.6086,
+        "enrich@0.02": 11.54,
+        "vs_-distance_AP": {
+          "delta": -0.0382,
+          "ci95": [
+            -0.0601,
+            -0.0133
+          ],
+          "p_two_sided": 0.002,
+          "B_used": 2000,
+          "B_skipped": 0,
+          "resampling": "pigeonhole"
+        },
+        "vs_-distance_prec@2%": {
+          "delta": -0.0049,
+          "ci95": [
+            -0.0842,
+            0.041
+          ],
+          "p_two_sided": 0.6337,
+          "B_used": 2000,
+          "B_skipped": 0,
+          "resampling": "pigeonhole"
+        }
+      }
+    },
+    "per_chrom_AP": {
+      "-distance": {
+        "chr1": 0.6014,
+        "chr10": 0.825,
+        "chr11": 0.4194,
+        "chr12": 0.4385,
+        "chr13": 1.0,
+        "chr14": 0.4318,
+        "chr15": 0.8466,
+        "chr16": 0.5888,
+        "chr17": 0.6278,
+        "chr18": 0.4104,
+        "chr19": 0.3477,
+        "chr2": 0.3918,
+        "chr20": 0.7778,
+        "chr21": 0.4098,
+        "chr22": 0.5541,
+        "chr3": 0.2392,
+        "chr4": 0.492,
+        "chr5": 0.672,
+        "chr6": 0.3338,
+        "chr7": 0.5318,
+        "chr8": 0.2669,
+        "chr9": 0.5695,
+        "chrX": 0.4115
+      },
+      "GBM dist": {
+        "chr1": 0.561,
+        "chr10": 0.8124,
+        "chr11": 0.3228,
+        "chr12": 0.4153,
+        "chr13": 0.8333,
+        "chr14": 0.4277,
+        "chr15": 0.8059,
+        "chr16": 0.582,
+        "chr17": 0.5328,
+        "chr18": 0.4264,
+        "chr19": 0.3117,
+        "chr2": 0.3315,
+        "chr20": 0.7347,
+        "chr21": 0.2396,
+        "chr22": 0.5833,
+        "chr3": 0.2188,
+        "chr4": 0.3623,
+        "chr5": 0.5738,
+        "chr6": 0.2657,
+        "chr7": 0.4618,
+        "chr8": 0.2181,
+        "chr9": 0.5115,
+        "chrX": 0.3472
+      }
+    },
+    "per_screen": {
+      "Gasperini et al., 2019": {
+        "-distance": {
+          "n": 5299,
+          "prevalence": 0.0759,
+          "k": 105,
+          "AUROC": 0.8615,
+          "AP": 0.4594,
+          "prec@0.02": 0.6952,
+          "enrich@0.02": 9.16
+        },
+        "GBM dist": {
+          "n": 5299,
+          "prevalence": 0.0759,
+          "k": 105,
+          "AUROC": 0.8137,
+          "AP": 0.4053,
+          "prec@0.02": 0.6571,
+          "enrich@0.02": 8.66,
+          "vs_-distance_AP": {
+            "delta": -0.0542,
+            "ci95": [
+              -0.0888,
+              -0.0205
+            ],
+            "p_two_sided": 0.003,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": -0.0381,
+            "ci95": [
+              -0.1681,
+              0.0661
+            ],
+            "p_two_sided": 0.4188,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        }
+      },
+      "Fulco et al., 2019": {
+        "-distance": {
+          "n": 3501,
+          "prevalence": 0.0234,
+          "k": 70,
+          "AUROC": 0.7967,
+          "AP": 0.2847,
+          "prec@0.02": 0.3,
+          "enrich@0.02": 12.81
+        },
+        "GBM dist": {
+          "n": 3501,
+          "prevalence": 0.0234,
+          "k": 70,
+          "AUROC": 0.8011,
+          "AP": 0.2447,
+          "prec@0.02": 0.2905,
+          "enrich@0.02": 12.4,
+          "vs_-distance_AP": {
+            "delta": -0.04,
+            "ci95": [
+              -0.0949,
+              0.0278
+            ],
+            "p_two_sided": 0.2589,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": -0.0095,
+            "ci95": [
+              -0.1435,
+              0.1224
+            ],
+            "p_two_sided": 1.0,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        }
+      },
+      "Schraivogel et al., 2020": {
+        "-distance": {
+          "n": 1306,
+          "prevalence": 0.0191,
+          "k": 26,
+          "AUROC": 0.953,
+          "AP": 0.515,
+          "prec@0.02": 0.4231,
+          "enrich@0.02": 22.1
+        },
+        "GBM dist": {
+          "n": 1306,
+          "prevalence": 0.0191,
+          "k": 26,
+          "AUROC": 0.9182,
+          "AP": 0.396,
+          "prec@0.02": 0.375,
+          "enrich@0.02": 19.59,
+          "vs_-distance_AP": {
+            "delta": -0.119,
+            "ci95": [
+              -0.2948,
+              0.0404
+            ],
+            "p_two_sided": 0.1219,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": -0.0481,
+            "ci95": [
+              -0.3853,
+              0.1501
+            ],
+            "p_two_sided": 0.7836,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        }
+      }
+    }
+  },
+  "E3_K562_heldout_screens": {
+    "note": "same chromosomes as training; new studies {'Ray et al., 2025': 1252, 'Xie et al., 2019': 441, 'Morris et al., 2023': 184, 'Klann et al., 2021': 33, 'Reilly et al., 2021': 8}",
+    "tiers": {
+      "all": {
+        "-distance": {
+          "n": 1918,
+          "prevalence": 0.0892,
+          "k": 38,
+          "AUROC": 0.7266,
+          "AP": 0.3295,
+          "prec@0.02": 0.6053,
+          "enrich@0.02": 6.79
+        },
+        "H3K27ac RPM": {
+          "n": 1918,
+          "prevalence": 0.0892,
+          "k": 38,
+          "AUROC": 0.7477,
+          "AP": 0.22,
+          "prec@0.02": 0.2895,
+          "enrich@0.02": 3.25,
+          "vs_-distance_AP": {
+            "delta": -0.1095,
+            "ci95": [
+              -0.2504,
+              0.0397
+            ],
+            "p_two_sided": 0.1479,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": -0.3158,
+            "ci95": [
+              -0.7046,
+              0.059
+            ],
+            "p_two_sided": 0.087,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        },
+        "DHS RPM": {
+          "n": 1918,
+          "prevalence": 0.0892,
+          "k": 38,
+          "AUROC": 0.7167,
+          "AP": 0.1974,
+          "prec@0.02": 0.2368,
+          "enrich@0.02": 2.66,
+          "vs_-distance_AP": {
+            "delta": -0.1321,
+            "ci95": [
+              -0.272,
+              0.0076
+            ],
+            "p_two_sided": 0.068,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": -0.3684,
+            "ci95": [
+              -0.682,
+              0.0833
+            ],
+            "p_two_sided": 0.1199,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        },
+        "GBM dist": {
+          "n": 1918,
+          "prevalence": 0.0892,
+          "k": 38,
+          "AUROC": 0.706,
+          "AP": 0.2997,
+          "prec@0.02": 0.5556,
+          "enrich@0.02": 6.23,
+          "vs_-distance_AP": {
+            "delta": -0.0298,
+            "ci95": [
+              -0.0773,
+              0.0103
+            ],
+            "p_two_sided": 0.1379,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": -0.0497,
+            "ci95": [
+              -0.273,
+              0.1627
+            ],
+            "p_two_sided": 0.7006,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        },
+        "GBM dist (monotone, diagnostic)": {
+          "n": 1918,
+          "prevalence": 0.0892,
+          "k": 38,
+          "AUROC": 0.7277,
+          "AP": 0.3077,
+          "prec@0.02": 0.5578,
+          "enrich@0.02": 6.26,
+          "vs_-distance_AP": {
+            "delta": -0.0218,
+            "ci95": [
+              -0.0472,
+              -0.0062
+            ],
+            "p_two_sided": 0.003,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": -0.0475,
+            "ci95": [
+              -0.145,
+              0.057
+            ],
+            "p_two_sided": 0.5777,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        }
+      },
+      "pair_disjoint": {
+        "-distance": {
+          "n": 1918,
+          "prevalence": 0.0892,
+          "k": 38,
+          "AUROC": 0.7266,
+          "AP": 0.3295,
+          "prec@0.02": 0.6053,
+          "enrich@0.02": 6.79
+        },
+        "H3K27ac RPM": {
+          "n": 1918,
+          "prevalence": 0.0892,
+          "k": 38,
+          "AUROC": 0.7477,
+          "AP": 0.22,
+          "prec@0.02": 0.2895,
+          "enrich@0.02": 3.25,
+          "vs_-distance_AP": {
+            "delta": -0.1095,
+            "ci95": [
+              -0.2504,
+              0.0397
+            ],
+            "p_two_sided": 0.1479,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": -0.3158,
+            "ci95": [
+              -0.7046,
+              0.059
+            ],
+            "p_two_sided": 0.087,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        },
+        "DHS RPM": {
+          "n": 1918,
+          "prevalence": 0.0892,
+          "k": 38,
+          "AUROC": 0.7167,
+          "AP": 0.1974,
+          "prec@0.02": 0.2368,
+          "enrich@0.02": 2.66,
+          "vs_-distance_AP": {
+            "delta": -0.1321,
+            "ci95": [
+              -0.272,
+              0.0076
+            ],
+            "p_two_sided": 0.068,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": -0.3684,
+            "ci95": [
+              -0.682,
+              0.0833
+            ],
+            "p_two_sided": 0.1199,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        },
+        "GBM dist": {
+          "n": 1918,
+          "prevalence": 0.0892,
+          "k": 38,
+          "AUROC": 0.706,
+          "AP": 0.2997,
+          "prec@0.02": 0.5556,
+          "enrich@0.02": 6.23,
+          "vs_-distance_AP": {
+            "delta": -0.0298,
+            "ci95": [
+              -0.0773,
+              0.0103
+            ],
+            "p_two_sided": 0.1379,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": -0.0497,
+            "ci95": [
+              -0.273,
+              0.1627
+            ],
+            "p_two_sided": 0.7006,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        },
+        "GBM dist (monotone, diagnostic)": {
+          "n": 1918,
+          "prevalence": 0.0892,
+          "k": 38,
+          "AUROC": 0.7277,
+          "AP": 0.3077,
+          "prec@0.02": 0.5578,
+          "enrich@0.02": 6.26,
+          "vs_-distance_AP": {
+            "delta": -0.0218,
+            "ci95": [
+              -0.0472,
+              -0.0062
+            ],
+            "p_two_sided": 0.003,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": -0.0475,
+            "ci95": [
+              -0.145,
+              0.057
+            ],
+            "p_two_sided": 0.5777,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        }
+      },
+      "elem_disjoint": {
+        "-distance": {
+          "n": 1491,
+          "prevalence": 0.0657,
+          "k": 29,
+          "AUROC": 0.7014,
+          "AP": 0.2395,
+          "prec@0.02": 0.4828,
+          "enrich@0.02": 7.34
+        },
+        "H3K27ac RPM": {
+          "n": 1491,
+          "prevalence": 0.0657,
+          "k": 29,
+          "AUROC": 0.7419,
+          "AP": 0.168,
+          "prec@0.02": 0.1379,
+          "enrich@0.02": 2.1,
+          "vs_-distance_AP": {
+            "delta": -0.0714,
+            "ci95": [
+              -0.2495,
+              0.0855
+            ],
+            "p_two_sided": 0.3918,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": -0.3448,
+            "ci95": [
+              -0.7143,
+              0.1614
+            ],
+            "p_two_sided": 0.2649,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        },
+        "DHS RPM": {
+          "n": 1491,
+          "prevalence": 0.0657,
+          "k": 29,
+          "AUROC": 0.7403,
+          "AP": 0.1493,
+          "prec@0.02": 0.1724,
+          "enrich@0.02": 2.62,
+          "vs_-distance_AP": {
+            "delta": -0.0902,
+            "ci95": [
+              -0.2651,
+              0.0595
+            ],
+            "p_two_sided": 0.2469,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": -0.3103,
+            "ci95": [
+              -0.7,
+              0.1379
+            ],
+            "p_two_sided": 0.2599,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        },
+        "GBM dist": {
+          "n": 1491,
+          "prevalence": 0.0657,
+          "k": 29,
+          "AUROC": 0.6761,
+          "AP": 0.2047,
+          "prec@0.02": 0.4061,
+          "enrich@0.02": 6.18,
+          "vs_-distance_AP": {
+            "delta": -0.0347,
+            "ci95": [
+              -0.087,
+              0.0073
+            ],
+            "p_two_sided": 0.1179,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": -0.0766,
+            "ci95": [
+              -0.2857,
+              0.1688
+            ],
+            "p_two_sided": 0.7726,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        },
+        "GBM dist (monotone, diagnostic)": {
+          "n": 1491,
+          "prevalence": 0.0657,
+          "k": 29,
+          "AUROC": 0.7034,
+          "AP": 0.2157,
+          "prec@0.02": 0.4269,
+          "enrich@0.02": 6.49,
+          "vs_-distance_AP": {
+            "delta": -0.0237,
+            "ci95": [
+              -0.0602,
+              -0.0025
+            ],
+            "p_two_sided": 0.024,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": -0.0559,
+            "ci95": [
+              -0.1434,
+              0.0885
+            ],
+            "p_two_sided": 0.9125,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        }
+      },
+      "elem_gene_disjoint": {
+        "-distance": {
+          "n": 558,
+          "prevalence": 0.1111,
+          "k": 11,
+          "AUROC": 0.6432,
+          "AP": 0.2642,
+          "prec@0.02": 0.6364,
+          "enrich@0.02": 5.73
+        },
+        "H3K27ac RPM": {
+          "n": 558,
+          "prevalence": 0.1111,
+          "k": 11,
+          "AUROC": 0.7847,
+          "AP": 0.4173,
+          "prec@0.02": 0.7273,
+          "enrich@0.02": 6.55,
+          "vs_-distance_AP": {
+            "delta": 0.1531,
+            "ci95": [
+              -0.0865,
+              0.3955
+            ],
+            "p_two_sided": 0.2439,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": 0.0909,
+            "ci95": [
+              -0.6,
+              0.7857
+            ],
+            "p_two_sided": 0.8266,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        },
+        "DHS RPM": {
+          "n": 558,
+          "prevalence": 0.1111,
+          "k": 11,
+          "AUROC": 0.8118,
+          "AP": 0.3607,
+          "prec@0.02": 0.6364,
+          "enrich@0.02": 5.73,
+          "vs_-distance_AP": {
+            "delta": 0.0965,
+            "ci95": [
+              -0.1358,
+              0.3357
+            ],
+            "p_two_sided": 0.4738,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": 0.0,
+            "ci95": [
+              -0.7783,
+              0.7273
+            ],
+            "p_two_sided": 1.0,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        },
+        "GBM dist": {
+          "n": 558,
+          "prevalence": 0.1111,
+          "k": 11,
+          "AUROC": 0.6149,
+          "AP": 0.2414,
+          "prec@0.02": 0.6364,
+          "enrich@0.02": 5.73,
+          "vs_-distance_AP": {
+            "delta": -0.0228,
+            "ci95": [
+              -0.0804,
+              0.0234
+            ],
+            "p_two_sided": 0.3278,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": 0.0,
+            "ci95": [
+              -0.5,
+              0.1111
+            ],
+            "p_two_sided": 1.0,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        },
+        "GBM dist (monotone, diagnostic)": {
+          "n": 558,
+          "prevalence": 0.1111,
+          "k": 11,
+          "AUROC": 0.6415,
+          "AP": 0.2421,
+          "prec@0.02": 0.6364,
+          "enrich@0.02": 5.73,
+          "vs_-distance_AP": {
+            "delta": -0.0221,
+            "ci95": [
+              -0.0695,
+              0.0019
+            ],
+            "p_two_sided": 0.078,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          },
+          "vs_-distance_prec@2%": {
+            "delta": 0.0,
+            "ci95": [
+              -0.25,
+              0.0866
+            ],
+            "p_two_sided": 1.0,
+            "B_used": 2000,
+            "B_skipped": 0,
+            "resampling": "pigeonhole"
+          }
+        }
+      }
+    }
+  },
+  "E4_conformal": {
+    "model": "GBM dist",
+    "calibration": "5-fold chromosome OOF residuals on train",
+    "q90": 0.0679,
+    "chr19": {
+      "q": 0.0679,
+      "coverage": 0.9027,
+      "n": 2260,
+      "significant": {
+        "False": {
+          "n": 2202,
+          "coverage": 0.9114
+        },
+        "True": {
+          "n": 58,
+          "coverage": 0.569
+        }
+      },
+      "strength_quintile": {
+        "0": {
+          "n": 452,
+          "coverage": 0.9535
+        },
+        "1": {
+          "n": 461,
+          "coverage": 0.9501
+        },
+        "2": {
+          "n": 453,
+          "coverage": 0.9183
+        },
+        "3": {
+          "n": 451,
+          "coverage": 0.9224
+        },
+        "4": {
+          "n": 443,
+          "coverage": 0.7652
+        }
+      },
+      "distance_bin": {
+        "0": {
+          "n": 41,
+          "coverage": 0.4878
+        },
+        "1": {
+          "n": 177,
+          "coverage": 0.661
+        },
+        "2": {
+          "n": 661,
+          "coverage": 0.9138
+        },
+        "3": {
+          "n": 1381,
+          "coverage": 0.9406
+        }
+      }
+    },
+    "K562_heldout_screens": {
+      "q": 0.0679,
+      "coverage": 0.8905,
+      "n": 1918,
+      "significant": {
+        "False": {
+          "n": 1747,
+          "coverage": 0.9645
+        },
+        "True": {
+          "n": 171,
+          "coverage": 0.1345
+        }
+      },
+      "strength_quintile": {
+        "0": {
+          "n": 386,
+          "coverage": 0.9508
+        },
+        "1": {
+          "n": 382,
+          "coverage": 0.9476
+        },
+        "2": {
+          "n": 392,
+          "coverage": 0.949
+        },
+        "3": {
+          "n": 378,
+          "coverage": 0.9312
+        },
+        "4": {
+          "n": 380,
+          "coverage": 0.6711
+        }
+      },
+      "distance_bin": {
+        "0": {
+          "n": 32,
+          "coverage": 0.1562
+        },
+        "1": {
+          "n": 136,
+          "coverage": 0.4853
+        },
+        "2": {
+          "n": 402,
+          "coverage": 0.8756
+        },
+        "3": {
+          "n": 1348,
+          "coverage": 0.9533
+        }
+      }
+    }
+  }
+}

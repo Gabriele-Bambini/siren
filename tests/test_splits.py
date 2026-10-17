@@ -225,65 +225,73 @@ class _ProbeCase:
 
 
 class TestS1BuilderModule(unittest.TestCase):
-    """Runs the real ``src.*`` S1 builder against the same contract."""
+    """Runs the real ``src.data.splits.split_s1`` against the same contract.
+
+    The previous adapter guessed call signatures, never managed to call the
+    builder (it needs ``elements``) and therefore always *skipped*: the
+    splitter had no coverage at all.
+    """
+
+    @staticmethod
+    def _frames(pairs: List[PairLabel]):
+        import pandas as pd
+        pdf = pd.DataFrame([p.to_dict() for p in pairs])
+        rows = []
+        for i, eid in enumerate(sorted(pdf["element_id"].unique())):
+            chrom = {"C7": "chr7", "C12": "chr12", "C19": "chr19"}[eid.split("_")[1]]
+            rows.append({"element_id": eid, "chrom": chrom, "start": 1_000_000 + 100_000 * i,
+                         "end": 1_000_500 + 100_000 * i})
+        return pdf, pd.DataFrame(rows)
 
     def test_builder_produces_disjoint_nonempty_splits(self) -> None:
+        from src.data.splits import split_s1
         pairs = _synthetic_pairs()
-        found = self._discover_builder()
-        if found is None:
-            self.skipTest(
-                "modulo S1 (C-SPLIT) non ancora presente in src.*; attesi "
-                f"moduli {_S1_MODULE_CANDIDATES} con funzioni "
-                f"{_S1_FUNCTION_CANDIDATES}"
-            )
-        builder, where = found
-        result, errors = self._invoke(builder, pairs)
-        if result is None:
-            self.skipTest(
-                f"builder S1 trovato ({where}) ma invocazione non riuscita con "
-                f"le firme provate; dettagli: {errors}"
-            )
-        _assert_split_contract(
-            self, _normalise_parts(result, pairs), n_expected=len(pairs)
-        )
+        pdf, elements = self._frames(pairs)
+        out, meta = split_s1(pdf, elements, heldout_chroms=["chr19"])
+        self.assertEqual(meta["canonical_validation"], "ok")
+        self.assertEqual(meta["canonical_violations"], 0)
+        parts = {name: [pairs[i] for i in idx]
+                 for name, idx in (("train", list(out.index[out.split_s1 == "train"])),
+                                   ("test", list(out.index[out.split_s1 == "test"])))}
+        _assert_split_contract(self, parts, n_expected=len(pairs))
+        self.assertEqual(len(parts["test"]), 6)  # the chr19 pairs
 
-    # -- helpers ---------------------------------------------------------
+    def test_pairlabel_schema_columns_are_not_misread(self) -> None:
+        # regression: suffix matching used to pick gene_id as the enhancer column
+        # (it ends in "e_id") and laboratory as the label (it ends in "y")
+        import pandas as pd
+        from src.data.splits import _COL_ENHANCER, _COL_LABEL, _pick_col
+        pdf = pd.DataFrame([p.to_dict() for p in _synthetic_pairs(1)])
+        self.assertEqual(_pick_col(pdf, _COL_ENHANCER), "element_id")
+        self.assertIsNone(_pick_col(pdf, _COL_LABEL, required=False))
 
-    @staticmethod
-    def _discover_builder() -> Optional[Tuple[Callable[..., Any], str]]:
-        """Locate ``(callable, qualified_name)`` across canonical modules."""
-        for mod_name in _S1_MODULE_CANDIDATES:
-            try:
-                module: ModuleType = importlib.import_module(mod_name)
-            except ImportError:
-                continue
-            for fn_name in _S1_FUNCTION_CANDIDATES:
-                candidate = getattr(module, fn_name, None)
-                if callable(candidate):
-                    return candidate, f"{mod_name}.{fn_name}"
-        return None
+    def test_unmapped_elements_and_chrom_aliases(self) -> None:
+        import warnings
+        from src.data.splits import split_s1
+        pdf, elements = self._frames(_synthetic_pairs())
+        elements.loc[elements.chrom == "chr19", "chrom"] = "19"  # alias of the held-out chrom
+        pdf.loc[0, "element_id"] = "NOT_IN_TABLE"
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", RuntimeWarning)
+            out, meta = split_s1(pdf, elements, heldout_chroms=["chr19"])
+        self.assertEqual(out.loc[0, "split_s1"], "unknown")
+        self.assertEqual(int((out.split_s1 == "test").sum()), 6)
+        self.assertEqual(meta["n_unknown"], 1)
 
-    @staticmethod
-    def _invoke(
-        builder: Callable[..., Any], pairs: List[PairLabel]
-    ) -> Tuple[Optional[Any], str]:
-        """Try common calling conventions; return (result|None, errors)."""
-        errors: List[str] = []
-        attempts: Tuple[Tuple[Tuple[Any, ...], Dict[str, Any]], ...] = (
-            ((pairs,), {}),
-            ((), {"labels": pairs}),
-            ((), {"pairs": pairs}),
-            ((), {"pair_labels": pairs}),
-        )
-        for args, kwargs in attempts:
-            try:
-                return builder(*args, **kwargs), ""
-            except BaseException as exc:  # noqa: BLE001 - diagnostic only
-                errors.append(
-                    f"{builder.__name__}({', '.join(kwargs) or 'positional'}): "
-                    f"{type(exc).__name__}: {exc}"
-                )
-        return None, " | ".join(errors)
+    def test_train_pair_sharing_a_test_element_is_moved(self) -> None:
+        import pandas as pd
+        from src.data.splits import split_s1
+        pdf, elements = self._frames(_synthetic_pairs())
+        extra = pdf.iloc[[0]].copy()
+        extra["element_id"] = pdf.loc[pdf.element_id.str.contains("C19"), "element_id"].iloc[0]
+        extra["gene_id"] = "G_shared"
+        # this pair's element is on chr19 (test); a pair with the same gene sits in train
+        twin = pdf.iloc[[0]].copy(); twin["gene_id"] = "G_shared"
+        pdf2 = pd.concat([pdf, extra, twin], ignore_index=True)
+        out, meta = split_s1(pdf2, elements, heldout_chroms=["chr19"])
+        self.assertEqual(out.iloc[-2]["split_s1"], "test")   # on chr19
+        self.assertEqual(out.iloc[-1]["split_s1"], "test")   # shares gene G_shared with it
+        self.assertTrue(bool(out.iloc[-1]["s1_moved_by_halo"]))
 
 
 if __name__ == "__main__":  # pragma: no cover

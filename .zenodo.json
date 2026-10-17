@@ -1,5 +1,4 @@
 {
-  "//": "Zenodo deposit metadata for siren-crispr-reference v1.0. TODO before deposit: add ORCIDs if desired and paste the minted DOI.",
   "title": "SIREN — a calibrated reference class for CRISPRi enhancer→gene prediction (v1.0)",
   "upload_type": "software",
   "creators": [
@@ -20,7 +19,7 @@
   "access_right": "open",
   "license": "MIT",
   "version": "v1.0",
-  "pub_date": "2026-08-23",
+  "publication_date": "2026-08-23",
   "keywords": [
     "CRISPRi",
     "enhancer-gene prediction",

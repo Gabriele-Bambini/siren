@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Fig 1 v2 — The Specificity Wall (publication styling)."""
+"""Fig 1 v2 — The Specificity Wall (publication styling).
+
+Correzioni 2026-10: valori letti da w7_results.json / w7c_results.json /
+w3b_summary.json invece che scritti a mano; la metrica e' davvero rho sulla
+magnitudine (prima era lo Spearman firmato sotto un titolo '|effect|'); il
+pannello K562 non e' piu' detto "held-out chroms".
+"""
 import os, json
 import numpy as np
 import matplotlib
@@ -8,20 +14,27 @@ import matplotlib.pyplot as plt
 plt.rcParams.update({"font.size": 10, "font.family": "DejaVu Sans",
                      "axes.linewidth": 0.8, "savefig.facecolor": "white"})
 
-RES = os.path.expanduser("~/siren_hpc/results")
-M = {
-    "K562 · chr19 test":         {"GBM dist+ATAC (K562)": 0.1212, "GBM trained on Gasperini": 0.004},
-    "K562 · held-out chroms":    {"GBM dist+ATAC (K562)": 0.1823, "GBM trained on Gasperini": None},
-    "HCT116 · held-out screen":  {"GBM dist+ATAC (K562)": 0.0143, "GBM trained on Gasperini": None},
-    "WTC11 · held-out screen":   {"GBM dist+ATAC (K562)": 0.0398, "GBM trained on Gasperini": None},
-}
-rows = ["GBM dist+ATAC (K562)", "GBM trained on Gasperini"]
+RES = os.path.join(os.environ.get("SIREN_HOME", os.path.expanduser("~/siren_hpc")), "results")
+# Values are read from the experiment outputs (they used to be typed in by hand).
+# Metric: Spearman rho between |prediction| and |CRISPRi effect| (magnitude).
+w7 = json.load(open(f"{RES}/w7_results.json"))
+w7c_f = f"{RES}/w7c_results.json"
+w7c = json.load(open(w7c_f)) if os.path.exists(w7c_f) else {}
+win = w7["winner_W7a"]
+per = w7["cross_celltype"]["per_CT"]
+ROW_K, ROW_G = f"GBM {win} (K562)", "GBM trained on Gasperini"
+gas = w7c.get("all_epc_test", {}).get("rho_gasperini_transfer_abs")  # pre-registered test set
+M = {"K562 chr19 test\n(held-out chromosome)": {ROW_K: w7["rows"][win]["spearman_abs"], ROW_G: gas}}
+for ct, r in per.items():
+    lbl = f"{ct}\nheld-out screens" + ("\n(K562 ATAC features)" if r.get("atac_features_from_K562") else "")
+    M[lbl] = {ROW_K: r["spearman_abs"], ROW_G: None}
+rows = [ROW_K, ROW_G]
 cols = list(M.keys())
 Z = np.array([[np.nan if M[c].get(r) is None else M[c][r] for c in cols] for r in rows])
 
 fig, ax = plt.subplots(figsize=(9.2, 3.6))
 im = ax.imshow(Z, cmap="RdYlGn", vmin=-0.05, vmax=0.25, aspect="auto")
-ax.set_xticks(range(len(cols))); ax.set_xticklabels(cols, fontsize=10)
+ax.set_xticks(range(len(cols))); ax.set_xticklabels(cols, fontsize=9)
 ax.set_yticks(range(len(rows))); ax.set_yticklabels(rows, fontsize=10, fontweight="bold")
 ax.set_xticks(np.arange(-0.5, len(cols), 1), minor=True)
 ax.set_yticks(np.arange(-0.5, len(rows), 1), minor=True)
@@ -37,15 +50,20 @@ for i in range(len(rows)):
         ax.text(j, i, f"{v:.3f}", ha="center", va="center",
                 color="white" if strong else ("#7a0000" if v < 0.05 else "#222222"),
                 fontsize=12, fontweight="bold" if strong else "normal")
-ax.set_title("The specificity wall", fontsize=13, fontweight="bold", pad=6, loc="left")
-ax.text(0, 1.06, "Spearman ρ on |CRISPRi effect| — signal survives only within the training cell type and screen",
+ax.set_title("The specificity wall", fontsize=13, fontweight="bold", pad=22, loc="left")
+ax.text(0, 1.03, "Spearman ρ between |prediction| and |CRISPRi effect|",
         transform=ax.transAxes, fontsize=10, color="#444444")
 cb = fig.colorbar(im, ax=ax, shrink=0.9, pad=0.015)
 cb.set_label("ρ (magnitude)", fontsize=9); cb.ax.tick_params(labelsize=8)
-note = ("Within-cell-type generalization is strong (ρ = 0.18 on unseen chromosomes); cross-cell-type and "
-        "cross-screen transfer collapse.\nEnformer ISD deltas: Δρ −0.275 [−0.21, +0.13] (powered, pre-registered). "
-        "Cross-screen ensemble underperforms the native model (0.058 < 0.106).")
-fig.text(0.005, -0.02, note, fontsize=8.5, ha="left", color="#333333", style="italic")
+w3b_f = f"{RES}/w3b_summary.json"
+w3b = json.load(open(w3b_f)) if os.path.exists(w3b_f) else None
+note = ("Spearman \u03c1 between |prediction| and |effect|. K562 rows of the held-out file are new screens on the "
+        "training chromosomes.\n"
+        + (f"Enformer ISD deltas (W3b): \u0394\u03c1 {w3b['incremento_test']:+.3f} "
+           f"[{w3b['ci95_incremento'][0]:+.2f}, {w3b['ci95_incremento'][1]:+.2f}] ({w3b.get('verdetto', '')}). "
+           if w3b else "Enformer ISD deltas (W3b): pending re-run with corrected readout. ")
+        + (f"Cross-screen transfer: {w7c.get('status')}." if "status" in w7c else ""))
+fig.text(0.005, -0.06, note, fontsize=8.5, ha="left", color="#333333", style="italic")
 fig.tight_layout()
 fig.savefig(f"{RES}/fig_transfer_matrix.png", dpi=300, bbox_inches="tight")
 fig.savefig(f"{RES}/fig_transfer_matrix.pdf", bbox_inches="tight")

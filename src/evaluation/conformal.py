@@ -96,8 +96,8 @@ def conformal_quantile(scores: ArrayLike, alpha: float) -> float:
     """Finite-sample split-conformal quantile of conformity ``scores``.
 
     Uses the standard rank ``ceil((n + 1) * (1 - alpha))`` over the sorted
-    scores; when the rank exceeds ``n`` (tiny calibration sets) the maximum
-    score is used as a conservative clamp.
+    scores; when the rank exceeds ``n`` (tiny calibration sets) the quantile is
+    ``inf`` (unbounded interval) — the finite-sample guarantee cannot be met.
 
     Args:
         scores: nonconformity scores (e.g. absolute validation errors).
@@ -116,9 +116,12 @@ def conformal_quantile(scores: ArrayLike, alpha: float) -> float:
     if not 0.0 < alpha < 1.0:
         raise ValueError(f"alpha must be in (0, 1); got {alpha!r}.")
     ordered = np.sort(scores_arr)
-    rank = math.ceil((n + 1) * (1.0 - alpha))
+    rank = math.ceil((n + 1) * (1.0 - alpha) - 1e-12)
     if rank > n:
-        rank = n
+        # too few calibration points for this level: the finite-sample interval
+        # is unbounded. Clamping to the max score (as before) under-covers,
+        # e.g. n=5, alpha=0.1 -> 0.83 coverage instead of >= 0.90.
+        return float("inf")
     return float(ordered[rank - 1])
 
 
