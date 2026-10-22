@@ -2,7 +2,8 @@ script	exit_code	seconds
 v2_e3_sanity	0	240
 v2_e3_enformer	0	2057
 v2_e3_enformer_random	0	1948
-v2_e3_analysis	0	102
+v2_e3_analysis	0	99
 v2_e3_posthoc	0	85
-v2_e3_bridge	0	49
-v2_e3_sensitivity	0	56
+v2_e3_bridge	0	50
+v2_e3_sensitivity	0	53
+n	2	0

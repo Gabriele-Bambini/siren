@@ -20,7 +20,7 @@ nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv || true
 STATUS=results/v2/pipeline_gpu_status.tsv
 if [ "${SKIP_SCORING:-0}" != "1" ]; then printf "script	exit_code	seconds
 " > "$STATUS"; fi   # SKIP_SCORING=1 re-runs only analysis steps
-for step in "v2_e3_sanity" "v2_e3_enformer" "v2_e3_analysis" "v2_e3_posthoc" "v2_e3_bridge"             "v2_e3_enformer --mode random" "v2_e3_sensitivity" \n            "v2_e3_enformer --table heldout --cell-type K562" "v2_e8_confirm"; do
+for step in "v2_e3_sanity" "v2_e3_enformer" "v2_e3_analysis" "v2_e3_posthoc" "v2_e3_bridge" "v2_e3_enformer --mode random" "v2_e3_sensitivity" "v2_e3_enformer --table heldout --cell-type K562" "v2_e8_confirm"; do
   read -r s args <<< "$step"
   name="${s}${args:+_${args##* }}"
   if [ "${SKIP_SCORING:-0}" = "1" ] && { [ "$s" = "v2_e3_sanity" ] || [ "$name" = "v2_e3_enformer" ] || [ "$name" = "v2_e3_enformer_random" ] || [ "$name" = "v2_e3_enformer_K562" ]; }; then continue; fi
