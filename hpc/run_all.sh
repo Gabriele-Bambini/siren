@@ -14,4 +14,4 @@ J_E6=$(sub -J siren_e6 hpc/run_cpu.sbatch scripts/v2_e6_zoo.py)
 J_E3S=$(sub -J siren_e3s hpc/run_gpu.sbatch scripts/v2_e3_enformer.py)
 J_E3A=$(sub -J siren_e3a --dependency=afterok:"$J_E3S" hpc/run_cpu.sbatch scripts/v2_e3_analysis.py)
 echo "submitted: E1=$J_E1 E2=$J_E2 E5=$J_E5 E6=$J_E6 E3score=$J_E3S E3analysis=$J_E3A"
-echo "then:  python scripts/v2_build_claims.py && python scripts/check_claims.py"
+echo "then:  python scripts/claims.py build render check"
