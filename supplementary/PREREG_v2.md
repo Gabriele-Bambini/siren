@@ -344,6 +344,29 @@ subsampling, a separate ablation of the indexing and track fixes, a refit-based 
 check, observed expression as a covariate, a numerical comparison of the ported weights with the original
 implementation, an external timestamp for this plan.
 
+**A20 · 2026-10-22 · pre-specified held-out confirmation of the Enformer finding (E8) · results seen for
+the confirmation set: NO (counts only).** The Enformer result of E3 was obtained on the training table and
+its comparison with raw distance is post hoc. To turn it into a confirmatory claim it is tested on data not
+used for discovery. *Population H:* the K562 slice of the benchmark's held-out table (`heldout_5_cell_types`),
+valid connections, element fully inside the TSS-centred window. A structural probe (counts only) gives
+313 pairs, 75 `Regulated`, 119 clusters; the other held-out cell types are not estimable (WTC11 13
+positives; GM12878, HCT116 and Jurkat 4–6 clusters) and no cell-type-mismatched track is used for them.
+*Score:* identical to E3 (`v2_e3_enformer.py --table heldout --cell-type K562`: K562 CAGE tracks 4828 and
+5111, TSS bin ±1, three GC-matched scrambles with the same seed rule). *Supervised models:* logistic
+regression on [logd, atac_ov, atac_dist] (LR0) and the same plus −Δ (LR1), fitted on the training-table
+pairs inside the window that share no cluster with any H pair (probe: 1,430 pairs, 325 positives) and
+scored on H; the score itself is zero-shot. *Primary confirmatory family (Holm over two), paired cluster
+bootstrap (2,000, seed 12345) on H, label `reg`:* C1 = AUPRC(LR1) − AUPRC(LR0); C2 = AUPRC(−Δ) − AUPRC(−logd).
+*Rule:* BENEFIT ⇔ interval lower bound > 0, point ≥ +0.02 and Holm p < 0.05 (as E3); NO-BENEFIT ⇔ interval
+within ±0.02; INFERIOR as in A16; otherwise INCONCLUSIVE. *Claim policy fixed in advance:* the Enformer
+finding is called **confirmed** iff C1 is BENEFIT, **partly confirmed** iff only C2 is BENEFIT, and **not
+confirmed** otherwise; the manuscript reports the outcome whichever it is, and leads with the Enformer result
+only if it is confirmed. Descriptive secondary results (no decision): LR1 versus −logd, the GBM-with-score
+versus the GBM without it. Estimability requires ≥15 `Regulated` pairs and ≥20 clusters (met by the probe).
+Limits stated in advance: H shares genes with the training table (41% of its pairs share a cluster with a
+training pair, no element is identical), so it is independent in screen but not in locus, which is why
+supervised models are refitted locus-disjoint and the score is zero-shot; power is moderate (75 positives).
+
 **A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
 scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark
 table composition (counts per chromosome/screen/cell type, distance quantiles); Enformer

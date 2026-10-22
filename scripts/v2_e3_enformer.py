@@ -27,7 +27,7 @@ os.environ.setdefault("HF_HUB_OFFLINE", "1")  # weights are cached on the cluste
 ROOT = os.path.expanduser(os.environ.get("SIREN_ROOT", "~/siren_hpc"))
 sys.path.insert(0, ROOT)
 from src.v2 import enformer_utils as eu  # noqa: E402
-from src.v2.data import add_strand, load_train  # noqa: E402
+from src.v2.data import add_strand, load_heldout, load_train  # noqa: E402
 
 TARGETS = os.path.join(ROOT, "resources", "enformer_targets_human.txt")
 TARGETS_SHA256 = "d90233175a9fec389e5ac04cc4aac8cfc08c4aa86217e2e5c10221de78023580"
@@ -76,11 +76,16 @@ def main() -> None:
     ap.add_argument("--null-n", type=int, default=300)
     ap.add_argument("--mode", choices=["gc", "random"], default="gc",
                     help="gc = GC-matched shuffle (primary); random = composition-preserving shuffle (A17 sensitivity)")
+    ap.add_argument("--table", choices=["train", "heldout"], default="train",
+                    help="train = benchmark training table (E3); heldout = held-out table (confirmation, A20)")
+    ap.add_argument("--cell-type", default="K562", help="cell type to score when --table heldout")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
     suffix = "" if a.mode == "gc" else "_" + a.mode
+    if a.table == "heldout":
+        suffix += "_heldout_" + a.cell_type.lower()
     shuffle = eu.gc_matched_shuffle if a.mode == "gc" else eu.random_shuffle
-    if a.mode != "gc":
+    if a.mode != "gc" or a.table == "heldout":
         a.null_n = 0
 
     import torch
@@ -95,7 +100,11 @@ def main() -> None:
     i_dnase = eu.track_indices(targets, "DNASE", "K562")
     assert i_k562 == [4828, 5111] and len(i_cage) == 638 and len(i_dnase) == 7, (i_k562, len(i_cage), i_dnase)
 
-    df = add_strand(load_train(ROOT), ROOT)
+    if a.table == "train":
+        df = add_strand(load_train(ROOT), ROOT)
+    else:
+        df = load_heldout(ROOT)
+        df = add_strand(df[df["cell_type"] == a.cell_type].reset_index(drop=True), ROOT)
     assert df["strand"].isin(["+", "-"]).all(), "gene strand missing"
     ws_all = df["tss"].to_numpy() - eu.WINDOW // 2
     inside = np.array([eu.element_inside_input(s, e, w) for s, e, w in zip(df["start"], df["end"], ws_all)])

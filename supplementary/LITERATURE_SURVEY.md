@@ -96,6 +96,14 @@ Verification date: **2026-10-22**. Written for the novelty guard (`PREREG_v2.md`
 4. Negative/neutral results for six variants (LTR, two-stage, uncertainty penalty, nested-CV HPO, gene covariates) under LOCO — new instances of a known pattern, labelled exploratory.
 5. If E4 survives: a first application (in our searches) of split-conformal intervals and conformal selection to CRISPRi E–G prioritisation, with realised FDP — exploratory, marginal.
 
+6. *(added 2026-10-22 with PREREG A20, before the held-out confirmation was run)* **C3′ — corrected Enformer
+   silencing score adds to distance + accessibility for nearby pairs, tested under LOCO and on a held-out
+   screen.** Closest prior art: Karollus 2023 [11] (same shuffle-and-read-CAGE design, "usable but weak"),
+   Gschwind 2026 [1] (Enformer scored only inside the window: AUPRC 0.493 against distance 0.436), AlphaGenome
+   [13] (gradient score improved rE2G). Status **PARTIALLY KNOWN**: the direction is expected from the
+   literature; what is new is the audited, pre-specified, uncertainty-aware test and the held-out
+   confirmation. Wording: "confirms and quantifies", never "first" or "novel method".
+
 **What must be reworded as confirmatory or dropped:**
 * "Reference class" (title, abstract, §1): replace with "reference baseline".
 * "Specificity wall" (title, abstract, §2.3, Fig. 1): drop; use "cross-cell-type/cross-screen transfer"; contradicted by [1] pending feature-matched controls.
