@@ -268,6 +268,18 @@ statistic of `logd`. (vi) E1 `status_atac` uses the §3 vocabulary (SUPPORTED / 
 values, on hand-typed integers (≥2 digits), percentages and negative decimals in the Abstract, Results and
 Discussion, and on verbs forbidden for the annotated status (G3). No decision threshold was changed.
 
+**A15 · 2026-10-22 · E3 post-hoc robustness analyses · results seen: YES (E3 primary: BENEFIT).** The
+pre-specified E3 comparison is against M2, which E1 showed to be *weaker than raw distance*; a gain over M2
+could therefore partly reflect the weakness of the regression baseline. `scripts/v2_e3_posthoc.py` adds,
+on the same eligible population and LOCO folds, label `reg`, paired cluster bootstrap (2,000, seed 12345),
+Holm over four contrasts: (a) −Δ alone minus −logd; (b) M2E minus −logd; (c) logistic regression on
+[logd, atac_ov, atac_dist, −Δ] minus the same without −Δ; (d) the same logistic model with −Δ minus −logd.
+Also reported (descriptive): AUPRC of −Δ from each of the three scrambles separately (stability), and, on the
+null-window subsample, AUPRC of the element score −Δ versus the score from an equal-length window that
+contains no benchmark element (paired cluster bootstrap on that subsample). Status rules as E3 (BENEFIT ⇔
+CI low > 0, point ≥ +0.02, Holm p < 0.05 within the four contrasts). All of this is labelled post-hoc and
+exploratory in the manuscript; the pre-specified primary result is reported first and unchanged.
+
 **A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
 scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark
 table composition (counts per chromosome/screen/cell type, distance quantiles); Enformer

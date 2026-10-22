@@ -1,0 +1,28 @@
+{
+  "torch": "2.8.0+cu126",
+  "cuda": "12.6",
+  "device": "cuda",
+  "gpu": "NVIDIA A100 80GB PCIe MIG 3g.40gb",
+  "model_id": "EleutherAI/enformer-official-rough",
+  "hf_snapshot": "/home/3393519/.cache/huggingface/hub/models--EleutherAI--enformer-official-rough/snapshots/affe5713ae9017460706a44108289b13c5fee16c",
+  "targets_sha256": "d90233175a9fec389e5ac04cc4aac8cfc08c4aa86217e2e5c10221de78023580",
+  "k562_cage_idx": [
+    4828,
+    5111
+  ],
+  "n_all_cage": 638,
+  "k562_dnase_idx": [
+    33,
+    34,
+    35,
+    121,
+    122,
+    123,
+    625
+  ],
+  "n_population": 1750,
+  "n_total_pairs": 10356,
+  "k_scrambles": 3,
+  "n_null": 298,
+  "seconds": 2047.7
+}

@@ -68,6 +68,21 @@ def flatten(obj: Any, prefix: str = "") -> Dict[str, Any]:
     return out
 
 
+def derive(values: Dict[str, Any]) -> Dict[str, Any]:
+    """Quantities computed from the result files (never typed): prefix 'd/'."""
+    out: Dict[str, Any] = {}
+    folds = sorted({k.split("/")[2] for k in values if k.startswith("e1/per_fold/")})
+    if folds:
+        def cnt(a: str, b: str) -> int:
+            return sum(1 for f in folds if values.get("e1/per_fold/%s/reg.%s.auprc" % (f, a), float("nan"))
+                       > values.get("e1/per_fold/%s/reg.%s.auprc" % (f, b), float("nan")))
+        out["d/e1/n_folds"] = len(folds)
+        out["d/e1/folds_m2_gt_m0"] = cnt("M2", "M0")
+        out["d/e1/folds_m3_gt_m0"] = cnt("M3", "M0")
+        out["d/e1/folds_m2_gt_m1"] = cnt("M2", "M1")
+    return out
+
+
 def collect() -> Tuple[Dict[str, Any], List[str]]:
     """Flatten all result files; raise on key collisions with different values."""
     values: Dict[str, Any] = {}
@@ -86,6 +101,7 @@ def collect() -> Tuple[Dict[str, Any], List[str]]:
             if k in values and values[k] != v:
                 raise ValueError("claim key collision with different values: %s (%s)" % (k, os.path.basename(f)))
             values[k] = v
+    values.update(derive(values))
     return values, [os.path.basename(f) for f, _ in sources]
 
 
