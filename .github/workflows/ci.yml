@@ -26,3 +26,5 @@ jobs:
         run: python -m pytest tests -q
       - name: Run synthetic end-to-end demo
         run: python scripts/demo_synthetic.py
+      - name: Check manuscript numbers against committed results
+        run: python scripts/claims.py check

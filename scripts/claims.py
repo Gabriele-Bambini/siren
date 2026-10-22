@@ -96,7 +96,8 @@ def collect() -> Tuple[Dict[str, Any], List[str]]:
     """Flatten all result files; raise on key collisions with different values."""
     values: Dict[str, Any] = {}
     files = sorted(glob.glob(os.path.join(RES, "*.json")))
-    sources = [(f, os.path.basename(f)[:-5].split("_")[0]) for f in files]
+    sources = [(f, os.path.basename(f)[:-5].split("_")[0] + ("rand" if f.endswith("_random.json") else ""))
+               for f in files]
     if os.path.exists(V1_REF):
         sources.append((V1_REF, "v1"))
     for f, stem in sources:
