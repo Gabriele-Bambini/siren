@@ -31,7 +31,7 @@ CLAIMS = os.path.join(ROOT, "results", "claims.json")
 TEMPLATE = os.path.join(ROOT, "paper", "MANUSCRIPT.template.md")
 RENDERED = os.path.join(ROOT, "paper", "MANUSCRIPT.md")
 
-PLACEHOLDER = re.compile(r"\{\{\s*([^{}|]+?)\s*(?:\|\s*([^{}]+?)\s*)?\}\}")
+PLACEHOLDER = re.compile(r"\{\{\s*([^{}|\\]+?)\s*(?:\\?\|\s*([^{}]+?)\s*)?\}\}")   # '\|' allowed inside tables
 ANNOT = re.compile(r"<!--\s*claim:\s*(\S+)\s+status=([A-Za-z\-]+)\s*-->")
 ALLOW = re.compile(r"<!--\s*allow:\s*([^>]+?)\s*-->")
 HTML_COMMENT = re.compile(r"<!--.*?-->")
@@ -170,6 +170,8 @@ def numeric_section_lines(template: str) -> List[Tuple[int, str]]:
             continue
         if fence:
             continue
+        if line.lstrip().startswith("###"):
+            continue                       # sub-headings keep the state of their section
         if line.lstrip().startswith("#"):
             title = line.lstrip("# ").strip().lower()
             active = any(title.startswith(s) or (" " + s) in (" " + title) for s in NUMERIC_SECTIONS)

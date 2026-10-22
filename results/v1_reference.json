@@ -21,6 +21,11 @@
     "enformer_ci_high": 0.13,
     "repression_fraction_among_significant": 0.967,
     "conformal_coverage_chr19": 0.893,
-    "nominal_coverage": 0.90
-  }
+    "nominal_coverage": 0.90,
+    "lit_distance_auprc": 0.4359,
+    "lit_rE2G_auprc": 0.662,
+    "lit_rE2G_extended_auprc": 0.737,
+    "lit_abc_auprc": 0.613
+  },
+  "literature_note": "lit_* values: Gschwind et al. 2026, Supplementary Table 3, K562 training benchmark (10,356 pairs, 471 positives), extracted by a research subagent and cross-checked only for the distance baseline (reproduced by E1); the rE2G and ABC values are context, not reproduced here."
 }

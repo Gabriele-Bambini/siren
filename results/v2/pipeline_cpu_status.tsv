@@ -1,6 +1,7 @@
 script	exit_code	seconds
-v2_e5_sign	0	16
-v2_e1_loco	0	160
-v2_e4_conformal	0	50
-v2_e2_transfer	0	59
-v2_e6_zoo	0	225
+v2_e5_sign	0	13
+v2_e1_loco	0	132
+v2_e4_conformal	0	38
+v2_e2_transfer	0	74
+v2_e6_zoo	0	220
+v2_e7_classifiers	0	69
