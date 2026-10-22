@@ -367,6 +367,8 @@ Limits stated in advance: H shares genes with the training table (41% of its pai
 training pair, no element is identical), so it is independent in screen but not in locus, which is why
 supervised models are refitted locus-disjoint and the score is zero-shot; power is moderate (75 positives).
 
+**A20 outcome · recorded after the run.** Plan commit 15e0533 (authored 2026-10-22T20:13+02:00, tag `prereg-v2-e8`); scoring job 713497 submitted 20:58:45, started 21:09:11, ended 21:15:15 (SLURM accounting); confirmation executed afterwards. Result: C1 (LR1 − LR0) = +0.113, interval 0.026 to 0.205, Holm p = 0.022 → BENEFIT; C2 (score alone − distance) = +0.126, interval −0.055 to 0.295, Holm p = 0.164 → INCONCLUSIVE; claim policy ⇒ **confirmed**. A dry run of the script on random scores (not real Δ) before the real run returned 'not confirmed', as expected.
+
 **A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
 scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark
 table composition (counts per chromosome/screen/cell type, distance quantiles); Enformer
