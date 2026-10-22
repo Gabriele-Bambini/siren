@@ -63,7 +63,7 @@
       ],
       "p_raw": 0.0005,
       "p_holm": 0.003,
-      "status": "INCONCLUSIVE"
+      "status": "INFERIOR"
     },
     "V2_twostage": {
       "delta_auprc": 0.014064592340951476,
@@ -83,7 +83,7 @@
       ],
       "p_raw": 0.0005,
       "p_holm": 0.003,
-      "status": "INCONCLUSIVE"
+      "status": "INFERIOR"
     },
     "V4_hpo": {
       "delta_auprc": 0.021020918203978556,

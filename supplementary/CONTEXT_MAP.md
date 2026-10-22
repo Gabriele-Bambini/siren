@@ -78,3 +78,7 @@ Regola `data/` matchava `src/data/` a qualunque profondita': i file erano nel wo
 
 ### T14 - URL citati a memoria
 URL bibliografici scritti da memoria sono risultati 404 (NeurIPS LightGBM). Regola: ogni URL in README/manoscritto va verificato con HTTP HEAD prima del freeze; hash lunghi non si indovinano.
+
+---
+## v4 — SUPERATA (2026-10-22)
+Questa mappa descrive la v1.0. Un audit indipendente (`AUDIT_v1.md`, 18 difetti) ha mostrato che "Path A chiuso / Enformer fallisce", "specificity wall", "reference class" e "96.7% repressioni" non sono supportati. Stato attuale, piano pre-specificato e risultati: `PREREG_v2.md`, `LITERATURE_SURVEY.md`, `paper/MANUSCRIPT.md` e `results/v2/*.json`. Non usare le righe sopra come fatti.

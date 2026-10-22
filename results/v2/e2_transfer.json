@@ -35,6 +35,7 @@
             "rho_abs": 0.14866132933576026,
             "rho_signed": 0.16363314131021608
           },
+          "unfitted_distance_lift": 7.144634286961409,
           "native": {
             "lift_reg": 5.788035337844173,
             "auprc_reg": 0.39322376328060055,
@@ -68,6 +69,7 @@
             "rho_abs": 0.1562347240538499,
             "rho_signed": 0.14869058227391102
           },
+          "unfitted_distance_lift": 7.144634286961409,
           "native": {
             "lift_reg": 6.034104809537886,
             "auprc_reg": 0.40994107028375903,
@@ -115,6 +117,7 @@
             "rho_abs": 0.12568895930322682,
             "rho_signed": 0.14727353448233968
           },
+          "unfitted_distance_lift": 7.144634286961409,
           "native": {
             "lift_reg": 7.242574507065651,
             "auprc_reg": 0.49204129506390537,
@@ -171,6 +174,7 @@
             "rho_abs": 0.1197865489365331,
             "rho_signed": 0.037742200620443436
           },
+          "unfitted_distance_lift": 25.765791070521882,
           "decision": "NOT-ESTIMABLE"
         },
         "FB": {
@@ -195,6 +199,7 @@
             "rho_abs": 0.1199018590211753,
             "rho_signed": 0.04290838914950263
           },
+          "unfitted_distance_lift": 25.765791070521882,
           "decision": "NOT-ESTIMABLE"
         },
         "FC": {
@@ -233,6 +238,7 @@
             "rho_abs": 0.08520447142183667,
             "rho_signed": 0.026196904662825444
           },
+          "unfitted_distance_lift": 25.765791070521882,
           "decision": "NOT-ESTIMABLE"
         }
       }
@@ -273,6 +279,7 @@
             "rho_abs": 0.08726916659710258,
             "rho_signed": 0.05384343103704953
           },
+          "unfitted_distance_lift": 28.06996066743064,
           "decision": "NOT-ESTIMABLE"
         },
         "FB": {
@@ -297,6 +304,7 @@
             "rho_abs": 0.09050616129644296,
             "rho_signed": 0.06508667167060724
           },
+          "unfitted_distance_lift": 28.06996066743064,
           "decision": "NOT-ESTIMABLE"
         },
         "FC": {
@@ -335,6 +343,7 @@
             "rho_abs": 0.07053075295717855,
             "rho_signed": 0.07373189921640555
           },
+          "unfitted_distance_lift": 28.06996066743064,
           "decision": "NOT-ESTIMABLE"
         }
       }
@@ -375,6 +384,7 @@
             "rho_abs": 0.09435596104704638,
             "rho_signed": 0.13430210551670013
           },
+          "unfitted_distance_lift": 6.003881603930816,
           "native": {
             "lift_reg": 4.2816463517965735,
             "auprc_reg": 0.2634172416642313,
@@ -389,6 +399,20 @@
             "native": [
               3.2898081252746825,
               5.793360896897795
+            ],
+            "unfitted_distance": [
+              4.323099743722652,
+              8.219487815448769
+            ]
+          },
+          "lift_diff_ci95": {
+            "transfer_minus_native": [
+              -0.6618938656424602,
+              1.3170921419186579
+            ],
+            "transfer_minus_unfitted_distance": [
+              -2.638494944881678,
+              -0.369871214489782
             ]
           },
           "decision": "TRANSFERS"
@@ -415,6 +439,7 @@
             "rho_abs": 0.11522376307712728,
             "rho_signed": 0.14416684971153418
           },
+          "unfitted_distance_lift": 6.003881603930816,
           "native": {
             "lift_reg": 4.248455756642139,
             "auprc_reg": 0.26137527595608573,
@@ -429,6 +454,20 @@
             "native": [
               3.199498451567324,
               5.819392198555249
+            ],
+            "unfitted_distance": [
+              4.323099743722652,
+              8.219487815448769
+            ]
+          },
+          "lift_diff_ci95": {
+            "transfer_minus_native": [
+              -0.12561034637508225,
+              2.1776553430292998
+            ],
+            "transfer_minus_unfitted_distance": [
+              -2.180170377789922,
+              0.43061443548577993
             ]
           },
           "decision": "TRANSFERS"
@@ -469,6 +508,7 @@
             "rho_abs": 0.11339469577773321,
             "rho_signed": 0.10281491881209161
           },
+          "unfitted_distance_lift": 6.003881603930816,
           "native": {
             "lift_reg": 7.46336131688006,
             "auprc_reg": 0.45916404347854384,
@@ -483,6 +523,20 @@
             "native": [
               5.257074614378458,
               10.416932777205366
+            ],
+            "unfitted_distance": [
+              4.323099743722652,
+              8.219487815448769
+            ]
+          },
+          "lift_diff_ci95": {
+            "transfer_minus_native": [
+              -1.8233436049476865,
+              1.231698880048002
+            ],
+            "transfer_minus_unfitted_distance": [
+              -0.43514197422409034,
+              3.3539313423203314
             ]
           },
           "decision": "TRANSFERS"
@@ -525,6 +579,7 @@
             "rho_abs": 0.07454521984911315,
             "rho_signed": 0.03675228288397075
           },
+          "unfitted_distance_lift": 58.69904155380917,
           "native": {
             "lift_reg": 12.100609749610207,
             "auprc_reg": 0.09448680179289594,
@@ -539,6 +594,20 @@
             "native": [
               5.9967363427124685,
               29.398816321358407
+            ],
+            "unfitted_distance": [
+              26.329013860776236,
+              143.99161849373903
+            ]
+          },
+          "lift_diff_ci95": {
+            "transfer_minus_native": [
+              2.5503237197026154,
+              56.01416462473341
+            ],
+            "transfer_minus_unfitted_distance": [
+              -73.13503478338325,
+              -8.618234906777534
             ]
           },
           "decision": "TRANSFERS"
@@ -579,6 +648,7 @@
             "rho_abs": 0.03665936378863147,
             "rho_signed": 0.04399380602240267
           },
+          "unfitted_distance_lift": 58.69904155380917,
           "native": {
             "lift_reg": 29.687486421554098,
             "auprc_reg": 0.2318127518601309,
@@ -593,6 +663,20 @@
             "native": [
               11.005599726296474,
               79.43097933191582
+            ],
+            "unfitted_distance": [
+              26.329013860776236,
+              143.99161849373903
+            ]
+          },
+          "lift_diff_ci95": {
+            "transfer_minus_native": [
+              -13.33638762979339,
+              64.31608992260308
+            ],
+            "transfer_minus_unfitted_distance": [
+              -64.73968441899463,
+              40.123614688836106
             ]
           },
           "decision": "TRANSFERS"
@@ -635,6 +719,7 @@
             "rho_abs": 0.016033328046573078,
             "rho_signed": 0.00025343879603710595
           },
+          "unfitted_distance_lift": 3.622285323673621,
           "decision": "NOT-ESTIMABLE"
         },
         "FC": {
@@ -673,6 +758,7 @@
             "rho_abs": 0.11387807586599595,
             "rho_signed": 0.10809989015717682
           },
+          "unfitted_distance_lift": 3.622285323673621,
           "decision": "NOT-ESTIMABLE"
         }
       }
@@ -713,6 +799,7 @@
             "rho_abs": 0.33513421520079417,
             "rho_signed": 0.3151464326137688
           },
+          "unfitted_distance_lift": 3.624171401515152,
           "decision": "NOT-ESTIMABLE"
         },
         "FC": {
@@ -751,6 +838,7 @@
             "rho_abs": 0.5918998358590677,
             "rho_signed": 0.42142230026338895
           },
+          "unfitted_distance_lift": 3.624171401515152,
           "decision": "NOT-ESTIMABLE"
         }
       }
@@ -791,6 +879,7 @@
             "rho_abs": 0.3126889989860345,
             "rho_signed": 0.2722350820751223
           },
+          "unfitted_distance_lift": 5.214341928503202,
           "decision": "NOT-ESTIMABLE"
         },
         "FC": {
@@ -829,6 +918,7 @@
             "rho_abs": 0.15186344238975816,
             "rho_signed": 0.2834708392603129
           },
+          "unfitted_distance_lift": 5.214341928503202,
           "decision": "NOT-ESTIMABLE"
         }
       }

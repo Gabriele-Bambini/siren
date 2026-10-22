@@ -1,10 +1,20 @@
 {
   "anchor_check": {
-    "published_distance_auprc": 0.4359,
-    "source": "Gschwind et al. 2026, Supp. Table 3 (extracted by a subagent, PREREG A10)",
+    "published_distance_auprc": 0.435933,
+    "published_distance_precision_at_70pct_recall": 0.315789,
+    "source": "Gschwind et al. 2026, Supplementary Table 3 (sheet 'Combined K562 data (training)'), read directly by the analyst on 2026-10-22",
     "ours_M0_reg_auprc": 0.43769581601511154,
-    "abs_diff": 0.0017958160151115288,
-    "within_0.01": true
+    "abs_diff": 0.0017628160151115235,
+    "within_0.01": true,
+    "ours_M0_precision_at_70pct_recall": 0.3157894736842105,
+    "abs_diff_p70": 4.7368421052240706e-07
+  },
+  "macro_fold_auprc_reg": {
+    "M0": 0.5247175478403784,
+    "M1": 0.4713141902973264,
+    "M2": 0.4856216680027535,
+    "M3": 0.5651469634813134,
+    "n_folds_used": 18
   },
   "experiment": "E1_LOCO",
   "n_pairs": 10356,
@@ -393,15 +403,19 @@
       "model_adds_over_distance": false,
       "atac_adds": false,
       "m2_equivalent_to_distance": false,
-      "status_m2_vs_distance": "INCONCLUSIVE",
-      "status_atac": "INCONCLUSIVE"
+      "status_m2_vs_distance": "INFERIOR",
+      "status_atac": "INCONCLUSIVE",
+      "status_m3_vs_distance": "INCONCLUSIVE",
+      "status_m3_vs_m2": "SUPPORTED"
     },
     "sig": {
       "model_adds_over_distance": false,
       "atac_adds": false,
       "m2_equivalent_to_distance": false,
-      "status_m2_vs_distance": "INCONCLUSIVE",
-      "status_atac": "INCONCLUSIVE"
+      "status_m2_vs_distance": "INFERIOR",
+      "status_atac": "INCONCLUSIVE",
+      "status_m3_vs_distance": "INCONCLUSIVE",
+      "status_m3_vs_m2": "SUPPORTED"
     }
   },
   "per_fold": {
