@@ -5,3 +5,6 @@ __pycache__/
 *.bigWig
 *.bam
 .DS_Store
+/results/v2/*.tsv.gz
+/results/v2/*.npz
+/logs/

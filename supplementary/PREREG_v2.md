@@ -141,4 +141,34 @@ Before a new claim, method or coined term enters the manuscript, add or update i
 REBRAND. A REBRAND term is replaced by the established term in the manuscript.
 
 ## 5. Amendments
-(none yet)
+Format: id · date · reason · **results seen before amending? (no = only data-structure probes)**.
+
+**A1 · 2026-10-22 · E3 population · results seen: no.** A structural probe showed that only 1,752 of the
+10,356 pairs (408 significant) lie within the Enformer reach (|distance| ≤ ~96 kb; median distance of
+all pairs is 369 kb). Therefore the E3 *primary population* is the set of pairs whose element lies fully
+inside the TSS-centred 196,608-bp window (`element_inside_input`); LOCO folds, M2 and the augmented
+model are all fitted and scored on this restricted population (paired). Secondary: full table with the
+Enformer score set to NaN outside the window. Chromosomes with <100 pairs in this population are merged
+into one fold.
+
+**A2 · 2026-10-22 · E2 contexts and cross-screen design · results seen: no.** Cluster probe: HCT116 has
+396 pairs but 5 genes (5 clusters); GM12878 9 clusters; Jurkat 5; WTC11 22; K562-held-out 152.
+(i) Any target context with fewer than 20 clusters is "not estimable" and receives no CI-based claim
+(HCT116, GM12878, Jurkat; reported descriptively only). (ii) The v1.0 cross-screen test
+(Gasperini-90k → EPC-K562) is contaminated because the EPC table itself contains the Gasperini screen;
+it is replaced by **leave-one-screen-out inside the training table** (screens: Gasperini2019 n=5,299,
+Fulco2019 n=3,501, Schraivogel2020 n=1,306; the 250 'other' pairs are train-only), with native ceilings
+from within-screen LOCO. The v1.0 W7c is kept only as a labelled-contaminated supplementary rerun.
+
+**A3 · 2026-10-22 · clusters · results seen: no.** The pre-specified cluster definition yields 600
+clusters on the 10,356-pair table (largest 982 pairs = 9.5%); no change to §2.
+
+**A4 · 2026-10-22 · operational definitions · results seen: no.** "Holm-adjusted CI excludes 0" is
+operationalised as Holm-adjusted bootstrap p < 0.05; the equivalence rule uses the raw (unadjusted) 95%
+cluster-bootstrap CI; "AUPRC lift" = AUPRC / prevalence of the evaluated set; prevalence in the E3
+population is reported alongside.
+
+**A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
+scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark
+table composition (counts per chromosome/screen/cell type, distance quantiles); Enformer
+`targets_human.txt` track ranges. No v2 model output had been computed.
