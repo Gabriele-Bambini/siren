@@ -178,6 +178,18 @@ continuity). The decision rules of §3 apply to the primary label; the secondary
 same rules and labelled secondary. For E3 the primary score is −Δ (same orientation). The families
 and Holm corrections are computed separately per label.
 
+**A7 · 2026-10-22 · E2 locus-disjoint transfer and estimability · results seen: no.** The K562 table
+pools three screens that test overlapping genes and elements, and the held-out K562 slice is probed on
+the same genes. For every E2 transfer, source pairs that share a cluster with any target pair are
+removed from the source before fitting (clusters are built jointly on source ∪ target); this
+*locus-disjoint* transfer is the primary result. The naive transfer is reported as secondary, with the
+fraction of target pairs that share a cluster with the source. Native ceilings: cluster-grouped 5-fold
+CV inside the target (for screens: within-screen LOCO). Estimability of a target requires ≥15 `reg`
+pairs **and** ≥20 target clusters; otherwise the context is reported descriptively as NOT-ESTIMABLE.
+Labels per A6 (primary `reg`, score −pred; secondary `sig`, score |pred|). Decision labels:
+NOT-ESTIMABLE · TARGET-UNINFORMATIVE (native lift CI low ≤ 1.5) · CONTEXT-LIMITED-TRANSFER ·
+TRANSFERS · INCONCLUSIVE, exactly as defined in E2.
+
 **A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
 scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark
 table composition (counts per chromosome/screen/cell type, distance quantiles); Enformer
