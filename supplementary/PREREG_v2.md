@@ -238,6 +238,18 @@ locus-disjoint filter (the screens test the same loci), so no primary transfer c
 now also reports, **descriptively and without a decision label**, the naive transfer and the native ceiling
 with cluster-bootstrap intervals for such targets. No decision rule was changed.
 
+**A13 · 2026-10-22 · E7 supervised classification baselines (post-hoc, exploratory) · results seen: YES for
+E1/E6, NO for E7.** E1 showed that the pre-specified regression models (which regress the signed effect
+size and rank by the negated prediction) score *below* the raw −logd ranking. Because the field-standard
+supervised baseline is a classifier (rE2G uses logistic regression; see LITERATURE_SURVEY §2a), leaving it
+out would make "no simple supervised model beats distance" an over-generalisation. E7 adds, under the same
+LOCO folds, label `reg` and cluster bootstrap: **M4** = standardised logistic regression on
+[`logd`, `atac_ov`, `atac_dist`]; **M5** = LightGBM *classifier* with the same features and monotone
+constraints fixed by prior biology (`logd` −1, `atac_ov` +1, `atac_dist` −1), default hyper-parameters.
+Family: {M4−M0, M5−M0} (Holm over two), plus M5−M2 and M4−M5 as descriptive contrasts. Rules as in E1 (adds
+⇔ Holm p < 0.05 and Δ ≥ +0.01; equivalent ⇔ raw 95% CI within ±0.02). E7 is labelled post-hoc and exploratory
+in the manuscript; it makes no novelty claim (logistic regression is the literature baseline).
+
 **A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
 scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark
 table composition (counts per chromosome/screen/cell type, distance quantiles); Enformer

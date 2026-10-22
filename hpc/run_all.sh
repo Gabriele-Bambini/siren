@@ -8,5 +8,5 @@ cd "$SIREN_ROOT"
 mkdir -p logs results/v2
 J_CPU=$(sbatch --parsable hpc/pipeline_cpu.sbatch)
 J_GPU=$(sbatch --parsable hpc/pipeline_gpu.sbatch)
-echo "submitted: cpu pipeline (E5,E1,E4,E2,E6)=$J_CPU  gpu pipeline (E3 sanity,score,analysis)=$J_GPU"
+echo "submitted: cpu pipeline (E5,E1,E4,E2,E6,E7)=$J_CPU  gpu pipeline (E3 sanity,score,analysis)=$J_GPU"
 echo "when both finish:  python scripts/claims.py build render check   (results/v2/*.json -> claims -> manuscript)"

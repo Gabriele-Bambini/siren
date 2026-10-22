@@ -16,7 +16,7 @@ cd "$SIREN_ROOT"
 mkdir -p logs results/v2
 STATUS=results/v2/pipeline_cpu_status.tsv
 printf "script\texit_code\tseconds\n" > "$STATUS"
-for s in v2_e5_sign v2_e1_loco v2_e4_conformal v2_e2_transfer v2_e6_zoo; do
+for s in v2_e5_sign v2_e1_loco v2_e4_conformal v2_e2_transfer v2_e6_zoo v2_e7_classifiers; do
   t0=$(date +%s)
   set +e
   python "scripts/$s.py" > "logs/$s.log" 2>&1
