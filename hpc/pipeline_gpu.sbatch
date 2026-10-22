@@ -16,7 +16,7 @@ source "${SIREN_VENV:-$HOME/venvs/siren}/bin/activate"
 cd "$SIREN_ROOT"
 mkdir -p logs results/v2
 pip freeze > "results/v2/env_freeze_gpu.txt" 2>/dev/null || true
-nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv
+nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv || true
 STATUS=results/v2/pipeline_gpu_status.tsv
 if [ "${SKIP_SCORING:-0}" != "1" ]; then printf "script	exit_code	seconds
 " > "$STATUS"; fi   # SKIP_SCORING=1 re-runs only analysis steps

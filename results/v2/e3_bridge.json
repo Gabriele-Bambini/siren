@@ -3,12 +3,18 @@
   "post_hoc": true,
   "n_v1_pairs": 300,
   "n_with_corrected_score": 293,
-  "v1_reproduced": {
+  "v1_exact_misaligned": {
+    "increment": -0.2748273306138668,
+    "spearman_A": 0.32331788193444033,
+    "spearman_B": 0.0484905513205735,
+    "n_test": 120,
+    "published_v1_increment": -0.2748
+  },
+  "v1_deltas_position_aligned": {
     "increment": -0.03907125550678461,
     "spearman_A": 0.1991334830422092,
     "spearman_B": 0.1600622275354246,
-    "n_test": 120,
-    "published_v1_increment": -0.2748
+    "n_test": 120
   },
   "same_pairs_v1_buggy_delta": {
     "increment": -0.031986045822144954,
@@ -24,6 +30,7 @@
     "ci95_cluster_bootstrap": [
       -0.3425410389846854,
       0.09500581606250631
-    ]
+    ],
+    "increment_if_misaligned_as_in_v1": 0.09256586379944717
   }
 }

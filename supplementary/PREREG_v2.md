@@ -314,6 +314,17 @@ each perturbation, (iii) the paired contrast of the two, and (iv) the logistic g
 distance + accessibility (paired, cluster bootstrap, 2,000 resamples; Holm over the two logistic gains).
 Descriptive and post hoc; the primary result is unchanged by it.
 
+**A18 · 2026-10-22 · bridge extended; new audit finding D19 · results seen: YES (bridge first run).** The first
+bridge run did not reproduce the published v1.0 increment (−0.2748) when v1.0's data were re-scored with a
+position-aligned Spearman (−0.039). Replicating v1.0's helper verbatim (a numpy array against a pandas
+Series that keeps its test-row index, so pandas aligns on labels) reproduces −0.2748, A = 0.3233 and
+B = 0.0485 exactly; this is audit defect **D19** (S1). The bridge now reports four increments: v1 verbatim,
+v1 features with aligned correlation, corrected features with aligned correlation (primary bridge result,
+cluster-bootstrap interval) and, descriptively, corrected features with the v1 misalignment. Count
+correction: the audit now lists 19 findings, 6 of severity S1. The GPU pipeline gained an analysis-only mode
+(`SKIP_SCORING=1`) that re-runs the cheap E3 analysis steps on existing scores and keeps their status lines in
+`pipeline_gpu_status.tsv`.
+
 **A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
 scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark
 table composition (counts per chromosome/screen/cell type, distance quantiles); Enformer
