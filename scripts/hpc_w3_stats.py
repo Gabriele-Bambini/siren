@@ -4,7 +4,7 @@ import os, sys, json
 import numpy as np
 import pandas as pd
 
-REPO = os.path.expanduser("~/siren_hpc"); RES = f"{REPO}/results"
+REPO = os.path.expanduser(os.environ.get("SIREN_ROOT", "~/siren_hpc")); RES = f"{REPO}/results"
 df = pd.read_csv(f"{RES}/w3_enformer_pairs.tsv.gz", sep="\t")
 def sp(a,b): return float(pd.Series(a).rank().corr(pd.Series(b).rank()))
 out = {"n_pairs": int(len(df)), "n_significant": int(df.significant.sum())}

@@ -12,7 +12,7 @@ import os, sys, json, time, glob, random
 import numpy as np
 import pandas as pd
 
-REPO = os.path.expanduser("~/siren_hpc")
+REPO = os.path.expanduser(os.environ.get("SIREN_ROOT", "~/siren_hpc"))
 RAW = f"{REPO}/data/raw"; PROC = f"{REPO}/data/processed"; RES = f"{REPO}/results"
 sys.path.insert(0, REPO)
 os.environ.setdefault("OMP_NUM_THREADS", "8")

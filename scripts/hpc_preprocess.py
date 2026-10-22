@@ -16,8 +16,8 @@ from __future__ import annotations
 import bisect, gzip, os, sys, time
 import pandas as pd
 
-RAW = os.path.expanduser("~/siren_hpc/data/raw")
-PROC = os.path.expanduser("~/siren_hpc/data/processed")
+RAW = os.path.join(os.path.expanduser(os.environ.get("SIREN_ROOT", "~/siren_hpc")), "data", "raw")
+PROC = os.path.join(os.path.expanduser(os.environ.get("SIREN_ROOT", "~/siren_hpc")), "data", "processed")
 os.makedirs(PROC, exist_ok=True)
 T0 = time.time()
 def say(msg): print(f"[{time.time()-T0:7.1f}s] {msg}", flush=True)

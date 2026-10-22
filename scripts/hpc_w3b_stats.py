@@ -4,7 +4,7 @@ import os, json, random
 import numpy as np
 import pandas as pd
 
-REPO = os.path.expanduser("~/siren_hpc"); RES = f"{REPO}/results"
+REPO = os.path.expanduser(os.environ.get("SIREN_ROOT", "~/siren_hpc")); RES = f"{REPO}/results"
 df = pd.read_csv(f"{RES}/w3b_pairs.tsv.gz", sep="\t")
 def sp(a,b): return float(pd.Series(a).rank().corr(pd.Series(b).rank()))
 

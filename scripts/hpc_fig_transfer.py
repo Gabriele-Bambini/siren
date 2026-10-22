@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 plt.rcParams.update({"font.size": 10, "font.family": "DejaVu Sans",
                      "axes.linewidth": 0.8, "savefig.facecolor": "white"})
 
-RES = os.path.expanduser("~/siren_hpc/results")
+RES = os.path.join(os.path.expanduser(os.environ.get("SIREN_ROOT", "~/siren_hpc")), "results")
 M = {
     "K562 · chr19 test":         {"GBM dist+ATAC (K562)": 0.1212, "GBM trained on Gasperini": 0.004},
     "K562 · held-out chroms":    {"GBM dist+ATAC (K562)": 0.1823, "GBM trained on Gasperini": None},

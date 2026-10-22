@@ -9,7 +9,7 @@ import os, sys, json
 import numpy as np
 import pandas as pd
 
-REPO = os.path.expanduser("~/siren_hpc")
+REPO = os.path.expanduser(os.environ.get("SIREN_ROOT", "~/siren_hpc"))
 RAW = f"{REPO}/data/raw"; PROC = f"{REPO}/data/processed"; RES = f"{REPO}/results"
 sys.path.insert(0, REPO)
 from src.utils.leakage import check_halo_overlap

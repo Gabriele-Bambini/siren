@@ -5,7 +5,7 @@ import os, sys, json
 import numpy as np
 import pandas as pd
 
-REPO=os.path.expanduser("~/siren_hpc"); RAW=f"{REPO}/data/raw"; RES=f"{REPO}/results"
+REPO=os.path.expanduser(os.environ.get("SIREN_ROOT", "~/siren_hpc")); RAW=f"{REPO}/data/raw"; RES=f"{REPO}/results"
 def say(m): print(m,flush=True)
 def sp(a,b): return float(pd.Series(a).rank().corr(pd.Series(b).rank()))
 
