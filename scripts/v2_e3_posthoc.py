@@ -20,6 +20,7 @@ import time
 
 import numpy as np
 import pandas as pd
+from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
@@ -56,7 +57,7 @@ def loco_logistic(X: np.ndarray, y: np.ndarray, folds: np.ndarray) -> np.ndarray
     out = np.zeros(len(y))
     for f in sorted(set(folds.tolist())):
         te = folds == f
-        mdl = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
+        mdl = make_pipeline(SimpleImputer(strategy="median"), StandardScaler(), LogisticRegression(max_iter=1000))
         mdl.fit(X[~te], y[~te].astype(int))
         out[te] = mdl.predict_proba(X[te])[:, 1]
     return out
@@ -80,9 +81,13 @@ def main() -> None:
     X1 = pop[BASE + ["neg_delta"]].to_numpy(float)
     X2 = np.column_stack([X0, ref])
     X3 = np.column_stack([X0, ref, pop["neg_delta"].to_numpy(float)])
+    # group C (A19): also control for screen power and source screen
+    X4 = np.column_stack([X2, pop["power50"].to_numpy(float), pd.get_dummies(pop["screen"]).to_numpy(float)])
+    X5 = np.column_stack([X4, pop["neg_delta"].to_numpy(float)])
     score = {"dist": -pop["logd"].to_numpy(), "nd": pop["neg_delta"].to_numpy(), "M2": -pred["M2"],
              "M2E": -pred["M2E"], "M2full": pop["m2_full"].to_numpy(), "LR0": loco_logistic(X0, y, folds),
-             "LR1": loco_logistic(X1, y, folds), "LR2": loco_logistic(X2, y, folds), "LR3": loco_logistic(X3, y, folds)}
+             "LR1": loco_logistic(X1, y, folds), "LR2": loco_logistic(X2, y, folds), "LR3": loco_logistic(X3, y, folds),
+             "LR4": loco_logistic(X4, y, folds), "LR5": loco_logistic(X5, y, folds)}
     names = list(score)
     scr = [c for c in pop.columns if c.startswith("d_k562cage_k")]
     far = (pop["dist"].to_numpy() > FAR_BP)
@@ -118,7 +123,8 @@ def main() -> None:
     groups = {"A": {"nd-dist": ("nd", "dist"), "M2E-dist": ("M2E", "dist"), "LR1-LR0": ("LR1", "LR0"),
                     "LR1-dist": ("LR1", "dist")},
               "B": {"M2E-M2full": ("M2E", "M2full"), "LR1-M2full": ("LR1", "M2full"), "LR3-LR2": ("LR3", "LR2"),
-                    "far_nd-far_dist": ("far_nd", "far_dist"), "far_LR1-far_LR0": ("far_LR1", "far_LR0")}}
+                    "far_nd-far_dist": ("far_nd", "far_dist"), "far_LR1-far_LR0": ("far_LR1", "far_LR0")},
+              "C": {"LR5-LR4": ("LR5", "LR4"), "LR1-nd": ("LR1", "nd")}}
     cons = {}
     for g, fam in groups.items():
         tmp = {k: contrast(a, b) for k, (a, b) in fam.items()}

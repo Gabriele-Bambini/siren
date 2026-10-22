@@ -16,17 +16,18 @@ EPCrisprBenchmark K562 table (10,356 tested element–gene pairs).
 1. Unfitted log-distance reproduces the published AUPRC of the benchmark's distance baseline; gradient-boosted
    regression on distance + K562 ATAC is **below** it under leave-one-chromosome-out (LOCO) with
    cluster-bootstrap intervals; benchmark annotations and logistic regression are not detectably better.
-2. No cross-context collapse once features are cell-type matched and source pairs are locus-disjoint.
+2. No cross-context collapse where it can be tested (K562 held-out screens, WTC11); three held-out cell types are untestable. Transferred models are below unfitted distance in the target.
 3. After correcting the Enformer indexing and track choice, the K562-CAGE silencing score adds to distance +
-   accessibility for pairs inside the model window (pre-specified rule: BENEFIT), and the gain survives
-   post-hoc comparisons with logistic baselines and a null-window control.
+   accessibility for pairs inside the model window (pre-specified rule: BENEFIT against a weak regression
+   baseline). Against unfitted distance the GBM combination is not detectably better; the score alone and
+   logistic models with it are, in post-hoc contrasts. The v1.0 negative headline was an artefact (D19).
 4. Constant-width conformal intervals are calibrated only on average; per-decile (Mondrian) intervals fix
    conditional coverage; conformal selection is inconclusive.
 5. Method variants (ranking objectives, two-stage, uncertainty penalty, nested HPO, gene covariates) do not
    improve on the baseline.
 
-Every analysis was pre-specified in [`supplementary/PREREG_v2.md`](supplementary/PREREG_v2.md) (git-timestamped; 15
-dated amendments state whether results had been seen). Novelty and rebranding were checked against
+Every analysis was pre-specified in [`supplementary/PREREG_v2.md`](supplementary/PREREG_v2.md) (git-committed; 19
+dated amendments state whether results had been seen; no external timestamp yet). Novelty and rebranding were checked against
 [`supplementary/LITERATURE_SURVEY.md`](supplementary/LITERATURE_SURVEY.md) (66 DOI-verified references).
 
 ## Reproduce
@@ -56,7 +57,7 @@ src/            v1.0 library (splits, leakage checker, metrics, conformal)
 hpc/            SLURM pipelines, environment lock and setup
 results/v2/     result JSON per experiment (regenerated); results/claims.json; results/v1_reference.json
 resources/      Enformer/Basenji targets_human.txt (SHA-256 checked by the scripts)
-tests/          unit tests (66+), including regression tests for each audited defect
+tests/          unit tests (68), including regression tests for the main fixed defects (Enformer geometry, seeds, correlation orientation, tie handling, cluster bootstrap, claims checker)
 ```
 
 ## Limitations to keep in mind
@@ -64,7 +65,7 @@ One training cell type and one public table; labels depend on screen power; the 
 of independent loci, not pairs; the Enformer analysis covers only pairs inside the model window and uses a
 community port of the weights (fidelity-checked, not compared with the original implementation); several
 analyses were added after earlier results were seen and are labelled post hoc in the manuscript and in PREREG
-amendments A11–A15.
+amendments A11–A19.
 
 ## Citation
 See [`CITATION.cff`](CITATION.cff). A preprint DOI will be added after posting; a Zenodo DOI after the authors

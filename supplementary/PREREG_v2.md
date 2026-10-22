@@ -9,7 +9,7 @@ Wording note: v1.0 said "pre-registered" for thresholds written in a private log
 third party.
 
 ## 0. Why a v2 (audit summary)
-`supplementary/AUDIT_v1.md` lists 17 findings. Four are S1 (the headline Enformer result rests on a
+`supplementary/AUDIT_v1.md` lists 19 findings (this paragraph originally said 17; counts updated by A16 and A18), six of them S1. The first four S1 (the headline Enformer result rests on a
 bin-indexing/crop bug and an inconsistent CI; the cross-cell-type "wall" is confounded by applying K562
 ATAC to other cell types and has no within-context ceiling). v2 re-derives every number from one
 pipeline with leave-one-chromosome-out (LOCO) evaluation and cluster-aware inference.
@@ -324,6 +324,25 @@ cluster-bootstrap interval) and, descriptively, corrected features with the v1 m
 correction: the audit now lists 19 findings, 6 of severity S1. The GPU pipeline gained an analysis-only mode
 (`SKIP_SCORING=1`) that re-runs the cheap E3 analysis steps on existing scores and keeps their status lines in
 `pipeline_gpu_status.tsv`.
+
+**A19 · 2026-10-22 · response to the third independent review · results seen: YES.** (i) *Post-hoc group C*
+(Holm over two, labelled post hoc): logistic baseline extended with the reference promoter signal, `power50`
+and the source screen, then with −delta (LR4 → LR5); and logistic+delta versus the silencing score alone
+(LR1 versus −delta), which the earlier text asserted without a test. (ii) *Wording:* "ceiling" becomes
+"native reference" (for the K562 slice it lies below unfitted distance); the INFERIOR label is described
+as added after results were seen; the bridge is reported as showing that the v1.0 headline was an artefact
+but as neither confirming nor refuting a null in the v1.0 design (no power analysis or separate ablation of
+the indexing and track fixes was done); claims such as "all numbers are checked" are narrowed to what
+`claims.py` verifies (numbers in the Abstract, Results and Discussion are substituted, not typed); the
+estimability threshold of twenty clusters is disclosed as fixed after the cluster counts were known but
+before any model result; inference scope is stated (the bootstrap conditions on fixed out-of-fold
+predictions and omits training variance); the proposed bioRxiv category becomes "New Results"; eight of the
+first eighteen amendments were made after results had been seen. (iii) README/PREREG counts corrected.
+**Under goal G5 (at most three review→fix rounds) no further review round is run by the analysis agent; the
+open items are escalated to the authors.** Open and not done: a power analysis of the v1.0 design by
+subsampling, a separate ablation of the indexing and track fixes, a refit-based (by-chromosome) resampling
+check, observed expression as a covariate, a numerical comparison of the ported weights with the original
+implementation, an external timestamp for this plan.
 
 **A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
 scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark

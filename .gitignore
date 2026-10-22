@@ -8,3 +8,4 @@ __pycache__/
 /results/v2/*.tsv.gz
 /results/v2/*.npz
 /logs/
+/.ecc/
