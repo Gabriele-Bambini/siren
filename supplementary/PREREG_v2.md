@@ -168,6 +168,16 @@ operationalised as Holm-adjusted bootstrap p < 0.05; the equivalence rule uses t
 cluster-bootstrap CI; "AUPRC lift" = AUPRC / prevalence of the evaluated set; prevalence in the E3
 population is reported alongside.
 
+**A6 · 2026-10-22 · outcome label and score orientation · results seen: no.** The literature survey
+(§2a) and a crosstab of the benchmark table show that the field-standard positive is `Regulated`
+(significant **decreases**; 471 of 10,356 pairs, prevalence 4.55%), whereas v1.0 used `Significant`
+(546; it also contains 75 significant increases). E1, E3 and E6 therefore report both labels.
+**Primary label = `Regulated`, score = −(predicted EffectSize)** (predicted repression strength; M0 =
+−logd unchanged); **secondary label = `Significant`, score = |predicted EffectSize|** (v1.0
+continuity). The decision rules of §3 apply to the primary label; the secondary is shown with the
+same rules and labelled secondary. For E3 the primary score is −Δ (same orientation). The families
+and Holm corrections are computed separately per label.
+
 **A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
 scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark
 table composition (counts per chromosome/screen/cell type, distance quantiles); Enformer

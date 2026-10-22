@@ -24,6 +24,8 @@ the v1.0 tree. Severity: **S1** invalidates a headline claim · **S2** weakens/b
 | D16 | S3 | Reproducibility gaps in the release: data-acquisition script, the stirring scripts S2/S3+S7/S4, environment lock, and hard-coded `~/siren_hpc` paths were missing; README quickstart contains a non-command (`python3 ../stirring scripts`). | v1.0 tree | reproducibility | partly fixed (`6379cbe`) |
 | D17 | S3 | Manuscript, figures and bib live outside the repository (`Idee/flagship_project_execution/paper_v0`), so the paper cannot be rebuilt or number-checked from the repo. | repo layout | reproducibility | open → G1 |
 
+| D18 | S2 | The headline "96.7% of significant effects are repressions" (abstract, §2.4–2.5, Fig. 3, C4) is not a property of the table: recomputed on the 10,356 valid pairs it is **86.3%** (471 of 546 significant; 75 are increases), 74.1% on chr19, 95.3% within 90 kb (where the Enformer sample was drawn), and 63.4% among the Fulco-derived pairs. The constant-predictor baseline of 0.967 was specific to the sampled subset. In addition v1.0 used `Significant` (any direction) whereas the benchmark's positive class is `Regulated` (significant decreases, n=471). | cluster-level crosstab on the benchmark table (2026-10-22) | C4, abstract, Fig. 3 | open → E1/E5 (A6) |
+
 ## What survives the audit (not affected by D1–D17 as written)
 * Data harmonisation checks (label bit-identity, distance reconciliation, unit tests).
 * The base-rate observation underlying C4 (96.7% of significant effects are repressions), which is a

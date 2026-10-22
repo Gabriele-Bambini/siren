@@ -61,6 +61,7 @@ def load_table(path: str) -> pd.DataFrame:
         "tss": ((pd.to_numeric(d["startTSS"]) + pd.to_numeric(d["endTSS"])) / 2.0).round().astype(np.int64),
         "y": d["_y"].astype(float),
         "sig": _truth(d["Significant"]).to_numpy(),
+        "reg": _truth(d["Regulated"]).to_numpy(),  # field-standard positive: significant DECREASE
         "dist": pd.to_numeric(d["distanceToTSS"], errors="coerce").abs(),
         "screen": d["Reference"].map(screen_of),
         "cell_type": d["CellType"].astype(str),
