@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 
 from src.v2.stats import (auprc, auroc, build_clusters, cluster_bootstrap, percentile_ci,
-                          precision_at_frac, rho_abs, rho_mag, rho_signed, two_sided_p)
+                          precision_at_frac, precision_at_recall, rho_abs, rho_mag, rho_signed, two_sided_p)
 
 
 def test_precision_at_frac_counts_ceiling():
@@ -20,6 +20,13 @@ def test_precision_at_frac_is_tie_aware_and_order_invariant():
     perm = np.random.RandomState(0).permutation(10)
     assert p1 == pytest.approx(0.4)
     assert precision_at_frac(y[perm], s[perm], 0.2) == pytest.approx(p1)
+
+
+def test_precision_at_recall_matches_hand_computation():
+    y = np.array([1, 0, 1, 0, 0, 1, 0, 0, 0, 0], bool)
+    s = np.arange(10, 0, -1, dtype=float)                 # ranks: hits at positions 1, 3, 6
+    assert precision_at_recall(y, s, 2 / 3) == pytest.approx(2 / 3)       # recall 2/3 reached at rank 3
+    assert precision_at_recall(y, s, 1.0) == pytest.approx(3 / 6)         # all three hits by rank 6
 
 
 def test_rho_mag_keeps_orientation_of_a_magnitude_score():

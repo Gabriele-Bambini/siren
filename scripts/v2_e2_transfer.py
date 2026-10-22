@@ -94,6 +94,7 @@ def evaluate_context(name: str, kind: str, src: pd.DataFrame, tgt: pd.DataFrame,
             res[tag] = {"lift_reg": lift(y_reg, -p), "auprc_reg": auprc(y_reg, -p),
                         "p2_reg": precision_at_frac(y_reg, -p, 0.02), "lift_sig": lift(y_sig, np.abs(p)),
                         "rho_abs": rho_abs(p, yv), "rho_signed": rho_signed(p, yv)}
+        res["unfitted_distance_lift"] = lift(y_reg, -tgt["logd"].to_numpy())
         if not estimable:
             res["decision"] = "NOT-ESTIMABLE"
         elif not have_dis:
@@ -114,12 +115,20 @@ def evaluate_context(name: str, kind: str, src: pd.DataFrame, tgt: pd.DataFrame,
             res["native"] = {"lift_reg": lift(y_reg, -p_nat), "auprc_reg": auprc(y_reg, -p_nat),
                              "lift_sig": lift(y_sig, np.abs(p_nat)), "rho_abs": rho_abs(p_nat, yv)}
 
+            d_score = -tgt["logd"].to_numpy()
+
             def stat(idx, p_dis=p_dis, p_nat=p_nat):
-                return np.array([lift(y_reg[idx], -p_dis[idx]), lift(y_reg[idx], -p_nat[idx])])
+                return np.array([lift(y_reg[idx], -p_dis[idx]), lift(y_reg[idx], -p_nat[idx]),
+                                 lift(y_reg[idx], d_score[idx])])
 
             _, dr = cluster_bootstrap(tgt_cl, stat, n_boot=N_BOOT, seed=SEED_BOOT)
             ci_tr, ci_nat = percentile_ci(dr[:, 0]), percentile_ci(dr[:, 1])
-            res["lift_ci95"] = {"transfer_locus_disjoint": list(ci_tr), "native": list(ci_nat)}
+            res["lift_ci95"] = {"transfer_locus_disjoint": list(ci_tr), "native": list(ci_nat),
+                                "unfitted_distance": list(percentile_ci(dr[:, 2]))}
+            res["unfitted_distance_lift"] = lift(y_reg, d_score)
+            res["lift_diff_ci95"] = {                       # A16: paired differences, same resamples
+                "transfer_minus_native": list(percentile_ci(dr[:, 0] - dr[:, 1])),
+                "transfer_minus_unfitted_distance": list(percentile_ci(dr[:, 0] - dr[:, 2]))}
             if ci_nat[0] <= LIFT_FLOOR:
                 res["decision"] = "TARGET-UNINFORMATIVE"
             elif ci_tr[1] < ci_nat[0]:

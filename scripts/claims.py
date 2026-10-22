@@ -80,6 +80,13 @@ def derive(values: Dict[str, Any]) -> Dict[str, Any]:
         out["d/e1/folds_m2_gt_m0"] = cnt("M2", "M0")
         out["d/e1/folds_m3_gt_m0"] = cnt("M3", "M0")
         out["d/e1/folds_m2_gt_m1"] = cnt("M2", "M1")
+    out["d/e3/n_markers"] = len([k for k in values if k.startswith("e3/markers_available/")])
+    e4_folds = sorted({k.split("/")[2] for k in values if k.startswith("e4/per_fold/")})
+    if e4_folds:
+        out["d/e4/n_folds"] = len(e4_folds)
+        for a in ("0.1", "0.2"):
+            out["d/e4/empty_folds_a%s" % a] = sum(1 for f in e4_folds
+                                                 if values.get("e4/per_fold/%s/n_selected_a%s" % (f, a), 1) == 0)
     return out
 
 

@@ -58,6 +58,8 @@ def status(lo: float, hi: float, est: float, p_holm: float = 0.0) -> str:
     """E3 rule plus the Holm requirement of the E6 family (PREREG amendment A11)."""
     if lo > 0 and est >= 0.02 and p_holm < 0.05:
         return "BENEFIT"
+    if hi < 0 and p_holm < 0.05:
+        return "INFERIOR"                    # amendment A16: interval wholly below zero after Holm
     if lo > -0.02 and hi < 0.02:
         return "NO-BENEFIT"
     return "INCONCLUSIVE"

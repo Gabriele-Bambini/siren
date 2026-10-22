@@ -85,6 +85,7 @@ def main() -> None:
         d = deltas[label]
         lo, hi = d["ci95"]
         d["status"] = ("SUPPORTED" if d["p_holm"] < 0.05 and d["delta_auprc"] >= 0.01
+                       else "INFERIOR" if (hi < 0 and d["p_holm"] < 0.05)
                        else "NO-BENEFIT" if (lo >= -0.02 and hi <= 0.02) else "INCONCLUSIVE")
     res = {"experiment": "E7", "label": "reg", "post_hoc": True, "n_pairs": int(n), "n_reg": int(y.sum()),
            "n_clusters": int(len(set(clusters.tolist()))), "metrics": metrics, "deltas_auprc": deltas}

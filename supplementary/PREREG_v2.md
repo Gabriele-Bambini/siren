@@ -280,6 +280,31 @@ contains no benchmark element (paired cluster bootstrap on that subsample). Stat
 CI low > 0, point ≥ +0.02, Holm p < 0.05 within the four contrasts). All of this is labelled post-hoc and
 exploratory in the manuscript; the pre-specified primary result is reported first and unchanged.
 
+**A16 · 2026-10-22 · response to an independent manuscript review · results seen: YES (all of E1–E7 and
+E3 post-hoc).** (i) *Published anchors read directly.* The analyst opened Supplementary Table 3 of Gschwind
+et al. 2026 (sheet "Combined K562 data (training)") and confirmed distance-to-TSS AUPRC 0.435933 (95% CI
+0.387337–0.482354; precision 0.315789 at 70% recall), ENCODE-rE2G 0.66224, rE2G Extended 0.737338, ABC
+(DNase×H3K27ac, ENCODE Hi-C) 0.612795 and Enformer 0.493135; this supersedes the "extracted by a
+subagent" caveat of A10. E1 now compares precision at 70% recall too. (ii) *Label INFERIOR* is added
+for a comparison whose interval lies wholly below zero with Holm p < 0.05 (E1, E6, E7, E3 groups); it
+does not alter any other label. (iii) *E3 post-hoc group B* (Holm over five): M2E versus M2 trained on the
+whole table and scored in the window; logistic+delta versus the same; logistic+delta versus logistic with the
+reference promoter K562-CAGE signal (is delta only promoter strength?); −delta versus −logd and logistic+delta
+versus logistic restricted to pairs farther than 10 kb. Descriptive additions: near-pair stratum, paired
+element-versus-null fraction, and the zero-filled −delta score on the whole table (comparable to the
+published Enformer evaluation, which scored only pairs <100 kb). (iv) *Bridge analysis*
+(`v2_e3_bridge.py`): the v1.0 W3b design (same 300 pairs, split and model) re-run with the corrected score
+to separate the effect of the fixes from the change of design. (v) E2 reports the unfitted-distance lift in
+each target and paired differences (transfer minus native, transfer minus distance). (vi) E1 adds the
+macro-average of per-fold AUPRC as a scale-robust summary. (vii) *Corrections to earlier text:* §0 should
+read 18 findings, 5 of severity S1; A1's counts (1,752 pairs, 408 significant) came from a structural probe
+(distance ≤ ~96 kb) and the final eligible population is 1,750 pairs (401 significant, 380 `Regulated`);
+the E3 null window was implemented as a deterministic list of offsets (mirror, ±20–80 kb, no benchmark
+element within 2 kb) rather than a random window, so distance matching is approximate; per-screen E1
+breakdowns were not in the plan and are exploratory; E1 "adds over distance" uses +0.01 whereas E3/E6
+BENEFIT uses +0.02, as written in §3. The bootstrap resamples fixed out-of-fold predictions (no refitting),
+not whole pipelines. No decision threshold was changed.
+
 **A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
 scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark
 table composition (counts per chromosome/screen/cell type, distance quantiles); Enformer

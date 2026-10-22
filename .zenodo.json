@@ -1,6 +1,6 @@
 {
-  "//": "Zenodo deposit metadata for siren-crispr-reference v1.0. TODO before deposit: add ORCIDs if desired and paste the minted DOI.",
-  "title": "SIREN — a calibrated reference class for CRISPRi enhancer→gene prediction (v1.0)",
+  "//": "Zenodo deposit metadata for the SIREN v2 revision draft. TODO before deposit: add ORCIDs if desired, tag a release, and paste the minted DOI.",
+  "title": "SIREN — leave-one-chromosome-out reassessment of CRISPRi enhancer–gene baselines and a corrected Enformer silencing analysis",
   "upload_type": "software",
   "creators": [
     {
@@ -16,17 +16,18 @@
       "affiliation": "Università Commerciale Luigi Bocconi, Milano, Italia"
     }
   ],
-  "description": "<p>Code, experiment scripts, result artifacts, and transparency materials (append-only project log with pre-registrations, adversarial-program charter, stirring log, trap register) for the study <em>How far do simple baselines go in CRISPRi enhancer–gene prediction? A calibrated reference class, the specificity wall, and the failure of sequence-model counterfactuals.</em> Includes leakage-safe chromosome-holdout splitting with halo deconfliction, the distance+ATAC gradient-boosting backbone with split-conformal intervals, the Enformer ISD powered replication (negative), and the adversarial robustness program.</p>",
+  "description": "<p>Code, pre-specified analysis plan with dated amendments, audit of an earlier internal release, literature survey, SLURM pipelines and machine-checked result files for a re-analysis of the public EPCrisprBenchmark K562 CRISPRi table: unfitted-distance baseline, leave-one-chromosome-out evaluation with cluster-bootstrap intervals, locus-disjoint transfer, a corrected Enformer in-silico-silencing analysis, and conformal calibration and selection.</p>",
   "access_right": "open",
   "license": "MIT",
-  "version": "v1.0",
-  "pub_date": "2026-08-23",
+  "version": "2.0-draft",
+  "pub_date": "2026-10-22",
   "keywords": [
     "CRISPRi",
     "enhancer-gene prediction",
     "benchmark",
+    "Enformer",
     "conformal prediction",
-    "negative results",
+    "reproducibility",
     "functional genomics"
   ],
   "related_identifiers": [

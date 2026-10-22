@@ -43,6 +43,22 @@ def precision_at_frac(y: np.ndarray, score: np.ndarray, frac: float) -> float:
     return float((y[above].sum() + k_rem * y[tied].mean()) / k)
 
 
+def precision_at_recall(y: np.ndarray, score: np.ndarray, recall: float) -> float:
+    """Precision at the first score threshold whose recall reaches ``recall`` (ties included), as in the
+    benchmark's 'precision at threshold' column."""
+    y = np.asarray(y).astype(bool)
+    s = np.asarray(score, float)
+    n_pos = int(y.sum())
+    if n_pos == 0:
+        return float("nan")
+    order = np.argsort(-s, kind="mergesort")
+    cum_tp = np.cumsum(y[order])
+    k = int(np.searchsorted(cum_tp, math.ceil(recall * n_pos)) + 1)
+    thr = s[order][min(k, len(s)) - 1]
+    sel = s >= thr
+    return float(y[sel].sum() / sel.sum())
+
+
 def _rho(a: np.ndarray, b: np.ndarray) -> float:
     a = np.asarray(a, float)
     b = np.asarray(b, float)

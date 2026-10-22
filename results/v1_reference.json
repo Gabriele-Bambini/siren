@@ -22,10 +22,12 @@
     "repression_fraction_among_significant": 0.967,
     "conformal_coverage_chr19": 0.893,
     "nominal_coverage": 0.90,
-    "lit_distance_auprc": 0.4359,
-    "lit_rE2G_auprc": 0.662,
-    "lit_rE2G_extended_auprc": 0.737,
-    "lit_abc_auprc": 0.613
+    "lit_distance_auprc": 0.435933,
+    "lit_rE2G_auprc": 0.66224,
+    "lit_rE2G_extended_auprc": 0.737338,
+    "lit_abc_auprc": 0.612795,
+    "lit_enformer_auprc": 0.493135,
+    "lit_distance_precision_at_70pct_recall": 0.315789
   },
-  "literature_note": "lit_* values: Gschwind et al. 2026, Supplementary Table 3, K562 training benchmark (10,356 pairs, 471 positives), extracted by a research subagent and cross-checked only for the distance baseline (reproduced by E1); the rE2G and ABC values are context, not reproduced here."
+  "literature_note": "lit_* values: Gschwind et al. 2026, Supplementary Table 3, sheet 'Combined K562 data (training)' (10,356 pairs, 471 positives), read directly by the analyst on 2026-10-22; only the distance baseline is reproduced by E1, the other values are context. The published Enformer value scored only pairs closer than 100 kb (others set to zero)."
 }

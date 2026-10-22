@@ -25,7 +25,7 @@ from src.evaluation.metrics import holm_correction  # noqa: E402
 from src.v2.data import ACT_NUMERIC, add_atac, add_category_dummies, load_train  # noqa: E402
 from src.v2.models import fold_labels, loco_predict  # noqa: E402
 from src.v2.stats import (auprc, auroc, build_clusters, cluster_bootstrap, percentile_ci,  # noqa: E402
-                          precision_at_frac, rho_mag, rho_signed, two_sided_p)
+                          precision_at_frac, precision_at_recall, rho_mag, rho_signed, two_sided_p)
 
 OUT = os.path.join(ROOT, "results", "v2")
 os.makedirs(OUT, exist_ok=True)
@@ -114,16 +114,27 @@ def main() -> None:
         def adds(label: str, tmp=tmp) -> bool:
             return bool(tmp[label]["p_holm"] < 0.05 and tmp[label]["delta_auprc"] >= 0.01)
 
+        def lab_status(key: str, tmp=tmp) -> str:
+            """SUPPORTED / INFERIOR (A16: interval wholly below zero and Holm p < 0.05) / NO-BENEFIT / INCONCLUSIVE."""
+            lo_, hi_ = tmp[key]["ci95"]
+            if adds(key):
+                return "SUPPORTED"
+            if hi_ < 0 and tmp[key]["p_holm"] < 0.05:
+                return "INFERIOR"
+            if lo_ >= -0.02 and hi_ <= 0.02:
+                return "NO-BENEFIT"
+            return "INCONCLUSIVE"
+
         lo, hi = tmp["M2-M0"]["ci95"]
         equiv = bool(lo >= -0.02 and hi <= 0.02)
         decisions[lab] = {
             "model_adds_over_distance": adds("M2-M0"),
             "atac_adds": adds("M2-M1"),
             "m2_equivalent_to_distance": equiv,
-            "status_m2_vs_distance": "SUPPORTED" if adds("M2-M0") else ("NO-BENEFIT" if equiv else "INCONCLUSIVE"),
-            "status_atac": ("SUPPORTED" if adds("M2-M1") else
-                            "NO-BENEFIT" if (tmp["M2-M1"]["ci95"][0] >= -0.02 and tmp["M2-M1"]["ci95"][1] <= 0.02)
-                            else "INCONCLUSIVE"),
+            "status_m2_vs_distance": lab_status("M2-M0"),
+            "status_atac": lab_status("M2-M1"),
+            "status_m3_vs_distance": lab_status("M3-M0"),
+            "status_m3_vs_m2": lab_status("M3-M2"),
         }
 
     def breakdown(mask: np.ndarray) -> dict:
@@ -140,12 +151,20 @@ def main() -> None:
     chr19_v1 = breakdown((df["chrom"] == "chr19").to_numpy())
 
     ours = float(point[col["reg.M0.auprc"]])
-    anchor = {"published_distance_auprc": 0.4359, "source": "Gschwind et al. 2026, Supp. Table 3 (extracted by a "
-              "subagent, PREREG A10)", "ours_M0_reg_auprc": ours, "abs_diff": abs(ours - 0.4359),
-              "within_0.01": bool(abs(ours - 0.4359) <= 0.01)}
-    say("anchor check: ours=%.4f published=0.4359 -> %s" % (ours, anchor["within_0.01"]))
+    pub, pub_p70 = 0.435933, 0.315789          # Gschwind et al. 2026, Supp. Table 3, read directly (A16)
+    ours_p70 = precision_at_recall(y_lab["reg"], score["reg"]["M0"], 0.7)
+    anchor = {"published_distance_auprc": pub, "published_distance_precision_at_70pct_recall": pub_p70,
+              "source": "Gschwind et al. 2026, Supplementary Table 3 (sheet 'Combined K562 data (training)'), "
+                        "read directly by the analyst on 2026-10-22",
+              "ours_M0_reg_auprc": ours, "abs_diff": abs(ours - pub), "within_0.01": bool(abs(ours - pub) <= 0.01),
+              "ours_M0_precision_at_70pct_recall": ours_p70, "abs_diff_p70": abs(ours_p70 - pub_p70)}
+    say("anchor check: ours=%.4f published=%.4f -> %s; precision@70%% recall ours=%.4f published=%.4f"
+        % (ours, pub, anchor["within_0.01"], ours_p70, pub_p70))
+    folds_ok = [f for f in fold_names if per_fold[f]["n_reg"] >= 5]
+    macro = {m: float(np.mean([per_fold[f]["reg.%s.auprc" % m] for f in folds_ok])) for m in MODELS}
+    macro["n_folds_used"] = len(folds_ok)
     res = {
-        "anchor_check": anchor,
+        "anchor_check": anchor, "macro_fold_auprc_reg": macro,
         "experiment": "E1_LOCO", "n_pairs": int(n), "n_regulated": int(df.reg.sum()),
         "n_significant": int(df.sig.sum()), "prevalence_reg": float(df.reg.mean()),
         "prevalence_sig": float(df.sig.mean()), "n_clusters": n_cl, "n_boot": N_BOOT, "seed_boot": SEED_BOOT,

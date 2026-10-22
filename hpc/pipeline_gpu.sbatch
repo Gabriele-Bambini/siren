@@ -19,7 +19,7 @@ pip freeze > "results/v2/env_freeze_gpu.txt" 2>/dev/null || true
 nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv
 STATUS=results/v2/pipeline_gpu_status.tsv
 printf "script\texit_code\tseconds\n" > "$STATUS"
-for s in v2_e3_sanity v2_e3_enformer v2_e3_analysis v2_e3_posthoc; do
+for s in v2_e3_sanity v2_e3_enformer v2_e3_analysis v2_e3_posthoc v2_e3_bridge; do
   t0=$(date +%s)
   set +e
   python "scripts/$s.py" > "logs/$s.log" 2>&1

@@ -28,6 +28,6 @@ the v1.0 tree. Severity: **S1** invalidates a headline claim · **S2** weakens/b
 
 ## What survives the audit (not affected by D1–D17 as written)
 * Data harmonisation checks (label bit-identity, distance reconciliation, unit tests).
-* The base-rate observation underlying C4 (96.7% of significant effects are repressions), which is a
-  property of the benchmark labels and can be recomputed in one line. Novelty of C4 is checked in
-  `LITERATURE_SURVEY.md`.
+* The general base-rate caution behind C4 (a constant-sign predictor can look good when one sign
+  dominates). The specific figure of 96.7% does **not** survive (D18): it is population-specific, 86.3% on
+  the whole table. Novelty of C4 is checked in `LITERATURE_SURVEY.md`.
