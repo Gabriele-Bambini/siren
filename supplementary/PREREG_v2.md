@@ -200,6 +200,20 @@ The control PASSES iff ≥3 markers are available, ≥3 have percentile rank ≥
 percentile is ≥ 0.90. If it FAILS, the E3 status is forced to INCONCLUSIVE (the corrected score cannot be
 trusted to reflect K562 CAGE) and the failure is reported.
 
+**A9 · 2026-10-22 · E4 operational definition · results seen: no.** Calibration/selection are evaluated
+per LOCO fold on M2 with a cluster-grouped 25% calibration split of the training chromosomes.
+Intervals: split-conformal absolute-residual intervals at level 0.90 (finite-sample quantile), constant
+width, and a Mondrian variant with one quantile per decile of |prediction| of the calibration set;
+coverage is reported per held-out chromosome (mean, range) and conditionally by decile of |prediction| and
+of `logd` (maximum absolute deviation from 0.90). Selection: nulls = calibration pairs with
+`reg` = False; conformal p-value of a test pair = (1 + #{null calibration scores ≥ its score}) /
+(n_null + 1), with score = −prediction; Benjamini–Hochberg within each held-out fold at α ∈ {0.1, 0.2};
+realised false-discovery proportion (FDP, relative to the benchmark `Regulated` label) and power are
+pooled over folds, with 95% cluster-bootstrap intervals, and compared with a naive top-k rule selecting
+the same number of pairs per fold. **SUPPORTED(α)** ⇔ pooled FDP ≤ α + 0.02 **and** its bootstrap CI upper
+bound ≤ α + 0.05 **and** ≥ 20 pairs selected in total; otherwise INCONCLUSIVE. Caveat stated in advance:
+"not regulated" ≠ "no effect" because screens are power-limited, so FDP is relative to benchmark labels.
+
 **A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
 scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark
 table composition (counts per chromosome/screen/cell type, distance quantiles); Enformer
