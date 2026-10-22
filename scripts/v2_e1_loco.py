@@ -25,7 +25,7 @@ from src.evaluation.metrics import holm_correction  # noqa: E402
 from src.v2.data import ACT_NUMERIC, add_atac, add_category_dummies, load_train  # noqa: E402
 from src.v2.models import fold_labels, loco_predict  # noqa: E402
 from src.v2.stats import (auprc, auroc, build_clusters, cluster_bootstrap, percentile_ci,  # noqa: E402
-                          precision_at_frac, rho_abs, rho_signed, two_sided_p)
+                          precision_at_frac, rho_mag, rho_signed, two_sided_p)
 
 OUT = os.path.join(ROOT, "results", "v2")
 os.makedirs(OUT, exist_ok=True)
@@ -81,7 +81,7 @@ def main() -> None:
                 s = score[lab][m][idx]
                 out += [auprc(ys, s), auroc(ys, s), precision_at_frac(ys, s, 0.02), precision_at_frac(ys, s, 0.05)]
         yv = y_val[idx]
-        out += [rho_abs(mag[m][idx], yv) for m in MODELS]
+        out += [rho_mag(mag[m][idx], yv) for m in MODELS]   # Spearman(magnitude score, |y|); M0 = -logd
         out += [rho_signed(pred[m][idx], yv) for m in ("M1", "M2", "M3")]
         return np.array(out)
 
@@ -121,7 +121,9 @@ def main() -> None:
             "atac_adds": adds("M2-M1"),
             "m2_equivalent_to_distance": equiv,
             "status_m2_vs_distance": "SUPPORTED" if adds("M2-M0") else ("NO-BENEFIT" if equiv else "INCONCLUSIVE"),
-            "status_atac": "SUPPORTED" if adds("M2-M1") else "NOT-SUPPORTED-OR-INCONCLUSIVE",
+            "status_atac": ("SUPPORTED" if adds("M2-M1") else
+                            "NO-BENEFIT" if (tmp["M2-M1"]["ci95"][0] >= -0.02 and tmp["M2-M1"]["ci95"][1] <= 0.02)
+                            else "INCONCLUSIVE"),
         }
 
     def breakdown(mask: np.ndarray) -> dict:

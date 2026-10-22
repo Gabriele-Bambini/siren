@@ -1,0 +1,26 @@
+{
+  "source": "Constants typed from the v1.0 draft manuscript (paper_v0/MANUSCRIPT.md, 2026-08-23) so that comparisons with v1.0 in the v2 manuscript are placeholders like any other number; they are NOT recomputed by v2.",
+  "values": {
+    "chr19_backbone_auprc": 0.368,
+    "chr19_backbone_auroc": 0.815,
+    "chr19_backbone_p2": 0.400,
+    "chr19_distance_auprc": 0.348,
+    "chr19_distance_auroc": 0.823,
+    "chr19_distance_p2": 0.422,
+    "backbone_rho_full_table": 0.108,
+    "backbone_enrichment_p2": 15.6,
+    "heldout_k562_rho": 0.182,
+    "heldout_k562_p2": 0.605,
+    "hct116_rho": 0.014,
+    "wtc11_rho": 0.040,
+    "cross_screen_transfer_rho": 0.004,
+    "cross_screen_native_rho": 0.106,
+    "cross_screen_ratio": 0.038,
+    "enformer_increment": -0.275,
+    "enformer_ci_low": -0.21,
+    "enformer_ci_high": 0.13,
+    "repression_fraction_among_significant": 0.967,
+    "conformal_coverage_chr19": 0.893,
+    "nominal_coverage": 0.90
+  }
+}

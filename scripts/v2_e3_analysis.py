@@ -84,9 +84,10 @@ def evaluate(df: pd.DataFrame, variants: dict, tag: str) -> dict:
     return res
 
 
-def status(delta: dict) -> str:
+def status(delta: dict, p_holm: float = 0.0) -> str:
+    """E3 rule; secondary-family comparisons must also pass the Holm correction (amendment A14)."""
     lo, hi = delta["ci95"]
-    if lo > 0 and delta["delta_auprc"] >= 0.02:
+    if lo > 0 and delta["delta_auprc"] >= 0.02 and p_holm < 0.05:
         return "BENEFIT"
     if lo > -0.02 and hi < 0.02:
         return "NO-BENEFIT"
@@ -94,7 +95,12 @@ def status(delta: dict) -> str:
 
 
 def main() -> None:
-    sc = pd.read_csv(os.path.join(OUT, "e3_scores.tsv.gz"), sep="\t").drop_duplicates(KEYS)
+    sc_raw = pd.read_csv(os.path.join(OUT, "e3_scores.tsv.gz"), sep="\t")
+    env_path0 = os.path.join(OUT, "e3_env.json")
+    if os.path.exists(env_path0):
+        n_exp = json.load(open(env_path0))["n_population"]
+        assert len(sc_raw) == n_exp, "scores file has %d pairs, e3_env says %d (partial run?)" % (len(sc_raw), n_exp)
+    sc = sc_raw.drop_duplicates(KEYS)
     full = add_atac(load_train(ROOT), ROOT)
     keep = KEYS + ["d_k562cage", "d_allcage", "d_k562dnase", "null_d_k562cage", "null_d_allcage", "null_d_k562dnase"]
     keep = [c for c in keep if c in sc.columns]
@@ -116,7 +122,8 @@ def main() -> None:
         prim["deltas"][k]["p_holm_secondary_family"] = float(ph)
     decision = {"primary": "reg.M2E-M2", "status": status(d_prim), "delta_auprc": d_prim["delta_auprc"],
                 "ci95": d_prim["ci95"],
-                "secondary_status": {k: status(prim["deltas"][k]) for k in sec},
+                "secondary_status": {k: status(prim["deltas"][k], prim["deltas"][k]["p_holm_secondary_family"])
+                                     for k in sec},
                 "sig_label_status": status(prim["deltas"]["sig.M2E-M2"])}
 
     # A8: fidelity control of the ported weights; a failed control forces INCONCLUSIVE

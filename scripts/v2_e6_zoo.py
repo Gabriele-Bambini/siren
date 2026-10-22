@@ -73,7 +73,7 @@ def main() -> None:
     X2 = BASE
     X5 = BASE + ["power50", "n_tested"]
     configs = sample_configs(20)
-    names = ["M2", "V1_rank", "V2_twostage", "V3_uncert", "V4_hpo", "V5_genecov"]
+    names = ["M2", "V1_rank", "V2_twostage", "V3_uncert", "V4_hpo", "V5_genecov", "V2b_twostage_signed"]
     score = {m: np.zeros(n) for m in names}
     chosen = {}
 
@@ -96,7 +96,9 @@ def main() -> None:
         # V2 two-stage
         clf = LGBMClassifier(n_estimators=300, learning_rate=0.05, num_leaves=31, min_child_samples=40, **COMMON)
         clf.fit(tr[X2].values, tr["reg"].astype(int).values)
-        score["V2_twostage"][te] = clf.predict_proba(tdf[X2].values)[:, 1] * np.abs(p2_te)
+        p_reg = clf.predict_proba(tdf[X2].values)[:, 1]
+        score["V2_twostage"][te] = p_reg * np.abs(p2_te)                 # as pre-specified in section 3 (|pred|)
+        score["V2b_twostage_signed"][te] = p_reg * np.maximum(-p2_te, 0.0)   # A14: repression-oriented variant
         # V3 uncertainty-penalised (cluster-grouped calibration split inside the training chromosomes)
         fit_i, cal_i = next(GroupShuffleSplit(n_splits=1, test_size=0.25, random_state=0)
                             .split(tr, groups=tr["cluster"].to_numpy()))

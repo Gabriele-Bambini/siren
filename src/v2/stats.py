@@ -28,12 +28,19 @@ def auroc(y: np.ndarray, score: np.ndarray) -> float:
 
 
 def precision_at_frac(y: np.ndarray, score: np.ndarray, frac: float) -> float:
-    """Fraction of positives among the top ceil(frac*n) scores (stable tie order)."""
+    """Precision among the top ceil(frac*n) scores; ties at the cut-off count their expected hit rate.
+
+    Tree-ensemble scores are piecewise constant, so a row-order tie break would make the estimate depend on
+    the order of the input table (review finding 10).
+    """
     y = np.asarray(y).astype(bool)
+    s = np.asarray(score, float)
     n = y.size
     k = max(1, int(math.ceil(frac * n)))
-    order = np.argsort(-np.asarray(score, float), kind="mergesort")
-    return float(np.mean(y[order[:k]]))
+    thr = np.sort(s)[::-1][k - 1]
+    above, tied = s > thr, s == thr
+    k_rem = k - int(above.sum())
+    return float((y[above].sum() + k_rem * y[tied].mean()) / k)
 
 
 def _rho(a: np.ndarray, b: np.ndarray) -> float:
@@ -47,6 +54,11 @@ def _rho(a: np.ndarray, b: np.ndarray) -> float:
 def rho_abs(pred: np.ndarray, y: np.ndarray) -> float:
     """Spearman(|pred|, |y|): magnitude agreement (average ranks for ties)."""
     return _rho(np.abs(pred), np.abs(y))
+
+
+def rho_mag(score: np.ndarray, y: np.ndarray) -> float:
+    """Spearman(score, |y|) for a score that is already a magnitude (larger = stronger); no abs on the score."""
+    return _rho(score, np.abs(y))
 
 
 def rho_signed(pred: np.ndarray, y: np.ndarray) -> float:

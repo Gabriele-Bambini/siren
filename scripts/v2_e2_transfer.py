@@ -18,6 +18,7 @@ import time
 
 import numpy as np
 import pandas as pd
+from scipy.stats import ks_2samp
 from sklearn.model_selection import GroupKFold
 
 ROOT = os.path.expanduser(os.environ.get("SIREN_ROOT", "~/siren_hpc"))
@@ -30,7 +31,7 @@ from src.v2.stats import (auprc, build_clusters, cluster_bootstrap, percentile_c
 OUT = os.path.join(ROOT, "results", "v2")
 os.makedirs(OUT, exist_ok=True)
 T0 = time.time()
-N_BOOT, SEED_BOOT = 1000, 12345
+N_BOOT, SEED_BOOT = 2000, 12345
 MIN_REG, MIN_CLUSTERS, LIFT_FLOOR = 15, 20, 1.5
 
 
@@ -78,6 +79,7 @@ def evaluate_context(name: str, kind: str, src: pd.DataFrame, tgt: pd.DataFrame,
            "prevalence_reg": float(tgt["reg"].mean()), "n_target_clusters": int(n_cl),
            "target_frac_sharing_cluster_with_source": tgt_shared_frac, "estimable": estimable,
            "logd_median_source": float(src["logd"].median()), "logd_median_target": float(tgt["logd"].median()),
+           "logd_ks_statistic": float(ks_2samp(src["logd"], tgt["logd"]).statistic),
            "feature_sets": {}}
     y_reg, y_sig, yv = tgt["reg"].to_numpy(), tgt["sig"].to_numpy(), tgt["y"].to_numpy()
     for fs, cols in fsets.items():
@@ -122,8 +124,10 @@ def evaluate_context(name: str, kind: str, src: pd.DataFrame, tgt: pd.DataFrame,
                 res["decision"] = "TARGET-UNINFORMATIVE"
             elif ci_tr[1] < ci_nat[0]:
                 res["decision"] = "CONTEXT-LIMITED-TRANSFER"
-            elif ci_tr[0] > LIFT_FLOOR:
-                res["decision"] = "TRANSFERS"
+            elif ci_tr[0] > LIFT_FLOOR and ci_tr[0] <= ci_nat[1]:
+                res["decision"] = "TRANSFERS"          # transfer CI overlaps the native CI and is above the floor
+            elif ci_tr[0] > ci_nat[1]:
+                res["decision"] = "TRANSFER-ABOVE-NATIVE"
             else:
                 res["decision"] = "INCONCLUSIVE"
         out["feature_sets"][fs] = res

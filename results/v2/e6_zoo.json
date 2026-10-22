@@ -55,8 +55,8 @@
         -0.04759225622044972
       ],
       "p_raw": 0.0005,
-      "status": "INCONCLUSIVE",
-      "p_holm": 0.0025
+      "p_holm": 0.0025,
+      "status": "INCONCLUSIVE"
     },
     "V2_twostage": {
       "delta_auprc": 0.014064592340951476,
@@ -65,8 +65,8 @@
         0.0316516233418368
       ],
       "p_raw": 0.081,
-      "status": "INCONCLUSIVE",
-      "p_holm": 0.162
+      "p_holm": 0.162,
+      "status": "INCONCLUSIVE"
     },
     "V3_uncert": {
       "delta_auprc": -0.16586353180224006,
@@ -75,8 +75,8 @@
         -0.13111123034448322
       ],
       "p_raw": 0.0005,
-      "status": "INCONCLUSIVE",
-      "p_holm": 0.0025
+      "p_holm": 0.0025,
+      "status": "INCONCLUSIVE"
     },
     "V4_hpo": {
       "delta_auprc": 0.021020918203978556,
@@ -85,8 +85,8 @@
         0.042688519095676856
       ],
       "p_raw": 0.038,
-      "status": "BENEFIT",
-      "p_holm": 0.11399999999999999
+      "p_holm": 0.11399999999999999,
+      "status": "INCONCLUSIVE"
     },
     "V5_genecov": {
       "delta_auprc": -0.043902505418386584,
@@ -95,8 +95,8 @@
         0.03629024025824484
       ],
       "p_raw": 0.355,
-      "status": "INCONCLUSIVE",
-      "p_holm": 0.355
+      "p_holm": 0.355,
+      "status": "INCONCLUSIVE"
     }
   },
   "chosen_configs": {

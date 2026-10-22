@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 
 from src.v2.stats import (auprc, auroc, build_clusters, cluster_bootstrap, percentile_ci,
-                          precision_at_frac, rho_abs, rho_signed, two_sided_p)
+                          precision_at_frac, rho_abs, rho_mag, rho_signed, two_sided_p)
 
 
 def test_precision_at_frac_counts_ceiling():
@@ -11,6 +11,22 @@ def test_precision_at_frac_counts_ceiling():
     s = np.arange(10, 0, -1, dtype=float)  # positive has the top score
     assert precision_at_frac(y, s, 0.1) == 1.0  # k = 1
     assert precision_at_frac(y, s, 0.2) == 0.5  # k = 2
+
+
+def test_precision_at_frac_is_tie_aware_and_order_invariant():
+    y = np.array([1, 0, 0, 0, 1, 0, 0, 0, 0, 0], bool)
+    s = np.array([5, 5, 5, 5, 5, 1, 1, 1, 1, 1], float)    # 5 tied at the top, 2 positives among them
+    p1 = precision_at_frac(y, s, 0.2)                        # k = 2 -> expected hits 2 * 2/5
+    perm = np.random.RandomState(0).permutation(10)
+    assert p1 == pytest.approx(0.4)
+    assert precision_at_frac(y[perm], s[perm], 0.2) == pytest.approx(p1)
+
+
+def test_rho_mag_keeps_orientation_of_a_magnitude_score():
+    y = np.array([0.1, -0.3, 0.2, -0.5, 0.05])
+    score = np.array([1.0, 3.0, 2.0, 4.0, 0.5])             # larger = stronger, agrees with |y|
+    assert rho_mag(score, y) == pytest.approx(1.0)
+    assert rho_mag(-score, y) == pytest.approx(-1.0)        # v1.0/E1 defect: rho_abs(-logd) took abs() of the score
 
 
 def test_auprc_perfect_and_random_floor():

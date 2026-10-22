@@ -250,6 +250,24 @@ Family: {M4−M0, M5−M0} (Holm over two), plus M5−M2 and M4−M5 as descript
 ⇔ Holm p < 0.05 and Δ ≥ +0.01; equivalent ⇔ raw 95% CI within ±0.02). E7 is labelled post-hoc and exploratory
 in the manuscript; it makes no novelty claim (logistic regression is the literature baseline).
 
+**A14 · 2026-10-22 · corrections after an independent code review · results seen: YES (E1–E7 first runs).**
+A reviewer who had seen only the code and this plan reported five S2 findings; all were checked and, where
+valid, fixed, and every analysis they affect was re-run. (i) `rho_abs` applied `abs()` to the magnitude score
+of M0 (−logd), which flipped its sign; E1 now uses `rho_mag(score, y) = Spearman(score, |y|)` (only the
+secondary M0 magnitude correlation changes). (ii) `precision_at_frac` broke ties at the cut-off by row order;
+it now counts the expected hit rate of tied scores (changes secondary precision@k values of tree models).
+(iii) E6 variant V2 (two-stage) multiplies by |pred| as written in §3, which counts a predicted *increase* as
+repression; a repression-oriented variant **V2b** (P(reg) × max(−pred, 0)) is added and the Holm family is the
+six variants; V2 is kept as pre-specified. E6 reports the primary label only (A6 said both; the secondary
+label is dropped for E6) and its inner CV groups by chromosome (stricter than by cluster). (iv) E3 secondary
+comparisons now require the Holm correction for BENEFIT, as E6 does in A11, and the E3 analysis asserts that
+the scored population matches `e3_env.json`. (v) E2 labels a transfer interval lying wholly above the native
+interval TRANSFER-ABOVE-NATIVE (TRANSFERS requires overlap), uses 2,000 resamples as in §2, and reports the KS
+statistic of `logd`. (vi) E1 `status_atac` uses the §3 vocabulary (SUPPORTED / NO-BENEFIT / INCONCLUSIVE).
+(vii) The claims checker now fails on a stale `claims.json`, on any non-zero pipeline step, on non-finite
+values, on hand-typed integers (≥2 digits), percentages and negative decimals in the Abstract, Results and
+Discussion, and on verbs forbidden for the annotated status (G3). No decision threshold was changed.
+
 **A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
 scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark
 table composition (counts per chromosome/screen/cell type, distance quantiles); Enformer
