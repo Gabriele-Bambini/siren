@@ -1,0 +1,781 @@
+{
+  "experiment": "E2",
+  "n_boot": 1000,
+  "seed_boot": 12345,
+  "lift_floor": 1.5,
+  "min_reg": 15,
+  "min_clusters": 20,
+  "contexts": [
+    {
+      "name": "LOSO:Gasperini2019",
+      "kind": "screen",
+      "n_source": 5057,
+      "n_source_locus_disjoint": 28,
+      "n_target": 5299,
+      "n_target_reg": 360,
+      "n_target_sig": 402,
+      "prevalence_reg": 0.06793734666918287,
+      "n_target_clusters": 595,
+      "target_frac_sharing_cluster_with_source": 0.17984525382147576,
+      "estimable": true,
+      "logd_median_source": 5.518411276321449,
+      "logd_median_target": 5.61776440454566,
+      "feature_sets": {
+        "FA": {
+          "cols": [
+            "logd"
+          ],
+          "transfer_locus_disjoint": null,
+          "transfer_naive": {
+            "lift_reg": 6.2353037092342225,
+            "auprc_reg": 0.42360998968188723,
+            "p2_reg": 0.6981132075471698,
+            "lift_sig": 5.319193779738798,
+            "rho_abs": 0.14866132933576026,
+            "rho_signed": 0.16363314131021608
+          },
+          "decision": "NO-LOCUS-DISJOINT-SOURCE"
+        },
+        "FB": {
+          "cols": [
+            "logd",
+            "atac_ov",
+            "atac_dist"
+          ],
+          "transfer_locus_disjoint": null,
+          "transfer_naive": {
+            "lift_reg": 6.548555141343104,
+            "auprc_reg": 0.4448914608196863,
+            "p2_reg": 0.6981132075471698,
+            "lift_sig": 5.49338223503389,
+            "rho_abs": 0.1562347240538499,
+            "rho_signed": 0.14869058227391102
+          },
+          "decision": "NO-LOCUS-DISJOINT-SOURCE"
+        },
+        "FC": {
+          "cols": [
+            "logd",
+            "H3K27ac_peak_overlap",
+            "H3K27ac.RPM",
+            "H3K27ac.percentile",
+            "H3K27ac.expandedRegion.percentile",
+            "DHS.RPM",
+            "DHS.percentile",
+            "CTCF_peak_overlap",
+            "CTCF.RPM",
+            "H3K27me3_peak_overlap",
+            "H3K4me1_peak_overlap",
+            "ubiq",
+            "cc_cat_CTCF element",
+            "cc_cat_H3K27ac",
+            "cc_cat_H3K27me3 element",
+            "cc_cat_High H3K27ac",
+            "cc_cat_No H3K27ac"
+          ],
+          "transfer_locus_disjoint": null,
+          "transfer_naive": {
+            "lift_reg": 7.308861610313419,
+            "auprc_reg": 0.4965446649769449,
+            "p2_reg": 0.7452830188679245,
+            "lift_sig": 6.218858257417815,
+            "rho_abs": 0.12568895930322682,
+            "rho_signed": 0.14727353448233968
+          },
+          "decision": "NO-LOCUS-DISJOINT-SOURCE"
+        }
+      }
+    },
+    {
+      "name": "LOSO:Fulco2019",
+      "kind": "screen",
+      "n_source": 6855,
+      "n_source_locus_disjoint": 6460,
+      "n_target": 3501,
+      "n_target_reg": 52,
+      "n_target_sig": 82,
+      "prevalence_reg": 0.014852899171665239,
+      "n_target_clusters": 6,
+      "target_frac_sharing_cluster_with_source": 1.0,
+      "estimable": false,
+      "logd_median_source": 5.61807425824229,
+      "logd_median_target": 5.482677821257605,
+      "feature_sets": {
+        "FA": {
+          "cols": [
+            "logd"
+          ],
+          "transfer_locus_disjoint": {
+            "lift_reg": 13.234039968675624,
+            "auprc_reg": 0.19656386128852685,
+            "p2_reg": 0.30985915492957744,
+            "lift_sig": 6.677475594133829,
+            "rho_abs": 0.12931042202797127,
+            "rho_signed": 0.03882041253889004
+          },
+          "transfer_naive": {
+            "lift_reg": 15.180095886754655,
+            "auprc_reg": 0.2254684336221771,
+            "p2_reg": 0.2112676056338028,
+            "lift_sig": 7.549483658801053,
+            "rho_abs": 0.1197865489365331,
+            "rho_signed": 0.037742200620443436
+          },
+          "decision": "NOT-ESTIMABLE"
+        },
+        "FB": {
+          "cols": [
+            "logd",
+            "atac_ov",
+            "atac_dist"
+          ],
+          "transfer_locus_disjoint": {
+            "lift_reg": 15.066223178049889,
+            "auprc_reg": 0.2237770937613808,
+            "p2_reg": 0.28169014084507044,
+            "lift_sig": 7.680118785984729,
+            "rho_abs": 0.12551839717200927,
+            "rho_signed": 0.04778044603004597
+          },
+          "transfer_naive": {
+            "lift_reg": 13.170807610769922,
+            "auprc_reg": 0.1956246774521668,
+            "p2_reg": 0.2676056338028169,
+            "lift_sig": 6.788865987793954,
+            "rho_abs": 0.1199018590211753,
+            "rho_signed": 0.04290838914950263
+          },
+          "decision": "NOT-ESTIMABLE"
+        },
+        "FC": {
+          "cols": [
+            "logd",
+            "H3K27ac_peak_overlap",
+            "H3K27ac.RPM",
+            "H3K27ac.percentile",
+            "H3K27ac.expandedRegion.percentile",
+            "DHS.RPM",
+            "DHS.percentile",
+            "CTCF_peak_overlap",
+            "CTCF.RPM",
+            "H3K27me3_peak_overlap",
+            "H3K4me1_peak_overlap",
+            "ubiq",
+            "cc_cat_CTCF element",
+            "cc_cat_H3K27ac",
+            "cc_cat_H3K27me3 element",
+            "cc_cat_High H3K27ac",
+            "cc_cat_No H3K27ac"
+          ],
+          "transfer_locus_disjoint": {
+            "lift_reg": 18.932062257768212,
+            "auprc_reg": 0.2811960118263202,
+            "p2_reg": 0.3380281690140845,
+            "lift_sig": 9.51937117202569,
+            "rho_abs": 0.1007450527922039,
+            "rho_signed": 0.0317060617173501
+          },
+          "transfer_naive": {
+            "lift_reg": 18.70932042964113,
+            "auprc_reg": 0.2778876499118363,
+            "p2_reg": 0.30985915492957744,
+            "lift_sig": 9.146542337600327,
+            "rho_abs": 0.08520447142183667,
+            "rho_signed": 0.026196904662825444
+          },
+          "decision": "NOT-ESTIMABLE"
+        }
+      }
+    },
+    {
+      "name": "LOSO:Schraivogel2020",
+      "kind": "screen",
+      "n_source": 9050,
+      "n_source_locus_disjoint": 8810,
+      "n_target": 1306,
+      "n_target_reg": 23,
+      "n_target_sig": 25,
+      "prevalence_reg": 0.01761102603369066,
+      "n_target_clusters": 17,
+      "target_frac_sharing_cluster_with_source": 0.9831546707503829,
+      "estimable": false,
+      "logd_median_source": 5.563076846263081,
+      "logd_median_target": 5.593255596311525,
+      "feature_sets": {
+        "FA": {
+          "cols": [
+            "logd"
+          ],
+          "transfer_locus_disjoint": {
+            "lift_reg": 22.133316839087044,
+            "auprc_reg": 0.38979041906508577,
+            "p2_reg": 0.3333333333333333,
+            "lift_sig": 21.272948037386474,
+            "rho_abs": 0.0677778073783822,
+            "rho_signed": 0.05209124702748973
+          },
+          "transfer_naive": {
+            "lift_reg": 22.45372422299916,
+            "auprc_reg": 0.39543312184454876,
+            "p2_reg": 0.37037037037037035,
+            "lift_sig": 22.374252276532534,
+            "rho_abs": 0.08726916659710258,
+            "rho_signed": 0.05384343103704953
+          },
+          "decision": "NOT-ESTIMABLE"
+        },
+        "FB": {
+          "cols": [
+            "logd",
+            "atac_ov",
+            "atac_dist"
+          ],
+          "transfer_locus_disjoint": {
+            "lift_reg": 13.12730921193674,
+            "auprc_reg": 0.23118538428372515,
+            "p2_reg": 0.37037037037037035,
+            "lift_sig": 11.207412011627596,
+            "rho_abs": 0.07313822130407141,
+            "rho_signed": 0.05695167517443725
+          },
+          "transfer_naive": {
+            "lift_reg": 13.82522815519811,
+            "auprc_reg": 0.24347645296290701,
+            "p2_reg": 0.25925925925925924,
+            "lift_sig": 11.851978510228088,
+            "rho_abs": 0.09050616129644296,
+            "rho_signed": 0.06508667167060724
+          },
+          "decision": "NOT-ESTIMABLE"
+        },
+        "FC": {
+          "cols": [
+            "logd",
+            "H3K27ac_peak_overlap",
+            "H3K27ac.RPM",
+            "H3K27ac.percentile",
+            "H3K27ac.expandedRegion.percentile",
+            "DHS.RPM",
+            "DHS.percentile",
+            "CTCF_peak_overlap",
+            "CTCF.RPM",
+            "H3K27me3_peak_overlap",
+            "H3K4me1_peak_overlap",
+            "ubiq",
+            "cc_cat_CTCF element",
+            "cc_cat_H3K27ac",
+            "cc_cat_H3K27me3 element",
+            "cc_cat_High H3K27ac",
+            "cc_cat_No H3K27ac"
+          ],
+          "transfer_locus_disjoint": {
+            "lift_reg": 25.358430636594573,
+            "auprc_reg": 0.4465879821146058,
+            "p2_reg": 0.4074074074074074,
+            "lift_sig": 26.82209881458782,
+            "rho_abs": 0.09795753765100582,
+            "rho_signed": 0.0570235575639995
+          },
+          "transfer_naive": {
+            "lift_reg": 24.142694116136198,
+            "auprc_reg": 0.42517761460270487,
+            "p2_reg": 0.3333333333333333,
+            "lift_sig": 22.829869493766466,
+            "rho_abs": 0.07053075295717855,
+            "rho_signed": 0.07373189921640555
+          },
+          "decision": "NOT-ESTIMABLE"
+        }
+      }
+    },
+    {
+      "name": "CT:K562",
+      "kind": "celltype",
+      "n_source": 10356,
+      "n_source_locus_disjoint": 4885,
+      "n_target": 1918,
+      "n_target_reg": 118,
+      "n_target_sig": 171,
+      "prevalence_reg": 0.061522419186652764,
+      "n_target_clusters": 152,
+      "target_frac_sharing_cluster_with_source": 0.970281543274244,
+      "estimable": true,
+      "logd_median_source": 5.567145807524085,
+      "logd_median_target": 5.559440968767568,
+      "feature_sets": {
+        "FA": {
+          "cols": [
+            "logd"
+          ],
+          "transfer_locus_disjoint": {
+            "lift_reg": 4.53003364678329,
+            "auprc_reg": 0.27869862894704284,
+            "p2_reg": 0.48717948717948717,
+            "lift_sig": 2.8474557950089823,
+            "rho_abs": 0.11079607011515193,
+            "rho_signed": 0.1303633278769219
+          },
+          "transfer_naive": {
+            "lift_reg": 5.722905427082978,
+            "auprc_reg": 0.35208698665056903,
+            "p2_reg": 0.5641025641025641,
+            "lift_sig": 3.5091925042587175,
+            "rho_abs": 0.09435596104704638,
+            "rho_signed": 0.13430210551670013
+          },
+          "native": {
+            "lift_reg": 4.2816463517965735,
+            "auprc_reg": 0.2634172416642313,
+            "lift_sig": 1.6547147303055172,
+            "rho_abs": 0.06494530826398287
+          },
+          "lift_ci95": {
+            "transfer_locus_disjoint": [
+              3.30435099340492,
+              6.123957022573721
+            ],
+            "native": [
+              3.3004747958287384,
+              5.812895904596622
+            ]
+          },
+          "decision": "TRANSFERS"
+        },
+        "FB": {
+          "cols": [
+            "logd",
+            "atac_ov",
+            "atac_dist"
+          ],
+          "transfer_locus_disjoint": {
+            "lift_reg": 5.102570479082957,
+            "auprc_reg": 0.3139224799435813,
+            "p2_reg": 0.5641025641025641,
+            "lift_sig": 3.137207795824034,
+            "rho_abs": 0.10895852103923306,
+            "rho_signed": 0.1443486042047329
+          },
+          "transfer_naive": {
+            "lift_reg": 6.1140811427624,
+            "auprc_reg": 0.3761530630062373,
+            "p2_reg": 0.6666666666666666,
+            "lift_sig": 3.739672453096178,
+            "rho_abs": 0.11522376307712728,
+            "rho_signed": 0.14416684971153418
+          },
+          "native": {
+            "lift_reg": 4.248455756642139,
+            "auprc_reg": 0.26137527595608573,
+            "lift_sig": 1.7684017935539955,
+            "rho_abs": 0.0776514360262702
+          },
+          "lift_ci95": {
+            "transfer_locus_disjoint": [
+              3.741813547465277,
+              7.075910914814815
+            ],
+            "native": [
+              3.2104141427595017,
+              5.838340395097421
+            ]
+          },
+          "decision": "TRANSFERS"
+        },
+        "FC": {
+          "cols": [
+            "logd",
+            "H3K27ac_peak_overlap",
+            "H3K27ac.RPM",
+            "H3K27ac.percentile",
+            "H3K27ac.expandedRegion.percentile",
+            "DHS.RPM",
+            "DHS.percentile",
+            "CTCF_peak_overlap",
+            "CTCF.RPM",
+            "H3K27me3_peak_overlap",
+            "H3K4me1_peak_overlap",
+            "ubiq",
+            "cc_cat_CTCF element",
+            "cc_cat_H3K27ac",
+            "cc_cat_H3K27me3 element",
+            "cc_cat_High H3K27ac",
+            "cc_cat_No H3K27ac"
+          ],
+          "transfer_locus_disjoint": {
+            "lift_reg": 7.290206306690085,
+            "auprc_reg": 0.4485111283573671,
+            "p2_reg": 0.7435897435897436,
+            "lift_sig": 4.470702401154362,
+            "rho_abs": 0.1307789498674,
+            "rho_signed": 0.15160683910960188
+          },
+          "transfer_naive": {
+            "lift_reg": 6.7923219090795985,
+            "auprc_reg": 0.4178800757410806,
+            "p2_reg": 0.7435897435897436,
+            "lift_sig": 4.095976325109899,
+            "rho_abs": 0.11339469577773321,
+            "rho_signed": 0.10281491881209161
+          },
+          "native": {
+            "lift_reg": 7.46336131688006,
+            "auprc_reg": 0.45916404347854384,
+            "lift_sig": 2.0712779196311497,
+            "rho_abs": 0.13224813223869858
+          },
+          "lift_ci95": {
+            "transfer_locus_disjoint": [
+              5.1727622673867115,
+              10.066234340001282
+            ],
+            "native": [
+              5.252475516610259,
+              10.239994003394902
+            ]
+          },
+          "decision": "TRANSFERS"
+        }
+      }
+    },
+    {
+      "name": "CT:WTC11",
+      "kind": "celltype",
+      "n_source": 10356,
+      "n_source_locus_disjoint": 8525,
+      "n_target": 1921,
+      "n_target_reg": 15,
+      "n_target_sig": 35,
+      "prevalence_reg": 0.007808433107756377,
+      "n_target_clusters": 22,
+      "target_frac_sharing_cluster_with_source": 0.9349297241020302,
+      "estimable": true,
+      "logd_median_source": 5.567145807524085,
+      "logd_median_target": 5.583245262534574,
+      "feature_sets": {
+        "FA": {
+          "cols": [
+            "logd"
+          ],
+          "transfer_locus_disjoint": {
+            "lift_reg": 33.71421053615458,
+            "auprc_reg": 0.2632551577523783,
+            "p2_reg": 0.1794871794871795,
+            "lift_sig": 8.355314300941346,
+            "rho_abs": 0.0746393860664676,
+            "rho_signed": 0.05812761815145207
+          },
+          "transfer_naive": {
+            "lift_reg": 35.175000542231714,
+            "auprc_reg": 0.2746616387993106,
+            "p2_reg": 0.20512820512820512,
+            "lift_sig": 8.54228102247422,
+            "rho_abs": 0.07454521984911315,
+            "rho_signed": 0.03675228288397075
+          },
+          "native": {
+            "lift_reg": 12.100609749610207,
+            "auprc_reg": 0.09448680179289594,
+            "lift_sig": 3.5257459107066715,
+            "rho_abs": 0.02934076790913681
+          },
+          "lift_ci95": {
+            "transfer_locus_disjoint": [
+              11.610878139331595,
+              80.70889106027114
+            ],
+            "native": [
+              5.972789554586524,
+              29.53107918135411
+            ]
+          },
+          "decision": "TRANSFERS"
+        },
+        "FC": {
+          "cols": [
+            "logd",
+            "H3K27ac_peak_overlap",
+            "H3K27ac.RPM",
+            "H3K27ac.percentile",
+            "H3K27ac.expandedRegion.percentile",
+            "DHS.RPM",
+            "DHS.percentile",
+            "CTCF_peak_overlap",
+            "CTCF.RPM",
+            "H3K27me3_peak_overlap",
+            "H3K4me1_peak_overlap",
+            "ubiq",
+            "cc_cat_CTCF element",
+            "cc_cat_H3K27ac",
+            "cc_cat_H3K27me3 element",
+            "cc_cat_High H3K27ac",
+            "cc_cat_No H3K27ac"
+          ],
+          "transfer_locus_disjoint": {
+            "lift_reg": 43.07170691971667,
+            "auprc_reg": 0.33632254231949504,
+            "p2_reg": 0.3076923076923077,
+            "lift_sig": 8.905378424141102,
+            "rho_abs": 0.034697242584985584,
+            "rho_signed": 0.03602248984275959
+          },
+          "transfer_naive": {
+            "lift_reg": 51.011040730801646,
+            "auprc_reg": 0.3983162993035006,
+            "p2_reg": 0.3076923076923077,
+            "lift_sig": 10.16474059246746,
+            "rho_abs": 0.03665936378863147,
+            "rho_signed": 0.04399380602240267
+          },
+          "native": {
+            "lift_reg": 29.687486421554098,
+            "auprc_reg": 0.2318127518601309,
+            "lift_sig": 6.645771864202349,
+            "rho_abs": 0.055103097977674854
+          },
+          "lift_ci95": {
+            "transfer_locus_disjoint": [
+              22.394308186576374,
+              109.13265899382992
+            ],
+            "native": [
+              11.005599726296468,
+              82.47275074375978
+            ]
+          },
+          "decision": "TRANSFERS"
+        }
+      }
+    },
+    {
+      "name": "CT:HCT116",
+      "kind": "celltype",
+      "n_source": 10356,
+      "n_source_locus_disjoint": 9712,
+      "n_target": 396,
+      "n_target_reg": 34,
+      "n_target_sig": 40,
+      "prevalence_reg": 0.08585858585858586,
+      "n_target_clusters": 5,
+      "target_frac_sharing_cluster_with_source": 0.8358585858585859,
+      "estimable": false,
+      "logd_median_source": 5.567145807524085,
+      "logd_median_target": 5.860468886220188,
+      "feature_sets": {
+        "FA": {
+          "cols": [
+            "logd"
+          ],
+          "transfer_locus_disjoint": {
+            "lift_reg": 3.476615958576622,
+            "auprc_reg": 0.2984973297767807,
+            "p2_reg": 0.5,
+            "lift_sig": 2.7085762988333606,
+            "rho_abs": 0.10396914436796907,
+            "rho_signed": 0.04264821700060634
+          },
+          "transfer_naive": {
+            "lift_reg": 2.3173207557889706,
+            "auprc_reg": 0.1989618830727904,
+            "p2_reg": 0.5,
+            "lift_sig": 2.1859205331602904,
+            "rho_abs": 0.016033328046573078,
+            "rho_signed": 0.00025343879603710595
+          },
+          "decision": "NOT-ESTIMABLE"
+        },
+        "FC": {
+          "cols": [
+            "logd",
+            "H3K27ac_peak_overlap",
+            "H3K27ac.RPM",
+            "H3K27ac.percentile",
+            "H3K27ac.expandedRegion.percentile",
+            "DHS.RPM",
+            "DHS.percentile",
+            "CTCF_peak_overlap",
+            "CTCF.RPM",
+            "H3K27me3_peak_overlap",
+            "H3K4me1_peak_overlap",
+            "ubiq",
+            "cc_cat_CTCF element",
+            "cc_cat_H3K27ac",
+            "cc_cat_H3K27me3 element",
+            "cc_cat_High H3K27ac",
+            "cc_cat_No H3K27ac"
+          ],
+          "transfer_locus_disjoint": {
+            "lift_reg": 4.903124188876719,
+            "auprc_reg": 0.4209753091459809,
+            "p2_reg": 0.75,
+            "lift_sig": 3.9216698865236923,
+            "rho_abs": 0.14992672797484155,
+            "rho_signed": 0.0266114603882264
+          },
+          "transfer_naive": {
+            "lift_reg": 3.821175284651589,
+            "auprc_reg": 0.3280807062579647,
+            "p2_reg": 0.625,
+            "lift_sig": 3.270689201776051,
+            "rho_abs": 0.11387807586599595,
+            "rho_signed": 0.10809989015717682
+          },
+          "decision": "NOT-ESTIMABLE"
+        }
+      }
+    },
+    {
+      "name": "CT:GM12878",
+      "kind": "celltype",
+      "n_source": 10356,
+      "n_source_locus_disjoint": 10203,
+      "n_target": 68,
+      "n_target_reg": 16,
+      "n_target_sig": 21,
+      "prevalence_reg": 0.23529411764705882,
+      "n_target_clusters": 9,
+      "target_frac_sharing_cluster_with_source": 0.058823529411764705,
+      "estimable": false,
+      "logd_median_source": 5.567145807524085,
+      "logd_median_target": 5.17107704565631,
+      "feature_sets": {
+        "FA": {
+          "cols": [
+            "logd"
+          ],
+          "transfer_locus_disjoint": {
+            "lift_reg": 3.2060918995994427,
+            "auprc_reg": 0.7543745646116335,
+            "p2_reg": 1.0,
+            "lift_sig": 2.2520560252003574,
+            "rho_abs": 0.3132987862799398,
+            "rho_signed": 0.320361944391296
+          },
+          "transfer_naive": {
+            "lift_reg": 3.3401923597236096,
+            "auprc_reg": 0.785927614052614,
+            "p2_reg": 1.0,
+            "lift_sig": 2.3670460696637328,
+            "rho_abs": 0.33513421520079417,
+            "rho_signed": 0.3151464326137688
+          },
+          "decision": "NOT-ESTIMABLE"
+        },
+        "FC": {
+          "cols": [
+            "logd",
+            "H3K27ac_peak_overlap",
+            "H3K27ac.RPM",
+            "H3K27ac.percentile",
+            "H3K27ac.expandedRegion.percentile",
+            "DHS.RPM",
+            "DHS.percentile",
+            "CTCF_peak_overlap",
+            "CTCF.RPM",
+            "H3K27me3_peak_overlap",
+            "H3K4me1_peak_overlap",
+            "ubiq",
+            "cc_cat_CTCF element",
+            "cc_cat_H3K27ac",
+            "cc_cat_H3K27me3 element",
+            "cc_cat_High H3K27ac",
+            "cc_cat_No H3K27ac"
+          ],
+          "transfer_locus_disjoint": {
+            "lift_reg": 4.1656249999999995,
+            "auprc_reg": 0.9801470588235294,
+            "p2_reg": 1.0,
+            "lift_sig": 2.820236076412672,
+            "rho_abs": 0.5038363171355498,
+            "rho_signed": 0.3850822613276329
+          },
+          "transfer_naive": {
+            "lift_reg": 4.040309495192308,
+            "auprc_reg": 0.9506610576923078,
+            "p2_reg": 1.0,
+            "lift_sig": 2.807620772252071,
+            "rho_abs": 0.5918998358590677,
+            "rho_signed": 0.42142230026338895
+          },
+          "decision": "NOT-ESTIMABLE"
+        }
+      }
+    },
+    {
+      "name": "CT:Jurkat",
+      "kind": "celltype",
+      "n_source": 10356,
+      "n_source_locus_disjoint": 10325,
+      "n_target": 75,
+      "n_target_reg": 7,
+      "n_target_sig": 7,
+      "prevalence_reg": 0.09333333333333334,
+      "n_target_clusters": 5,
+      "target_frac_sharing_cluster_with_source": 0.06666666666666667,
+      "estimable": false,
+      "logd_median_source": 5.567145807524085,
+      "logd_median_target": 5.175160872995877,
+      "feature_sets": {
+        "FA": {
+          "cols": [
+            "logd"
+          ],
+          "transfer_locus_disjoint": {
+            "lift_reg": 5.358866772635669,
+            "auprc_reg": 0.5001608987793291,
+            "p2_reg": 1.0,
+            "lift_sig": 5.309219191876035,
+            "rho_abs": 0.17073101667545196,
+            "rho_signed": 0.1791679744161639
+          },
+          "transfer_naive": {
+            "lift_reg": 5.542398739924843,
+            "auprc_reg": 0.517290549059652,
+            "p2_reg": 1.0,
+            "lift_sig": 5.536735798215388,
+            "rho_abs": 0.3126889989860345,
+            "rho_signed": 0.2722350820751223
+          },
+          "decision": "NOT-ESTIMABLE"
+        },
+        "FC": {
+          "cols": [
+            "logd",
+            "H3K27ac_peak_overlap",
+            "H3K27ac.RPM",
+            "H3K27ac.percentile",
+            "H3K27ac.expandedRegion.percentile",
+            "DHS.RPM",
+            "DHS.percentile",
+            "CTCF_peak_overlap",
+            "CTCF.RPM",
+            "H3K27me3_peak_overlap",
+            "H3K4me1_peak_overlap",
+            "ubiq",
+            "cc_cat_CTCF element",
+            "cc_cat_H3K27ac",
+            "cc_cat_H3K27me3 element",
+            "cc_cat_High H3K27ac",
+            "cc_cat_No H3K27ac"
+          ],
+          "transfer_locus_disjoint": {
+            "lift_reg": 7.516679748822605,
+            "auprc_reg": 0.7015567765567765,
+            "p2_reg": 1.0,
+            "lift_sig": 7.516679748822605,
+            "rho_abs": 0.11231863442389757,
+            "rho_signed": 0.2784921763869132
+          },
+          "transfer_naive": {
+            "lift_reg": 7.343382807668522,
+            "auprc_reg": 0.6853823953823954,
+            "p2_reg": 1.0,
+            "lift_sig": 7.343382807668522,
+            "rho_abs": 0.15186344238975816,
+            "rho_signed": 0.2834708392603129
+          },
+          "decision": "NOT-ESTIMABLE"
+        }
+      }
+    }
+  ]
+}

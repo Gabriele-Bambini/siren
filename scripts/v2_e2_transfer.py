@@ -95,6 +95,17 @@ def evaluate_context(name: str, kind: str, src: pd.DataFrame, tgt: pd.DataFrame,
         if not estimable:
             res["decision"] = "NOT-ESTIMABLE"
         elif not have_dis:
+            # A12 (descriptive only): no locus-disjoint source exists, so report the naive transfer next to
+            # the native ceiling without a decision label.
+            p_nat = native_oof(tgt, cols, kind, tgt_cl)
+            res["native"] = {"lift_reg": lift(y_reg, -p_nat), "auprc_reg": auprc(y_reg, -p_nat),
+                             "lift_sig": lift(y_sig, np.abs(p_nat)), "rho_abs": rho_abs(p_nat, yv)}
+
+            def stat_n(idx, p_nai=p_nai, p_nat=p_nat):
+                return np.array([lift(y_reg[idx], -p_nai[idx]), lift(y_reg[idx], -p_nat[idx])])
+
+            _, dn = cluster_bootstrap(tgt_cl, stat_n, n_boot=N_BOOT, seed=SEED_BOOT)
+            res["lift_ci95"] = {"transfer_naive": list(percentile_ci(dn[:, 0])), "native": list(percentile_ci(dn[:, 1]))}
             res["decision"] = "NO-LOCUS-DISJOINT-SOURCE"
         else:
             p_nat = native_oof(tgt, cols, kind, tgt_cl)

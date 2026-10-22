@@ -1,0 +1,117 @@
+{
+  "experiment": "E5",
+  "all": {
+    "n_pairs": 10356,
+    "n_significant": 546,
+    "n_significant_decrease": 471,
+    "frac_decrease": 0.8626373626373627,
+    "wilson95": [
+      0.8312193351683426,
+      0.8889880845685416
+    ],
+    "constant_repression_accuracy": 0.8626373626373627,
+    "n_regulated": 471,
+    "prevalence_regulated": 0.045480880648899186,
+    "prevalence_significant": 0.05272305909617613
+  },
+  "chr19": {
+    "n_pairs": 2260,
+    "n_significant": 58,
+    "n_significant_decrease": 43,
+    "frac_decrease": 0.7413793103448276,
+    "wilson95": [
+      0.6162236918664121,
+      0.8365459648048255
+    ],
+    "constant_repression_accuracy": 0.7413793103448276,
+    "n_regulated": 43,
+    "prevalence_regulated": 0.01902654867256637,
+    "prevalence_significant": 0.02566371681415929
+  },
+  "within_90kb": {
+    "n_pairs": 1656,
+    "n_significant": 401,
+    "n_significant_decrease": 382,
+    "frac_decrease": 0.9526184538653366,
+    "wilson95": [
+      0.9271869423685143,
+      0.9694600425263186
+    ],
+    "constant_repression_accuracy": 0.9526184538653366,
+    "n_regulated": 382,
+    "prevalence_regulated": 0.23067632850241546,
+    "prevalence_significant": 0.24214975845410627
+  },
+  "enformer_window": {
+    "n_pairs": 1750,
+    "n_significant": 401,
+    "n_significant_decrease": 380,
+    "frac_decrease": 0.9476309226932669,
+    "wilson95": [
+      0.9212709411853732,
+      0.9654956361624092
+    ],
+    "constant_repression_accuracy": 0.9476309226932669,
+    "n_regulated": 380,
+    "prevalence_regulated": 0.21714285714285714,
+    "prevalence_significant": 0.22914285714285715
+  },
+  "by_screen": {
+    "Fulco2019": {
+      "n_pairs": 3501,
+      "n_significant": 82,
+      "n_significant_decrease": 52,
+      "frac_decrease": 0.6341463414634146,
+      "wilson95": [
+        0.5260706597602314,
+        0.7302153367729181
+      ],
+      "constant_repression_accuracy": 0.6341463414634146,
+      "n_regulated": 52,
+      "prevalence_regulated": 0.014852899171665239,
+      "prevalence_significant": 0.023421879463010567
+    },
+    "Gasperini2019": {
+      "n_pairs": 5299,
+      "n_significant": 402,
+      "n_significant_decrease": 360,
+      "frac_decrease": 0.8955223880597015,
+      "wilson95": [
+        0.8617842519546656,
+        0.9217726825734854
+      ],
+      "constant_repression_accuracy": 0.8955223880597015,
+      "n_regulated": 360,
+      "prevalence_regulated": 0.06793734666918287,
+      "prevalence_significant": 0.0758633704472542
+    },
+    "Schraivogel2020": {
+      "n_pairs": 1306,
+      "n_significant": 25,
+      "n_significant_decrease": 23,
+      "frac_decrease": 0.92,
+      "wilson95": [
+        0.7503348787704218,
+        0.977780066308908
+      ],
+      "constant_repression_accuracy": 0.92,
+      "n_regulated": 23,
+      "prevalence_regulated": 0.01761102603369066,
+      "prevalence_significant": 0.01914241960183767
+    },
+    "other": {
+      "n_pairs": 250,
+      "n_significant": 37,
+      "n_significant_decrease": 36,
+      "frac_decrease": 0.972972972972973,
+      "wilson95": [
+        0.8617562156243666,
+        0.9952131489450924
+      ],
+      "constant_repression_accuracy": 0.972972972972973,
+      "n_regulated": 36,
+      "prevalence_regulated": 0.144,
+      "prevalence_significant": 0.148
+    }
+  }
+}

@@ -54,8 +54,9 @@ def sample_configs(n: int, seed: int = 0) -> list:
                  min_child_samples=int(rng.choice([10, 20, 40, 80]))) for _ in range(n)]
 
 
-def status(lo: float, hi: float, est: float) -> str:
-    if lo > 0 and est >= 0.02:
+def status(lo: float, hi: float, est: float, p_holm: float = 0.0) -> str:
+    """E3 rule plus the Holm requirement of the E6 family (PREREG amendment A11)."""
+    if lo > 0 and est >= 0.02 and p_holm < 0.05:
         return "BENEFIT"
     if lo > -0.02 and hi < 0.02:
         return "NO-BENEFIT"
@@ -147,9 +148,11 @@ def main() -> None:
         est = float(point[i] - point[0])
         p = two_sided_p(d)
         p_raw.append(p)
-        res["deltas_vs_M2"][m] = {"delta_auprc": est, "ci95": [lo, hi], "p_raw": p, "status": status(lo, hi, est)}
+        res["deltas_vs_M2"][m] = {"delta_auprc": est, "ci95": [lo, hi], "p_raw": p}
     for m, ph in zip(var, holm_correction(np.array(p_raw))):
-        res["deltas_vs_M2"][m]["p_holm"] = float(ph)
+        d_ = res["deltas_vs_M2"][m]
+        d_["p_holm"] = float(ph)
+        d_["status"] = status(d_["ci95"][0], d_["ci95"][1], d_["delta_auprc"], float(ph))
     with open(os.path.join(OUT, "e6_zoo.json"), "w") as fh:
         json.dump(res, fh, indent=2)
     say("DONE %s" % json.dumps({m: [round(v["delta_auprc"], 4), v["status"]] for m, v in res["deltas_vs_M2"].items()}))

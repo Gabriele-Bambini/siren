@@ -1,0 +1,73 @@
+{
+  "experiment": "E3_sanity",
+  "markers_available": [
+    "HBE1",
+    "HBG1",
+    "HBG2",
+    "LMO2",
+    "HBZ",
+    "HBA1",
+    "KLF1",
+    "MYC",
+    "GATA1"
+  ],
+  "rows": [
+    {
+      "gene": "HBE1",
+      "strand": "-",
+      "k562_cage": 137.1774444580078,
+      "percentile": 0.9984326018808778
+    },
+    {
+      "gene": "HBG1",
+      "strand": "-",
+      "k562_cage": 203.59359741210938,
+      "percentile": 0.9968652037617555
+    },
+    {
+      "gene": "HBG2",
+      "strand": "-",
+      "k562_cage": 0.0393575094640255,
+      "percentile": 0.41379310344827586
+    },
+    {
+      "gene": "LMO2",
+      "strand": "-",
+      "k562_cage": 0.0848499983549118,
+      "percentile": 0.6018808777429467
+    },
+    {
+      "gene": "HBZ",
+      "strand": "+",
+      "k562_cage": 134.7122802734375,
+      "percentile": 0.9921630094043887
+    },
+    {
+      "gene": "HBA1",
+      "strand": "+",
+      "k562_cage": 191.10855102539062,
+      "percentile": 0.9827586206896551
+    },
+    {
+      "gene": "KLF1",
+      "strand": "-",
+      "k562_cage": 261.2125244140625,
+      "percentile": 0.9921630094043887
+    },
+    {
+      "gene": "MYC",
+      "strand": "+",
+      "k562_cage": 46.84498596191406,
+      "percentile": 0.932601880877743
+    },
+    {
+      "gene": "GATA1",
+      "strand": "+",
+      "k562_cage": 217.8246612548828,
+      "percentile": 0.9905956112852664
+    }
+  ],
+  "median_percentile": 0.9905956112852664,
+  "n_ge_090": 7,
+  "pass": true
+}

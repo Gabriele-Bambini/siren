@@ -225,6 +225,19 @@ literature. The rE2G/ABC values are context only (we do not reimplement them). T
 that Enformer was scored only for pairs <100 kb in that paper (others filled with 0), so its published
 AUPRC (0.493) is not comparable with our restricted-population E3.
 
+**A11 · 2026-10-22 · E6 status rule · results seen: YES (E6 first run).** The first E6 run labelled the
+hyper-parameter-search variant BENEFIT (ΔAUPRC +0.021, CI 0.001–0.043) although its Holm-adjusted p was
+0.114, because the status function did not apply the Holm correction that §3 E6 prescribes ("Holm over the
+five variants"). The status function now requires Holm-adjusted p < 0.05 in addition to the E3 rule. This
+change makes the criterion stricter, so it can only remove a positive label; the raw interval is still
+reported. E6 was re-run with the corrected script.
+
+**A12 · 2026-10-22 · E2 reporting when no locus-disjoint source exists · results seen: YES (E2 first
+run).** For the Gasperini target of the leave-one-screen-out context only 28 source pairs remain after the
+locus-disjoint filter (the screens test the same loci), so no primary transfer can be fitted. The script
+now also reports, **descriptively and without a decision label**, the naive transfer and the native ceiling
+with cluster-bootstrap intervals for such targets. No decision rule was changed.
+
 **A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
 scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark
 table composition (counts per chromosome/screen/cell type, distance quantiles); Enformer

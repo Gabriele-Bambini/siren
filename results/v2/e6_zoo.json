@@ -1,0 +1,212 @@
+{
+  "experiment": "E6",
+  "n_pairs": 10356,
+  "n_reg": 471,
+  "n_boot": 2000,
+  "auprc": {
+    "M2": {
+      "point": 0.3888188343677898,
+      "ci95": [
+        0.33783521648755066,
+        0.46089581982474176
+      ]
+    },
+    "V1_rank": {
+      "point": 0.3086291234804629,
+      "ci95": [
+        0.25193548065474564,
+        0.38632299978677814
+      ]
+    },
+    "V2_twostage": {
+      "point": 0.4028834267087413,
+      "ci95": [
+        0.34994748300319295,
+        0.4799035513277583
+      ]
+    },
+    "V3_uncert": {
+      "point": 0.22295530256554974,
+      "ci95": [
+        0.18603785523066027,
+        0.27591078637028993
+      ]
+    },
+    "V4_hpo": {
+      "point": 0.40983975257176836,
+      "ci95": [
+        0.3518836886303768,
+        0.4926281881190639
+      ]
+    },
+    "V5_genecov": {
+      "point": 0.3449163289494032,
+      "ci95": [
+        0.2783383492936188,
+        0.4637441352037194
+      ]
+    }
+  },
+  "deltas_vs_M2": {
+    "V1_rank": {
+      "delta_auprc": -0.0801897108873269,
+      "ci95": [
+        -0.11372569397017003,
+        -0.04759225622044972
+      ],
+      "p_raw": 0.0005,
+      "status": "INCONCLUSIVE",
+      "p_holm": 0.0025
+    },
+    "V2_twostage": {
+      "delta_auprc": 0.014064592340951476,
+      "ci95": [
+        -0.0012139627302623981,
+        0.0316516233418368
+      ],
+      "p_raw": 0.081,
+      "status": "INCONCLUSIVE",
+      "p_holm": 0.162
+    },
+    "V3_uncert": {
+      "delta_auprc": -0.16586353180224006,
+      "ci95": [
+        -0.20862273134481954,
+        -0.13111123034448322
+      ],
+      "p_raw": 0.0005,
+      "status": "INCONCLUSIVE",
+      "p_holm": 0.0025
+    },
+    "V4_hpo": {
+      "delta_auprc": 0.021020918203978556,
+      "ci95": [
+        0.000942951517280036,
+        0.042688519095676856
+      ],
+      "p_raw": 0.038,
+      "status": "BENEFIT",
+      "p_holm": 0.11399999999999999
+    },
+    "V5_genecov": {
+      "delta_auprc": -0.043902505418386584,
+      "ci95": [
+        -0.09970227022836642,
+        0.03629024025824484
+      ],
+      "p_raw": 0.355,
+      "status": "INCONCLUSIVE",
+      "p_holm": 0.355
+    }
+  },
+  "chosen_configs": {
+    "chr1": {
+      "n_estimators": 100,
+      "learning_rate": 0.02,
+      "num_leaves": 7,
+      "min_child_samples": 40
+    },
+    "chr10": {
+      "n_estimators": 100,
+      "learning_rate": 0.02,
+      "num_leaves": 7,
+      "min_child_samples": 40
+    },
+    "chr11": {
+      "n_estimators": 200,
+      "learning_rate": 0.05,
+      "num_leaves": 7,
+      "min_child_samples": 20
+    },
+    "chr12": {
+      "n_estimators": 100,
+      "learning_rate": 0.02,
+      "num_leaves": 7,
+      "min_child_samples": 40
+    },
+    "chr14": {
+      "n_estimators": 100,
+      "learning_rate": 0.02,
+      "num_leaves": 7,
+      "min_child_samples": 40
+    },
+    "chr16": {
+      "n_estimators": 100,
+      "learning_rate": 0.02,
+      "num_leaves": 7,
+      "min_child_samples": 40
+    },
+    "chr17": {
+      "n_estimators": 100,
+      "learning_rate": 0.02,
+      "num_leaves": 7,
+      "min_child_samples": 40
+    },
+    "chr19": {
+      "n_estimators": 100,
+      "learning_rate": 0.05,
+      "num_leaves": 7,
+      "min_child_samples": 80
+    },
+    "chr2": {
+      "n_estimators": 100,
+      "learning_rate": 0.05,
+      "num_leaves": 7,
+      "min_child_samples": 80
+    },
+    "chr20": {
+      "n_estimators": 100,
+      "learning_rate": 0.05,
+      "num_leaves": 7,
+      "min_child_samples": 80
+    },
+    "chr3": {
+      "n_estimators": 100,
+      "learning_rate": 0.02,
+      "num_leaves": 7,
+      "min_child_samples": 40
+    },
+    "chr4": {
+      "n_estimators": 100,
+      "learning_rate": 0.05,
+      "num_leaves": 7,
+      "min_child_samples": 80
+    },
+    "chr5": {
+      "n_estimators": 100,
+      "learning_rate": 0.05,
+      "num_leaves": 7,
+      "min_child_samples": 80
+    },
+    "chr6": {
+      "n_estimators": 100,
+      "learning_rate": 0.05,
+      "num_leaves": 7,
+      "min_child_samples": 80
+    },
+    "chr7": {
+      "n_estimators": 100,
+      "learning_rate": 0.05,
+      "num_leaves": 7,
+      "min_child_samples": 80
+    },
+    "chr8": {
+      "n_estimators": 100,
+      "learning_rate": 0.02,
+      "num_leaves": 7,
+      "min_child_samples": 40
+    },
+    "chrX": {
+      "n_estimators": 100,
+      "learning_rate": 0.02,
+      "num_leaves": 7,
+      "min_child_samples": 40
+    },
+    "small": {
+      "n_estimators": 100,
+      "learning_rate": 0.1,
+      "num_leaves": 7,
+      "min_child_samples": 80
+    }
+  }
+}
