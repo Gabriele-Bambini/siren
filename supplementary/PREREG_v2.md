@@ -305,6 +305,15 @@ breakdowns were not in the plan and are exploratory; E1 "adds over distance" use
 BENEFIT uses +0.02, as written in §3. The bootstrap resamples fixed out-of-fold predictions (no refitting),
 not whole pipelines. No decision threshold was changed.
 
+**A17 · 2026-10-22 · E3 sensitivity to the perturbation · results seen: YES (E3 primary and post-hoc).**
+The primary E3 perturbation preserves the G/C-versus-A/T pattern of the element. As a sensitivity check
+`v2_e3_enformer.py --mode random` repeats the scoring (same pairs, window, strand handling, three seeds, same
+K562 CAGE score) with a composition-preserving random shuffle that does not keep the G/C positions, and
+`v2_e3_sensitivity.py` reports (i) the Spearman correlation between the two deltas, (ii) AUPRC of −delta from
+each perturbation, (iii) the paired contrast of the two, and (iv) the logistic gain of adding each delta to
+distance + accessibility (paired, cluster bootstrap, 2,000 resamples; Holm over the two logistic gains).
+Descriptive and post hoc; the primary result is unchanged by it.
+
 **A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
 scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark
 table composition (counts per chromosome/screen/cell type, distance quantiles); Enformer

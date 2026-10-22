@@ -59,6 +59,17 @@ def test_gc_matched_shuffle_preserves_gc_positions_and_composition():
     assert out == eu.gc_matched_shuffle(seq, 10, 50, seed=3)
 
 
+def test_random_shuffle_keeps_composition_and_n_but_not_gc_positions():
+    seq = "ACGTNACGTAAGCTTGCNNACGT" * 4
+    out = eu.random_shuffle(seq, 5, 80, seed=11)
+    assert len(out) == len(seq) and out[:5] == seq[:5] and out[80:] == seq[80:]
+    assert sorted(out[5:80]) == sorted(seq[5:80])
+    assert [i for i, x in enumerate(seq[5:80]) if x == "N"] == [i for i, x in enumerate(out[5:80]) if x == "N"]
+    assert out != seq
+    assert any((a in "GC") != (b in "GC") for a, b in zip(seq[5:80], out[5:80]))   # unlike the GC-matched shuffle
+    assert out == eu.random_shuffle(seq, 5, 80, seed=11)
+
+
 def test_reverse_complement():
     assert eu.reverse_complement("ACGTN") == "NACGT"
 

@@ -74,8 +74,14 @@ def main() -> None:
     ap.add_argument("--k", type=int, default=3)
     ap.add_argument("--max-pairs", type=int, default=0)
     ap.add_argument("--null-n", type=int, default=300)
+    ap.add_argument("--mode", choices=["gc", "random"], default="gc",
+                    help="gc = GC-matched shuffle (primary); random = composition-preserving shuffle (A17 sensitivity)")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
+    suffix = "" if a.mode == "gc" else "_" + a.mode
+    shuffle = eu.gc_matched_shuffle if a.mode == "gc" else eu.random_shuffle
+    if a.mode != "gc":
+        a.null_n = 0
 
     import torch
     from enformer_pytorch import Enformer
@@ -136,7 +142,7 @@ def main() -> None:
             a0, a1 = int(r.start) - ws, int(r.end) - ws
             tss_local = eu.WINDOW // 2
         b = eu.output_bin(tss_local, 0)
-        seqs = [seq] + [eu.gc_matched_shuffle(seq, a0, a1, eu.stable_seed(r.chrom, int(r.start), int(r.end), k))
+        seqs = [seq] + [shuffle(seq, a0, a1, eu.stable_seed(r.chrom, int(r.start), int(r.end), k))
                         for k in range(a.k)]
         p = predict(seqs)
         k562, cage, dnase = summarise(p, b)
@@ -161,9 +167,9 @@ def main() -> None:
         rows.append(row)
         if (n_done + 1) % 100 == 0:
             say("%d/%d pairs" % (n_done + 1, len(pop)))
-            pd.DataFrame(rows).to_csv(os.path.join(OUT, "e3_scores.tsv.gz"), sep="\t", index=False)
+            pd.DataFrame(rows).to_csv(os.path.join(OUT, "e3_scores%s.tsv.gz" % suffix), sep="\t", index=False)
 
-    pd.DataFrame(rows).to_csv(os.path.join(OUT, "e3_scores.tsv.gz"), sep="\t", index=False)
+    pd.DataFrame(rows).to_csv(os.path.join(OUT, "e3_scores%s.tsv.gz" % suffix), sep="\t", index=False)
     try:
         from huggingface_hub import snapshot_download
         snap = snapshot_download(MODEL_ID, local_files_only=True)
@@ -173,9 +179,9 @@ def main() -> None:
            "gpu": torch.cuda.get_device_name(0) if dev == "cuda" else None,
            "model_id": MODEL_ID, "hf_snapshot": snap, "targets_sha256": sha,
            "k562_cage_idx": i_k562, "n_all_cage": len(i_cage), "k562_dnase_idx": i_dnase,
-           "n_population": int(len(pop)), "n_total_pairs": int(len(df)), "k_scrambles": a.k,
+           "n_population": int(len(pop)), "n_total_pairs": int(len(df)), "k_scrambles": a.k, "mode": a.mode,
            "n_null": int(sum("null_d_k562cage" in r for r in rows)), "seconds": round(time.time() - T0, 1)}
-    with open(os.path.join(OUT, "e3_env.json"), "w") as fh:
+    with open(os.path.join(OUT, "e3_env%s.json" % suffix), "w") as fh:
         json.dump(env, fh, indent=2)
     say("DONE %s" % json.dumps(env))
 

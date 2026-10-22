@@ -57,6 +57,17 @@ def gc_matched_shuffle(seq: str, a: int, b: int, seed: int) -> str:
     return seq[:a] + new + seq[b:]
 
 
+def random_shuffle(seq: str, a: int, b: int, seed: int) -> str:
+    """Shuffle all A/C/G/T of seq[a:b] among themselves (composition kept, GC positions NOT kept); N stays."""
+    seg = list(seq[a:b])
+    idx = [i for i, x in enumerate(seg) if x in "ACGT"]
+    bases = [seg[i] for i in idx]
+    random.Random(seed).shuffle(bases)
+    for i, x in zip(idx, bases):
+        seg[i] = x
+    return seq[:a] + "".join(seg) + seq[b:]
+
+
 def reverse_complement(seq: str) -> str:
     comp = {"A": "T", "C": "G", "G": "C", "T": "A", "N": "N"}
     return "".join(comp.get(x, "N") for x in reversed(seq))

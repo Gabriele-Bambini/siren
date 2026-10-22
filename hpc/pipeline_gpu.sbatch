@@ -19,13 +19,16 @@ pip freeze > "results/v2/env_freeze_gpu.txt" 2>/dev/null || true
 nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv
 STATUS=results/v2/pipeline_gpu_status.tsv
 printf "script\texit_code\tseconds\n" > "$STATUS"
-for s in v2_e3_sanity v2_e3_enformer v2_e3_analysis v2_e3_posthoc v2_e3_bridge; do
+for step in "v2_e3_sanity" "v2_e3_enformer" "v2_e3_analysis" "v2_e3_posthoc" "v2_e3_bridge"             "v2_e3_enformer --mode random" "v2_e3_sensitivity"; do
+  read -r s args <<< "$step"
+  name="${s}${args:+_${args##* }}"
   t0=$(date +%s)
   set +e
-  python "scripts/$s.py" > "logs/$s.log" 2>&1
+  python "scripts/$s.py" $args > "logs/$name.log" 2>&1
   rc=$?
   set -e
-  printf "%s\t%s\t%s\n" "$s" "$rc" "$(( $(date +%s) - t0 ))" >> "$STATUS"
-  if [ "$rc" -ne 0 ]; then echo "STOP: $s failed (rc=$rc)"; break; fi
+  printf "%s	%s	%s
+" "$name" "$rc" "$(( $(date +%s) - t0 ))" >> "$STATUS"
+  if [ "$rc" -ne 0 ]; then echo "STOP: $name failed (rc=$rc)"; break; fi
 done
 cat "$STATUS"

@@ -52,6 +52,8 @@ FORBIDDEN_BY_STATUS = {
     "TRANSFERS": ["collapses", "fails to transfer", "does not transfer"],
     "CONTEXT-LIMITED-TRANSFER": ["transfers well", "transfers without loss"],
     "NOT-ESTIMABLE": ["shows that", "demonstrates", "confirms"],
+    "INFERIOR": ["comparable", "equivalent", "non-inferior", "noninferior", "no difference", "matches"],
+    "SUPPORTED": ["no evidence", "fails to", "does not help"],
 }
 
 
