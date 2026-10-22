@@ -190,6 +190,16 @@ Labels per A6 (primary `reg`, score −pred; secondary `sig`, score |pred|). Dec
 NOT-ESTIMABLE · TARGET-UNINFORMATIVE (native lift CI low ≤ 1.5) · CONTEXT-LIMITED-TRANSFER ·
 TRANSFERS · INCONCLUSIVE, exactly as defined in E2.
 
+**A8 · 2026-10-22 · E3 fidelity control for the ported weights · results seen: no.** The literature
+survey notes that equivalence of the `enformer-pytorch` port (`EleutherAI/enformer-official-rough`) with
+the TF-Hub model, including track order, is assumed and not verified. Before E3 is interpreted,
+`scripts/v2_e3_sanity.py` predicts the forward-strand, TSS-centred reference sequence for K562-marker
+genes present in the table (GATA1, HBE1, HBG1, HBG2, HBZ, GYPA, GYPB, KLF1, TAL1, LMO2, MYC, HBA1, HBA2)
+and ranks the mean of the two K562 CAGE tracks (4828, 5111) among all 638 CAGE tracks at the TSS bin ±1.
+The control PASSES iff ≥3 markers are available, ≥3 have percentile rank ≥ 0.90 and the median
+percentile is ≥ 0.90. If it FAILS, the E3 status is forced to INCONCLUSIVE (the corrected score cannot be
+trusted to reflect K562 CAGE) and the failure is reported.
+
 **A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
 scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark
 table composition (counts per chromosome/screen/cell type, distance quantiles); Enformer

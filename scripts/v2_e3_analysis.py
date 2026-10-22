@@ -119,6 +119,21 @@ def main() -> None:
                 "secondary_status": {k: status(prim["deltas"][k]) for k in sec},
                 "sig_label_status": status(prim["deltas"]["sig.M2E-M2"])}
 
+    # A8: fidelity control of the ported weights; a failed control forces INCONCLUSIVE
+    san_path = os.path.join(OUT, "e3_sanity.json")
+    if os.path.exists(san_path):
+        with open(san_path) as fh:
+            san = json.load(fh)
+        decision["fidelity_control_pass"] = bool(san["pass"])
+        decision["fidelity_median_percentile"] = san["median_percentile"]
+        if not san["pass"]:
+            decision["status_before_fidelity_override"] = decision["status"]
+            decision["status"] = "INCONCLUSIVE"
+    else:
+        decision["fidelity_control_pass"] = None
+        decision["status_before_fidelity_override"] = decision["status"]
+        decision["status"] = "INCONCLUSIVE"
+
     # univariate value of -delta, partial correlation, sign sanity
     clusters = build_clusters(pop["chrom"], pop["start"], pop["end"], pop["gene"])
     y_reg = pop["reg"].to_numpy()
