@@ -214,6 +214,17 @@ the same number of pairs per fold. **SUPPORTED(α)** ⇔ pooled FDP ≤ α + 0.0
 bound ≤ α + 0.05 **and** ≥ 20 pairs selected in total; otherwise INCONCLUSIVE. Caveat stated in advance:
 "not regulated" ≠ "no effect" because screens are power-limited, so FDP is relative to benchmark labels.
 
+**A10 · 2026-10-22 · external anchor for the pipeline · results seen: no (E1 not yet run).** A
+literature-extraction subagent read Supplementary Table 3 of Gschwind et al. 2026 and reports AUPRC =
+0.4359 (95% CI 0.387–0.482; precision 0.316 at 70% recall) for the unsupervised distance-to-TSS baseline
+on the 10,356-pair K562 table with 471 positives, plus ENCODE-rE2G 0.662, rE2G Extended 0.737 and ABC 0.613
+(values extracted by the agent, not yet read directly by the analyst). E1 records `anchor_check`: our
+pooled M0 (−logd) AUPRC for `Regulated` must agree with 0.4359 within ±0.01; a larger discrepancy is
+reported as a pipeline/label mismatch and blocks the claim that the E1 numbers are comparable with the
+literature. The rE2G/ABC values are context only (we do not reimplement them). The same source reports
+that Enformer was scored only for pairs <100 kb in that paper (others filled with 0), so its published
+AUPRC (0.493) is not comparable with our restricted-population E3.
+
 **A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
 scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark
 table composition (counts per chromosome/screen/cell type, distance quantiles); Enformer

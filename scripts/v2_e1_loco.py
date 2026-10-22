@@ -137,7 +137,13 @@ def main() -> None:
     per_screen = {s_: breakdown((df["screen"] == s_).to_numpy()) for s_ in sorted(df["screen"].unique())}
     chr19_v1 = breakdown((df["chrom"] == "chr19").to_numpy())
 
+    ours = float(point[col["reg.M0.auprc"]])
+    anchor = {"published_distance_auprc": 0.4359, "source": "Gschwind et al. 2026, Supp. Table 3 (extracted by a "
+              "subagent, PREREG A10)", "ours_M0_reg_auprc": ours, "abs_diff": abs(ours - 0.4359),
+              "within_0.01": bool(abs(ours - 0.4359) <= 0.01)}
+    say("anchor check: ours=%.4f published=0.4359 -> %s" % (ours, anchor["within_0.01"]))
     res = {
+        "anchor_check": anchor,
         "experiment": "E1_LOCO", "n_pairs": int(n), "n_regulated": int(df.reg.sum()),
         "n_significant": int(df.sig.sum()), "prevalence_reg": float(df.reg.mean()),
         "prevalence_sig": float(df.sig.mean()), "n_clusters": n_cl, "n_boot": N_BOOT, "seed_boot": SEED_BOOT,
