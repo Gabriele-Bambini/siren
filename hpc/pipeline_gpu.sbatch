@@ -18,10 +18,13 @@ mkdir -p logs results/v2
 pip freeze > "results/v2/env_freeze_gpu.txt" 2>/dev/null || true
 nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv
 STATUS=results/v2/pipeline_gpu_status.tsv
-printf "script\texit_code\tseconds\n" > "$STATUS"
+if [ "${SKIP_SCORING:-0}" != "1" ]; then printf "script	exit_code	seconds
+" > "$STATUS"; fi   # SKIP_SCORING=1 re-runs only analysis steps
 for step in "v2_e3_sanity" "v2_e3_enformer" "v2_e3_analysis" "v2_e3_posthoc" "v2_e3_bridge"             "v2_e3_enformer --mode random" "v2_e3_sensitivity"; do
   read -r s args <<< "$step"
   name="${s}${args:+_${args##* }}"
+  if [ "${SKIP_SCORING:-0}" = "1" ] && { [ "$s" = "v2_e3_sanity" ] || [ "$name" = "v2_e3_enformer" ] || [ "$name" = "v2_e3_enformer_random" ]; }; then continue; fi
+  grep -v "^$name" "$STATUS" > "$STATUS.tmp" 2>/dev/null && mv "$STATUS.tmp" "$STATUS"
   t0=$(date +%s)
   set +e
   python "scripts/$s.py" $args > "logs/$name.log" 2>&1

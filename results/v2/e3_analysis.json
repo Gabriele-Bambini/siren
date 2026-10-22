@@ -422,7 +422,8 @@
     "n_population": 1750,
     "n_total_pairs": 10356,
     "k_scrambles": 3,
+    "mode": "gc",
     "n_null": 298,
-    "seconds": 2047.7
+    "seconds": 2043.4
   }
 }

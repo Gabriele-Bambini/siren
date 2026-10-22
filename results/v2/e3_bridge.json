@@ -1,0 +1,29 @@
+{
+  "experiment": "E3_bridge",
+  "post_hoc": true,
+  "n_v1_pairs": 300,
+  "n_with_corrected_score": 293,
+  "v1_reproduced": {
+    "increment": -0.03907125550678461,
+    "spearman_A": 0.1991334830422092,
+    "spearman_B": 0.1600622275354246,
+    "n_test": 120,
+    "published_v1_increment": -0.2748
+  },
+  "same_pairs_v1_buggy_delta": {
+    "increment": -0.031986045822144954,
+    "spearman_A": 0.20098056389592064,
+    "spearman_B": 0.1689945180737757,
+    "n_test": 114
+  },
+  "same_pairs_corrected_delta": {
+    "increment": -0.13178641808258845,
+    "spearman_A": 0.20098056389592064,
+    "spearman_B": 0.0691941458133322,
+    "n_test": 114,
+    "ci95_cluster_bootstrap": [
+      -0.3425410389846854,
+      0.09500581606250631
+    ]
+  }
+}

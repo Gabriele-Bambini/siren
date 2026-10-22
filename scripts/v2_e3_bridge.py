@@ -28,7 +28,14 @@ KEYS = ["chrom", "start", "end", "gene"]
 
 
 def sp(a, b) -> float:
+    """Position-aligned Spearman (both arguments converted to numpy)."""
     return float(pd.Series(np.asarray(a)).rank().corr(pd.Series(np.asarray(b)).rank()))
+
+
+def sp_v1(a, b) -> float:
+    """The v1.0 helper, verbatim: ``b`` keeps its own pandas index while ``a`` gets a RangeIndex, so pandas aligns
+    the two ranked series on index LABELS, not positions (audit defect D19)."""
+    return float(pd.Series(a).rank().corr(pd.Series(b).rank()))
 
 
 def split(df: pd.DataFrame):
@@ -56,7 +63,9 @@ def increment(df: pd.DataFrame, delta_col: str, absdelta_col: str):
     fa, fb = ["dist_tss", "atac_ov"], ["dist_tss", "atac_ov", absdelta_col, delta_col]
     pa, pb = np.abs(fit(fa)), np.abs(fit(fb))
     t = te["lfc"].abs().to_numpy()
-    return sp(pb, t) - sp(pa, t), sp(pa, t), sp(pb, t), te, pa, pb
+    t_series = te["lfc"].abs()                      # keeps te's original index, as in v1.0
+    mis = sp_v1(pb, t_series) - sp_v1(pa, t_series)
+    return sp(pb, t) - sp(pa, t), sp(pa, t), sp(pb, t), te, pa, pb, mis, sp_v1(pa, t_series), sp_v1(pb, t_series)
 
 
 def main() -> None:
@@ -71,21 +80,24 @@ def main() -> None:
     m["has_corrected"] = m["d_k562cage"].notna()
     res = {"experiment": "E3_bridge", "post_hoc": True, "n_v1_pairs": int(len(v1)),
            "n_with_corrected_score": int(m["has_corrected"].sum())}
-    inc_v1, ra, rb, te, _, _ = increment(m, "delta", "abs_delta")
-    res["v1_reproduced"] = {"increment": float(inc_v1), "spearman_A": float(ra), "spearman_B": float(rb),
-                            "n_test": int(len(te)), "published_v1_increment": -0.2748}
+    inc_v1, ra, rb, te, _, _, mis, mra, mrb = increment(m, "delta", "abs_delta")
+    res["v1_exact_misaligned"] = {"increment": float(mis), "spearman_A": float(mra), "spearman_B": float(mrb),
+                                  "n_test": int(len(te)), "published_v1_increment": -0.2748}
+    res["v1_deltas_position_aligned"] = {"increment": float(inc_v1), "spearman_A": float(ra),
+                                         "spearman_B": float(rb), "n_test": int(len(te))}
     sub = m[m["has_corrected"]].copy().reset_index(drop=True)
     sub["delta_c"] = sub["d_k562cage"]
     sub["abs_delta_c"] = sub["d_k562cage"].abs()
-    inc_b, ra_b, rb_b, te_b, pa_b, pb_b = increment(sub, "delta", "abs_delta")
-    inc_c, ra_c, rb_c, te_c, pa_c, pb_c = increment(sub, "delta_c", "abs_delta_c")
+    inc_b, ra_b, rb_b, te_b, pa_b, pb_b, _, _, _ = increment(sub, "delta", "abs_delta")
+    inc_c, ra_c, rb_c, te_c, pa_c, pb_c, mis_c, _, _ = increment(sub, "delta_c", "abs_delta_c")
     t = te_c["lfc"].abs().to_numpy()
     cl = build_clusters(te_c["chrom"], te_c["start"], te_c["end"], te_c["gene"])
     pt, dr = cluster_bootstrap(cl, lambda i: np.array([sp(pb_c[i], t[i]) - sp(pa_c[i], t[i])]), n_boot=2000, seed=12345)
     res["same_pairs_v1_buggy_delta"] = {"increment": float(inc_b), "spearman_A": float(ra_b), "spearman_B": float(rb_b),
                                          "n_test": int(len(te_b))}
     res["same_pairs_corrected_delta"] = {"increment": float(inc_c), "spearman_A": float(ra_c), "spearman_B": float(rb_c),
-                                          "n_test": int(len(te_c)), "ci95_cluster_bootstrap": list(percentile_ci(dr[:, 0]))}
+                                          "n_test": int(len(te_c)), "ci95_cluster_bootstrap": list(percentile_ci(dr[:, 0])),
+                                          "increment_if_misaligned_as_in_v1": float(mis_c)}
     with open(os.path.join(OUT, "e3_bridge.json"), "w") as fh:
         json.dump(res, fh, indent=2)
     print(json.dumps(res, indent=1))
