@@ -104,6 +104,22 @@ Verification date: **2026-10-22**. Written for the novelty guard (`PREREG_v2.md`
    literature; what is new is the audited, pre-specified, uncertainty-aware test and the held-out
    confirmation. Wording: "confirms and quantifies", never "first" or "novel method".
 
+7. *(added 2026-10-23 with PREREG A21, before any contact, activity-product or rE2G value was computed)*
+   **C3″ — does the corrected Enformer score add to 3D contact and activity (E9)?** Closest prior art:
+   AlphaGenome [13] (zero-shot within 1% AUPRC of rE2G Extended on this benchmark; its gradient score added to
+   rE2G Extended gave a new best); Gschwind 2026 [1] (contact and activity are the most informative feature
+   groups; cell-type Hi-C beats a 1/distance contact proxy); ABC, Fulco 2019 [3]; GraphReg [67] (graph
+   attention over Hi-C/HiChIP/Micro-C with epigenomic or sequence input; attributions checked against
+   CRISPRi-FlowFISH and TAP-seq). Status **PARTIALLY KNOWN**: [13] shows a sequence-model signal can add to
+   rE2G; whether the open Enformer model does, once its scoring is corrected, is not reported (searches
+   2026-10-23). Either outcome is reported. Wording: "tests whether", never "first".
+   *Considered and not pursued:* a gene-level knowledge-graph prior (Gene Ontology, protein interactions,
+   PrimeKG). Closest prior art: Rödelsperger 2011 [68] (functional similarity and interactome proximity
+   improved enhancer-target recall, pre-CRISPR ground truth); no modern test on CRISPRi benchmarks found
+   (searches 2026-10-23). Not pursued because such priors are gene-level and not cell-type-specific (they
+   cannot rank elements within one gene's locus), gene-level covariates gave no gain in E6, and they risk
+   encoding per-gene screen power rather than regulation.
+
 **What must be reworded as confirmatory or dropped:**
 * "Reference class" (title, abstract, §1): replace with "reference baseline".
 * "Specificity wall" (title, abstract, §2.3, Fig. 1): drop; use "cross-cell-type/cross-screen transfer"; contradicted by [1] pending feature-matched controls.
@@ -185,3 +201,5 @@ Verification date: **2026-10-22**. Written for the novelty guard (`PREREG_v2.md`
 64. Varma S, Simon R. Bias in error estimation when using cross-validation for model selection. *BMC Bioinformatics* 2006;7:91. doi:10.1186/1471-2105-7-91
 65. Enformer/Basenji2 track table: https://raw.githubusercontent.com/calico/basenji/0.5/manuscripts/cross2020/targets_human.txt (downloaded and analysed 2026-10-22; SHA-256 above). Enformer usage README: https://github.com/google-deepmind/deepmind-research/tree/master/enformer
 66. bioRxiv policy pages (second-hand summaries, accessed 2026-10-22): https://www.biorxiv.org/about-biorxiv ; https://www.biorxiv.org/submit-a-manuscript
+67. Karbalayghareh A, Sahin M, Leslie CS. Chromatin interaction–aware gene regulatory modeling with graph attention networks. *Genome Res* 2022;32:930–944. doi:10.1101/gr.275870.121 (Crossref verified 2026-10-23)
+68. Rödelsperger C et al. Integrative analysis of genomic, functional and protein interaction data predicts long-range enhancer-target gene interactions. *Nucleic Acids Res* 2011;39:2492–2502. doi:10.1093/nar/gkq1081 (Europe PMC verified 2026-10-23)

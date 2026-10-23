@@ -369,6 +369,83 @@ supervised models are refitted locus-disjoint and the score is zero-shot; power 
 
 **A20 outcome · recorded after the run.** Plan commit 15e0533 (authored 2026-10-22T20:13+02:00, tag `prereg-v2-e8`); scoring job 713497 submitted 20:58:45, started 21:09:11, ended 21:15:15 (SLURM accounting); confirmation executed afterwards. Result: C1 (LR1 − LR0) = +0.113, interval 0.026 to 0.205, Holm p = 0.022 → BENEFIT; C2 (score alone − distance) = +0.126, interval −0.055 to 0.295, Holm p = 0.164 → INCONCLUSIVE; claim policy ⇒ **confirmed**. A dry run of the script on random scores (not real Δ) before the real run returned 'not confirmed', as expected.
 
+**A21 · 2026-10-23 · does the Enformer score add to 3D contact and activity? (E9) · results seen: YES for the
+Enformer score on the E3 population and on H (E3, E8); NO for any contact, activity-product or rE2G value
+(when this was written the Hi-C file was still being downloaded by SLURM job 714807, no contact value had been
+extracted, and the rE2G predictions had not been downloaded; the only probes were metadata: ENCODE file size and
+md5, the rE2G repository's feature tables, the names of the Synapse files, the line count and first lines of the
+TSS reference file).** *Why:* E3 and E8 compare
+the score with distance and K562 accessibility only. The benchmark authors find 3D contact and activity the most
+informative feature groups [survey 1], and a sequence-model gradient score added to rE2G Extended in AlphaGenome
+[survey 13]. Whether the corrected Enformer score adds to contact and activity, or only recovers them, is the
+open question behind the E8 claim. Novelty row: LITERATURE_SURVEY item 7 (C3″), added with this amendment.
+*Population S9:* the E3 population (training table, valid pairs, element fully inside the TSS-centred window,
+score available), label `reg`, the E3 LOCO folds (`fold_labels` on S9) and clusters.
+*New label-free features*, computed for every pair of both tables by `scripts/v2_e9_features.py` before any
+model is fitted, written to `results/v2/e9_features.tsv.gz`:
+(i) `hic`: K562 intact Hi-C ENCFF621AIY (the matrix ENCODE-rE2G uses; md5 71e5dc072beddbdcda11c9016696e142;
+fetched by `hpc/fetch_hic.sbatch`), 5-kb bins, normalisation SCALE (else KR, else VC_SQRT; the one used is
+recorded), value c at (bin of the element midpoint, bin of the TSS); when both fall in one bin, c is the larger
+of the two neighbouring off-diagonal values (ABC convention); missing or non-finite c = 0;
+`hic = log10(c/m + 0.01)`, m = median of the non-zero c over the training table (label-free scale);
+(ii) `act = log1p(sqrt(DHS.RPM × H3K27ac.RPM))` from the benchmark columns (ABC activity), missing if either is
+missing; (iii) `abcn = log1p(sqrt(DHS.RPM × H3K27ac.RPM) × c/m)` (ABC numerator; the ABC denominator needs
+genome-wide element activities that these open inputs do not provide); (iv) `n_tss`: log1p of the number of
+TSSs of other genes strictly between the element midpoint and the target TSS, using the file rE2G uses for this
+feature, `data/raw/D1_encode_rE2G_repo/reference/RefSeqCurated.170308.bed.CollapsedGeneBounds.hg38.TSS500bp.bed`
+(24,461 genes, SHA-256 dba884af2303ce0d25b4cffff22bfe73a0f190a93187dfdf0f310aaacea71e1e; TSS = midpoint of
+each 500-bp interval; the target gene is excluded by symbol);
+(v) `n_peaks`: log1p of the number of K562 ATAC IDR peaks (ENCSR956DNB, as `atac_*`) lying entirely strictly
+between them; (vi) `ubiq`: the benchmark flag. These mirror the rE2G DNase/Hi-C feature list (distance, contact,
+ABC score, TSSs and candidate elements between E and P, ubiquitous expression) with open K562 inputs; they are a
+reimplementation, not rE2G.
+*Models:* logistic regression exactly as E8 (median imputation, standardisation, sklearn defaults with
+`max_iter=1000`) on B = [logd, atac_ov, atac_dist, hic, act, abcn, n_tss, n_peaks, ubiq] (LRB) and on B + −Δ
+(LRBE), LOCO out-of-fold on S9.
+*Primary family (Holm over two), paired cluster bootstrap (2,000, seed 12345), label `reg`:*
+P1 = AUPRC(LRBE) − AUPRC(LRB) on S9.
+P2 = AUPRC(LR[logit rE2G-Extended, −Δ]) − AUPRC(rE2G-Extended) on the S9 pairs matched to the published
+cross-validated rE2G Extended predictions for this benchmark (Synapse syn53019595; out-of-fold by chromosome as
+produced by the authors; score = the file's final score column, `ENCODE-rE2G_Extended.Score` or as named; the
+two-feature combiner is fitted LOCO on S9; logit of the score clipped to [1e-6, 1 − 1e-6]). Matching: exact element coordinates and gene symbol; unmatched pairs are excluded from P2 and
+counted; if fewer than 80% of S9 match exactly, matching switches to overlap of the tested element with the
+predicted element for the same gene, aggregated by maximum, and this is declared in the output. The Synapse file
+requires a user account and is downloaded by the authors into `data/raw/RE2G_CV/`; if it is absent when E9 runs,
+P2 is NOT-RUN and P1's Holm p is still computed for a family of two (p × 2). If the files arrive after P1 has
+been run, P2 is run then exactly as specified here; P1 is not re-run and its reported Holm p is unchanged.
+*Rule:* as A20: BENEFIT ⇔ interval lower bound > 0, point ≥ +0.02 and Holm p < 0.05; NO-BENEFIT ⇔ interval
+within ±0.02; INFERIOR as A16; otherwise INCONCLUSIVE. Estimability: ≥15 `reg` and ≥20 clusters.
+*Positive control for the contact feature (outside the family, fixed now):* PC = AUPRC(LR[logd, hic]) −
+AUPRC(−logd) on the whole training table under LOCO (folds `fold_labels` on the whole table), same bootstrap.
+The benchmark authors report that cell-type Hi-C beats a distance-based contact proxy, so PC is expected to be
+positive. If its interval lower bound is ≤ 0 the contact feature is declared **not validated**: P1 may then not be
+worded as "beyond contact", and the extraction is checked before anything else is concluded (a broken contact
+feature would weaken the baseline and favour the score, so this guards against a false positive).
+*Claim policy fixed in advance:* P1 BENEFIT with P2 BENEFIT or NOT-RUN, and PC validated ⇒ "the score adds
+information beyond distance, accessibility, 3D contact and activity" (if P2 is NOT-RUN: "beyond an open
+reimplementation of the rE2G feature family"). Any NO-BENEFIT or INFERIOR in P1/P2 ⇒ "the score is largely
+redundant with contact and activity", and the manuscript qualifies the E8 claim accordingly, title and abstract
+included. INCONCLUSIVE ⇒ stated with its interval. When P1 and P2 disagree, P2 (the stronger, published
+baseline) governs the headline wording; in particular P1 BENEFIT with P2 INCONCLUSIVE ⇒ "adds information beyond
+an open reimplementation of the rE2G feature family; not established beyond rE2G Extended", both reported. The outcome is reported whichever it is, with the same prominence (B6).
+*Secondary, descriptive (no decision):* (a) on H, post hoc because H's labels were seen in E8: LRB and LRBE
+fitted on the locus-disjoint training pairs inside the window, as E8, scored on H; (b) P2 with the default
+rE2G model (syn53019593); (c) GBM (§2 defaults) on B vs B + −Δ, LOCO on S9; (d) AUPRC of single unfitted
+scores on S9: −logd, hic, abcn, −Δ, rE2G; (e) P1 within distance strata ≤ 10 kb and > 10 kb; (f) Spearman
+correlation of −Δ with hic, act and abcn on S9.
+*Limits stated in advance:* S9 lies within about 98 kb of the TSS, where contact is largely a function of
+distance, so P1 tests the near range only; the reimplemented features differ from rE2G's (no ABC denominator,
+ATAC peaks instead of DNase candidate elements, no promoter activity); the rE2G predictions were fitted on this
+table's labels, out-of-fold by chromosome, with folds that need not coincide with ours; the rE2G prediction for a
+pair on another chromosome came from a model that saw the test chromosome's labels, so the combiner's training
+rows carry second-order information about the test fold (negligible for a two-parameter combiner, stated for
+completeness). *Implementation checks (label-free, before any model):* the 5-kb bin returned by the Hi-C reader
+for each query is asserted to start at floor(position/5000)·5000 (the 0/1-based convention of the reader is
+tested on a synthetic case); the available normalisations and the chromosome naming of the file are recorded.
+*Considered and not
+pre-specified:* a gene-level knowledge-graph prior (GO, protein interactions, PrimeKG); reasons in the survey
+row (gene-level, not cell-type-specific, no gain from gene covariates in E6, risk of encoding screen power).
+
 **A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
 scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark
 table composition (counts per chromosome/screen/cell type, distance quantiles); Enformer
