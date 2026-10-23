@@ -7,7 +7,8 @@
 #SBATCH --mem=48G
 #SBATCH --time=12:00:00
 #SBATCH --output=logs/%x_%j.out
-# Enformer branch: fidelity control (A8) -> scoring -> analysis (analysis forces INCONCLUSIVE if the control fails).
+# Enformer branch: fidelity control (A8) -> scoring -> analysis (analysis forces INCONCLUSIVE if the control fails);
+# E9 (A21) needs the K562 Hi-C file fetched once by hpc/fetch_hic.sbatch (and, for P2, the rE2G files in data/raw/RE2G_CV).
 set -eu
 export SIREN_ROOT="${SIREN_ROOT:-$HOME/siren_repro}"
 export PYTHONHASHSEED=0
@@ -20,7 +21,7 @@ nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv || true
 STATUS=results/v2/pipeline_gpu_status.tsv
 if [ "${SKIP_SCORING:-0}" != "1" ]; then printf "script	exit_code	seconds
 " > "$STATUS"; fi   # SKIP_SCORING=1 re-runs only analysis steps
-for step in "v2_e3_sanity" "v2_e3_enformer" "v2_e3_analysis" "v2_e3_posthoc" "v2_e3_bridge" "v2_e3_enformer --mode random" "v2_e3_sensitivity" "v2_e3_enformer --table heldout --cell-type K562" "v2_e8_confirm"; do
+for step in "v2_e3_sanity" "v2_e3_enformer" "v2_e3_analysis" "v2_e3_posthoc" "v2_e3_bridge" "v2_e3_enformer --mode random" "v2_e3_sensitivity" "v2_e3_enformer --table heldout --cell-type K562" "v2_e8_confirm" "v2_e9_features" "v2_e9_analysis"; do
   read -r s args <<< "$step"
   name="${s}${args:+_${args##* }}"
   if [ "${SKIP_SCORING:-0}" = "1" ] && { [ "$s" = "v2_e3_sanity" ] || [ "$name" = "v2_e3_enformer" ] || [ "$name" = "v2_e3_enformer_random" ] || [ "$name" = "v2_e3_enformer_K562" ]; }; then continue; fi
