@@ -446,6 +446,25 @@ tested on a synthetic case); the available normalisations and the chromosome nam
 pre-specified:* a gene-level knowledge-graph prior (GO, protein interactions, PrimeKG); reasons in the survey
 row (gene-level, not cell-type-specific, no gain from gene covariates in E6, risk of encoding screen power).
 
+**A22 · 2026-10-23 · the extraction check required by A21 finds missing TSS coordinates · results seen: YES (first
+E9 run).** First run (plan 1916f53, code cf737de, SLURM job 714962): PC = +0.021, interval −0.005 to 0.045 (not
+validated); P1 = +0.042, interval 0.014 to 0.069, Holm p 0.006 (BENEFIT); P2 NOT-RUN; claim "adds beyond distance
+and accessibility; contact feature not validated"; held-out, post hoc, +0.007, interval −0.010 to 0.031. Kept as
+`results/superseded/e9_contact_A21_run1.json`. As A21 requires, the extraction was then checked without labels.
+*Finding:* the benchmark tables give `startTSS = endTSS = 0` for three genes while `distanceToTSS` is filled:
+C19orf43 (81 training pairs), SMIM26 (13 held-out K562 pairs), PIMREG (10 held-out WTC11 pairs). E9 placed their
+TSS at position 0, so their contact was 0 and their TSS and peak counts were wrong. All 81 training pairs enter PC;
+none enters S9, because the Enformer window also needs the TSS. *Fix (mechanical, independent of any outcome):*
+for pairs with a zero TSS, the TSS is the midpoint of the gene's interval in the rE2G RefSeq reference named in
+A21, matched by symbol, and the features script asserts that the recovered TSS reproduces the table's
+`distanceToTSS` within 1 kb. Nothing else changes. E9 is re-run once and the second run is reported, with the first
+alongside. The label-free contact check (`scripts/v2_e9_contact_check.py`: indexing through an independent
+dense-block query, SCALE/raw consistency, distance-decay slope) is run on the corrected features and reported.
+*Effect on earlier experiments:* E3 and E8 need the TSS for the window, so these pairs were silently excluded from
+the E3 population and from E8's population H. For SMIM26, 4 held-out K562 pairs lie within 98 kb of the true TSS and
+would have entered H (317 pairs instead of 313). E8 was pre-specified and executed and is not re-run; the exclusion
+is disclosed as a limitation. The C19orf43 training pairs are 400–530 kb from the TSS, outside every window.
+
 **A5 · 2026-10-22 · log of what was inspected before this plan was frozen.** v1.0 result JSONs and
 scripts (read for the audit); the v1.0 Phase-A rerun reproduced all 3,509 numeric leaves; benchmark
 table composition (counts per chromosome/screen/cell type, distance quantiles); Enformer

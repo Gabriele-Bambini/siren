@@ -57,6 +57,18 @@ def main() -> None:
     he = he[he["cell_type"] == "K562"][KEEP].assign(table="heldout_k562")
     df = pd.concat([tr, he], ignore_index=True)
     df["e_mid"] = (df["start"] + df["end"]) // 2
+    ref = pd.read_csv(TSS_REF, sep="\t", header=None, usecols=[0, 1, 2, 3], names=["chrom", "s", "e", "symbol"])
+    ref_tss = (ref["s"] + ref["e"]) // 2
+    # A22: three genes have startTSS = endTSS = 0 in the benchmark tables; recover the TSS from the reference
+    miss = (df["tss"] <= 0).to_numpy()
+    if miss.any():
+        lut = dict(zip(ref["symbol"], ref_tss))
+        rec = df.loc[miss, "gene_symbol"].map(lut)
+        assert rec.notna().all(), "no reference TSS for %s" % sorted(set(df.loc[miss, "gene_symbol"]) - set(lut))
+        err = ((df.loc[miss, "e_mid"] - rec).abs() - df.loc[miss, "dist"]).abs()
+        assert err.max() <= 1000, "recovered TSS disagrees with distanceToTSS by %d bp" % err.max()
+        df.loc[miss, "tss"] = rec.astype(np.int64)
+    say("TSS recovered from the reference for %d pairs (%s)" % (miss.sum(), sorted(set(df.loc[miss, "gene_symbol"]))))
     df["e_bin"] = df["e_mid"] // ct.RES
     df["t_bin"] = df["tss"] // ct.RES
     say("pairs: train %d, heldout K562 %d" % (len(tr), len(he)))
@@ -77,9 +89,8 @@ def main() -> None:
     df["act"] = np.log1p(a)
     df["abcn"] = np.log1p(a * df["c"].to_numpy() / m)
 
-    ref = pd.read_csv(TSS_REF, sep="\t", header=None, usecols=[0, 1, 2, 3], names=["chrom", "s", "e", "symbol"])
     df["n_tss"] = np.log1p(ct.count_tss_between(df["chrom"], df["e_mid"], df["tss"], df["gene_symbol"],
-                                                ref["chrom"], (ref["s"] + ref["e"]) // 2, ref["symbol"]))
+                                                ref["chrom"], ref_tss, ref["symbol"]))
     pk = pd.read_csv(os.path.join(ROOT, ATAC_PEAKS), sep="\t", header=None, usecols=[0, 1, 2],
                      names=["chrom", "s", "e"])
     df["n_peaks"] = np.log1p(ct.count_peaks_between(df["chrom"], df["e_mid"], df["tss"],
@@ -94,6 +105,7 @@ def main() -> None:
            "frac_same_bin": {t: float((g["e_bin"] == g["t_bin"]).mean()) for t, g in df.groupby("table")},
            "frac_act_missing": {t: float(g["act"].isna().mean()) for t, g in df.groupby("table")},
            "n": {t: int(len(g)) for t, g in df.groupby("table")}, "tss_ref_sha256": TSS_SHA256,
+           "n_tss_recovered_A22": {t: int(miss[(df["table"] == t).to_numpy()].sum()) for t in ("train", "heldout_k562")},
            "runtime_s": round(time.time() - T0, 1)}
     with open(os.path.join(OUT, "e9_features_env.json"), "w") as fh:
         json.dump(env, fh, indent=2)
