@@ -1,0 +1,12 @@
+{
+  "n_sample": 300,
+  "seed": 2021,
+  "centre_matches_stored": 300,
+  "centre_is_best_match_in_5x5": 300,
+  "n_raw_positive": 232,
+  "scale_over_raw_finite_positive": 232,
+  "decay_slope_log10c_log10d": -0.9284938269289632,
+  "decay_n": 6647,
+  "normalization": "SCALE",
+  "pass": true
+}
